@@ -1,0 +1,65 @@
+{
+    "primary_groups": [
+      {
+        "id": 100,
+        "name": "ASSETS",
+        "type":"Debit",
+        "groups": [
+          {"id": 101, "name": "CASH"},
+          {"id": 102, "name": "MISC. EXPENSES (ASSET)"},
+          {"id": 103, "name": "INVESTMENTS"},
+          {"id": 104, "name": "FIXED ASSETS"},
+          {"id": 105, "name": "SUNDRY DEBTORS"},
+          {"id": 106, "name": "STOCK-IN-HAND"},
+          {"id": 107, "name": "LOANS & ADVANCES (ASSET)"},
+          {"id": 108, "name": "DEPOSITS (ASSET)"},
+          {"id": 109, "name": "CASH-IN-HAND"},
+          {"id": 110, "name": "BANK ACCOUNTS"},
+          {"id": 111, "name": "DEPOSITS (ASSET)"}
+        ]
+      },
+      {
+        "id": 200,
+        "name": "EXPENSES",
+        "type":"Debit",
+        "groups": [
+          {"id": 201, "name": "PURCHASE"},
+          {"id": 202, "name": "EXPENSES"},
+          {"id": 203, "name": "PURCHASE ACCOUNTS"},
+          {"id": 204, "name": "INDIRECT EXPENSES"},
+          {"id": 205, "name": "DIRECT EXPENSES"}
+        ]
+      },
+      {
+        "id": 300,
+        "name": "INCOME",
+        "type":"Credit",
+        "groups": [
+          {"id": 301, "name": "SALES"},
+          {"id": 302, "name": "SALES ACCOUNTS"},
+          {"id": 303, "name": "INDIRECT INCOMES"}
+        ]
+      },
+      {
+        "id": 400,
+        "name": "LIABILITIES",
+        "type":"Credit",
+        "groups": [
+          {"id": 401, "name": "PL"},
+          {"id": 402, "name": "SUSPENSE A/C"},
+          {"id": 403, "name": "UNSECURED LOANS"},
+          {"id": 404, "name": "SECURED LOANS"},
+          {"id": 405, "name": "BANK OD A/C"},
+          {"id": 406, "name": "LOANS (LIABILITY)"},
+          {"id": 407, "name": "SUNDRY CREDITORS"},
+          {"id": 408, "name": "PROVISIONS"},
+          {"id": 409, "name": "DUTIES & TAXES"},
+          {"id": 410, "name": "CURRENT LIABILITIES"},
+          {"id": 411, "name": "RESERVES & SURPLUS"},
+          {"id": 412, "name": "BRANCH / DIVISIONS"},
+          {"id": 413, "name": "CAPITAL ACCOUNT"}
+        ]
+      }
+    ]
+  }
+  

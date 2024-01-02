@@ -1,0 +1,248 @@
+<!-- sales_quotation_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      position: relative;
+    }
+  
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  
+    /* Add more styling as needed */
+  </style>
+
+    <h2>Sales Order Details</h2>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title">Sales Order Information</h5>
+      </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+                
+                <p class="card-text"><strong>Quotation Number:</strong> {{ sales_quotation.quotation_number }}</p>
+                <p class="card-text"><strong>Customer:</strong> {{ sales_quotation.customer }}</p>
+            </div>
+            <div class="col-md-6">
+              <h5 class="card-title"></h5>
+
+                <p class="card-text"><strong>Billing Address:</strong> {{ sales_quotation.billing_address }}</p>
+                <p class="card-text"><strong>Shipping Address:</strong> {{ sales_quotation.shipping_address }}</p>
+            </div>
+        </div>
+            <!-- Add other fields as needed -->
+
+            <!-- Display related SalesItemRow objects in a table -->
+            <h5 class="card-title mt-4">Sales Products</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sales_quotation.items.all %}
+                        <tr>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.product_description }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.unit_price }}</td>
+                            <td>{{ item.total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="card-body">
+          
+          <!-- Add other fields as needed -->
+
+          <!-- Display related SalesItemRow objects in a table -->
+          <h5 class="card-title mt-4">Products Added For Production</h5>
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Product</th>
+                      <th>Package</th>
+                      <th>packageQuantity</th>
+                      <th>quantityPerPackage</th>
+                      <th>TotalQuantity</th>
+                      <th>TotalCost</th>
+
+                      <th>Delete</th>
+
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in ProductionRow %}
+                      <tr>
+                          <td>{{ item.product }}</td>
+                          <td>{{ item.package }}</td>
+                          <td>{{ item.packageQuantity }}</td>
+                          <td>{{ item.quantityPerPackage }}</td>
+                          <td>{{ item.TotalQuantity }}</td>
+                          <td>{{ item.TotalCost }}</td>
+
+                          <td><a class="btn btn-primary" href="{% url 'delete_production' quotation_number=item.id %}">Delete Production</a></td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+
+
+      </div>
+      <div class="card-body">
+      <form method="post"  class="form-horizontal">
+        {% csrf_token %}
+        <input type="hidden" name="sales_id" value="{{ sales_quotation.quotation_number }}">
+        <div class="row">
+  
+            <div class="col-md-2">
+                <label for="{{ production_form.product.id_for_label }}">{{ production_form.product.label }}</label>
+                {{ production_form.product }}
+            </div>
+
+          
+       
+          <div class="col-md-2">
+            <label for="{{ production_form.package.id_for_label }}">{{ production_form.package.label }}</label>
+            {{ production_form.package }}
+        </div>
+        <div class="col-md-2">
+          <label for="{{ production_form.packageQuantity.id_for_label }}">{{ production_form.packageQuantity.label }}</label>
+          {{ production_form.packageQuantity }}
+      </div>
+
+      <div class="col-md-2">
+          <label for="{{ production_form.quantityPerPackage.id_for_label }}">{{ production_form.quantityPerPackage.label }}</label>
+          {{ production_form.quantityPerPackage }}
+      </div>
+      <div class="col-md-2">
+        <label for="{{ production_form.TotalQuantity.id_for_label }}">{{ production_form.TotalQuantity.label }}</label>
+        {{ production_form.TotalQuantity }}
+      </div>
+      <div class="col-md-2">
+        <label for="{{ production_form.TotalCost.id_for_label }}">{{ production_form.TotalCost.label }}</label>
+        {{ production_form.TotalCost }}
+      </div>
+        </div>
+        
+
+
+        <div class="row" style="padding-top: 20px;">
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+      </div>
+    </div>
+    
+    <form action="">
+      <div class="row" style="padding-top: 20px;">
+        <div class="form-group col-md-12">
+          <a href="{% url 'send_for_production' sales_quotation.quotation_number %}" class="btn btn-primary">Send for Production</a>
+        </div>
+    </div>
+    </form>
+        
+</div> 
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var approveButtons = document.querySelectorAll('.approve-btn');
+      var disapproveButtons = document.querySelectorAll('.disapprove-btn');
+  
+      approveButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var orderId = button.getAttribute('data-order-id');
+          showConfirmationModal(orderId, 'approved');
+        });
+      });
+  
+      disapproveButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var orderId = button.getAttribute('data-order-id');
+          showConfirmationModal(orderId, 'disapproved');
+        });
+      });
+  
+      function showConfirmationModal(orderId, action,delivery) {
+            var modal = document.getElementById('confirmationModal');
+            var form = modal.querySelector('form');
+            var actionInput = form.querySelector('input[name="action"]');
+            var orderIdInput = form.querySelector('input[name="order_id"]');
+            var delivery_date = form.querySelector('input[name="delivery_date"]');
+
+            actionInput.value = action;
+            orderIdInput.value = orderId;
+            delivery_date.value=delivery
+            // Display the modal by toggling its visibility
+            modal.style.display = 'block';
+
+            // Optionally, you can add more logic here to customize the modal content or appearance
+        }
+
+        // Close the modal when the user clicks the close button
+        var closeButton2 = document.getElementById('cancel');
+        if (closeButton2) {
+            closeButton2.addEventListener('click', function () {
+            var modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+            });
+        }
+        var closeButton = document.querySelector('.modal-content .close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function () {
+            var modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+            });
+        }
+    });
+  </script>
+  <script>
+    function handleColorTheme(e) {
+      $("html").attr("data-color-theme", e);
+      $(e).prop("checked", !0);
+    }
+  </script>
+
+
+
+
+<script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/js/datatable/datatable-basic.init.js"></script>
+{% endblock %}

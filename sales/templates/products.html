@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .rounded-image-overlay {
+    position: relative;
+    width: 50px; /* Adjust the width and height as needed */
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 5px; /* Add some margin between the images */
+  }
+
+  .rounded-image-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+<table id="productsTable" class="table table-hover table-product" style="width:100%">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>View</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td class="py-0">
+          <div class="rounded-image-overlay">
+            <img src={{product.images}} alt="Product Image">
+            </div>
+        </td>
+        <td>{{product.Product_Name}}</td>
+
+        <td>{{product.Description}}</td>
+        <td>1</td>
+        <td>{{product.Price}}</td>
+        <td>
+          <a href="{% url 'productDetail' product.productId %}" class="btn btn-primary">View Details</a>
+        </td>
+
+
+        
+      </tr>
+      {% endfor %}
+      
+    </tbody>
+  </table>
+
+  {% endblock %}

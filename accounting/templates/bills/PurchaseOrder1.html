@@ -1,0 +1,2164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style >
+    @import url(https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLUXza5VhXqVC6o75Eld_V98);
+
+    ol {
+        margin: 0;
+        padding: 0
+    }
+
+    table td,
+    table th {
+        padding: 0
+    }
+
+    .c21 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #bfbfbf;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 297pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c79 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #f2f2f2;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c67 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c29 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c63 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #c0c0c0;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #f2f2f2;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c35 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 198.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c42 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #3b4e87;
+        vertical-align: middle;
+        border-right-color: #3b4e87;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c7 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c0 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #f2f2f2;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c70 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #3b4e87;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 235.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c90 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #f2f2f2;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c28 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c74 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #3b4e87;
+        vertical-align: middle;
+        border-right-color: #3b4e87;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c38 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #3b4e87;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #ed1a3b;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c84 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #bfbfbf;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c86 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        background-color: #bfbfbf;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c93 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 163.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c34 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c107 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c13 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 220.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c65 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #c0c0c0;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c50 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c97 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c51 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c62 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c96 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 98.2pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c11 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c77 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c109 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c85 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c60 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 532.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c100 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c30 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c87 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 235.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c103 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c32 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c41 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c31 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c69 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c73 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c78 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c81 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #c0c0c0;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #c0c0c0;
+        vertical-align: middle;
+        border-right-color: #c0c0c0;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #c0c0c0;
+        border-bottom-style: solid
+    }
+
+    .c99 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 532.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c53 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 148.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c37 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c92 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c36 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 297pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c71 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c80 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c57 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #c0c0c0;
+        vertical-align: middle;
+        border-right-color: #c0c0c0;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #c0c0c0;
+        border-bottom-style: solid
+    }
+
+    .c27 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c45 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c64 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 122.2pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c43 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c91 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c82 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c59 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c76 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 198.8pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c12 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c25 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 235.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c1 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c9 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 198.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c61 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c106 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 311.8pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c58 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c20 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c95 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c46 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c19 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 72pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c68 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c5 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #c0c0c0;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c54 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c22 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 98.2pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c98 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 0pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: middle;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 122.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c55 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c83 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 76.5pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c24 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #d9d9d9;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 198.8pt;
+        border-top-color: #d9d9d9;
+        border-bottom-style: solid
+    }
+
+    .c108 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 122.2pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c89 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 532.2pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c44 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 0pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 76.5pt;
+        border-top-color: #000000;
+        border-bottom-style: solid
+    }
+
+    .c102 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #a6a6a6;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #a6a6a6;
+        vertical-align: top;
+        border-right-color: #a6a6a6;
+        border-left-width: 1pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 297pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c40 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #000000;
+        border-top-width: 1pt;
+        border-right-width: 0pt;
+        border-left-color: #000000;
+        vertical-align: top;
+        border-right-color: #000000;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 0pt;
+        width: 86.8pt;
+        border-top-color: #a6a6a6;
+        border-bottom-style: solid
+    }
+
+    .c101 {
+        border-right-style: solid;
+        padding: 0pt 5.8pt 0pt 5.8pt;
+        border-bottom-color: #3b4e87;
+        border-top-width: 1pt;
+        border-right-width: 1pt;
+        border-left-color: #000000;
+        vertical-align: middle;
+        border-right-color: #3b4e87;
+        border-left-width: 0pt;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-width: 1pt;
+        width: 86.8pt;
+        border-top-color: #3b4e87;
+        border-bottom-style: solid
+    }
+
+    .c56 {
+        color: #ffffff;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 2pt;
+        font-family: "Trebuchet MS";
+        font-style: normal
+    }
+
+    .c88 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 11pt;
+        font-family: "Calibri";
+        font-style: normal
+    }
+
+    .c49 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 16pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c39 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 10pt;
+        font-family: "Trebuchet MS";
+        font-style: normal
+    }
+
+    .c8 {
+        color: #ffffff;
+        font-weight: 700;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 10pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c47 {
+        color: #000000;
+        font-weight: 700;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 10pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c6 {
+        padding-top: 0pt;
+        text-indent: 10pt;
+        padding-bottom: 0pt;
+        line-height: 1.0;
+        orphans: 2;
+        widows: 2;
+        text-align: right
+    }
+
+    .c18 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 10pt;
+        font-family: "Times New Roman";
+        font-style: normal
+    }
+
+    .c23 {
+        color: #ed1a3b;
+        font-weight: 700;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 28pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c105 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 11pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c4 {
+        padding-top: 0pt;
+        padding-bottom: 0pt;
+        line-height: 1.0;
+        orphans: 2;
+        widows: 2;
+        text-align: left;
+        height: 11pt
+    }
+
+    .c3 {
+        color: #000000;
+        font-weight: 400;
+        text-decoration: none;
+        vertical-align: baseline;
+        font-size: 10pt;
+        font-family: "Arial";
+        font-style: normal
+    }
+
+    .c14 {
+        padding-top: 0pt;
+        padding-bottom: 0pt;
+        line-height: 1.0;
+        orphans: 2;
+        widows: 2;
+        text-align: right
+    }
+
+    .c17 {
+        padding-top: 0pt;
+        padding-bottom: 0pt;
+        line-height: 1.0;
+        orphans: 2;
+        widows: 2;
+        text-align: center
+    }
+
+    .c10 {
+        padding-top: 0pt;
+        padding-bottom: 0pt;
+        line-height: 1.0;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    .c104 {
+        padding-top: 0pt;
+        padding-bottom: 8pt;
+        line-height: 1.0791666666666666;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    .c15 {
+        padding-top: 0pt;
+        padding-bottom: 0pt;
+        line-height: 1.15;
+        text-align: left;
+        height: 11pt
+    }
+
+    .c72 {
+        margin-left: -5.8pt;
+        border-spacing: 0;
+        border-collapse: collapse;
+        margin-right: auto
+    }
+
+    .c52 {
+        font-size: 10pt;
+        font-family: "Arial";
+        font-weight: 400
+    }
+
+    .c48 {
+        background-color: #ffffff;
+        max-width: 540pt;
+        padding: 36pt 36pt 36pt 36pt
+    }
+
+    .c33 {
+        text-indent: 10.1pt
+    }
+
+    .c94 {
+        height: 19.4pt
+    }
+
+    .c2 {
+        height: 15pt
+    }
+
+    .c26 {
+        height: 18pt
+    }
+
+    .c16 {
+        height: 11pt
+    }
+
+    .c75 {
+        background-color: #ed1a3b
+    }
+
+    .c66 {
+        height: 36pt
+    }
+
+    .title {
+        padding-top: 24pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 36pt;
+        padding-bottom: 6pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    .subtitle {
+        padding-top: 18pt;
+        color: #666666;
+        font-size: 24pt;
+        padding-bottom: 4pt;
+        font-family: "Georgia";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        font-style: italic;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    li {
+        color: #000000;
+        font-size: 11pt;
+        font-family: "Calibri"
+    }
+
+    p {
+        margin: 0;
+        color: #000000;
+        font-size: 11pt;
+        font-family: "Calibri"
+    }
+
+    h1 {
+        padding-top: 24pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 24pt;
+        padding-bottom: 6pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    h2 {
+        padding-top: 18pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 18pt;
+        padding-bottom: 4pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    h3 {
+        padding-top: 14pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 14pt;
+        padding-bottom: 4pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    h4 {
+        padding-top: 12pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 12pt;
+        padding-bottom: 2pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    h5 {
+        padding-top: 11pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 11pt;
+        padding-bottom: 2pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+
+    h6 {
+        padding-top: 10pt;
+        color: #000000;
+        font-weight: 700;
+        font-size: 10pt;
+        padding-bottom: 2pt;
+        font-family: "Calibri";
+        line-height: 1.0791666666666666;
+        page-break-after: avoid;
+        orphans: 2;
+        widows: 2;
+        text-align: left
+    }
+</style>
+
+<style>
+
+.card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+    .card-header {
+      background-color: #007bff;
+      color: #ffffff;
+    }
+  
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+  
+    label {
+      font-weight: bold;
+      /* Make the label bold */
+      padding: 5px;
+    }
+  </style>
+  <!-- Include jsPDF library -->
+
+<div class="card"  >
+    <div class="card-header" >
+
+        
+        Purchase Orders
+        <button id="pdfButton" class="btn btn-danger" style="margin-left: 90%;">PDF</button>
+    </div>
+    
+<!-- Add a button to trigger PDF generation -->
+
+<div id="pdf-content" style="padding: 50px;" >
+    <div class="card-body" >
+        <table class="c72" style="width: 100%;" >
+            <tr class="c66">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c49">{{company.name}}</span></p>
+                </td>
+                <td class="c106" colspan="4" rowspan="1">
+                    <p class="c14"><span class="c23">PURCHASE ORDER</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{company.address}}</span></p>
+                </td>
+                <td class="c53" colspan="2" rowspan="6">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+                <td class="c37" colspan="1" rowspan="1">
+                    <p class="c6"><span class="c3">DATE</span></p>
+                </td>
+                <td class="c20" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c3">22/12/2022</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{company.city}}, {{company.state}} &nbsp;{{company.postal_Code}}</span></p>
+                </td>
+                <td class="c37" colspan="1" rowspan="1">
+                    <p class="c6"><span class="c3">PO #</span></p>
+                </td>
+                <td class="c20" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c3">{{purchase.quotation_number}}</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">Phone: {{company.phone_number}}</span></p>
+                </td>
+                <td class="c93" colspan="2" rowspan="4">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">Email:  {{company.email}}</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">Website:  {{company.website}}</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+            </tr>
+            <tr class="c94">
+                <td class="c13 c75" colspan="2" rowspan="1">
+                    <p class="c10 c33"><span class="c8">Supplier</span></p>
+                </td>
+                <td class="c44" colspan="1" rowspan="7">
+                    <p class="c4"><span class="c8"></span></p>
+                </td>
+                <td class="c25 c75" colspan="3" rowspan="1">
+                    <p class="c10 c33"><span class="c8">SHIP TO</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{purchase.supplier.supplier_name}}</span></p>
+                </td>
+                <td class="c25" colspan="3" rowspan="1">
+                    <p class="c10"><span class="c52">{{purchase.supplier}}</span></p>
+                </td>
+            </tr>
+
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{purchase.supplier.address}}</span></p>
+                </td>
+                <td class="c25" colspan="3" rowspan="1">
+                    <p class="c10"><span class="c3">{{purchase.shipping_address}}</span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{purchase.supplier.gst_no}}</span></p>
+                </td>
+           
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">Phone: {{purchase.supplier.phone}}</span></p>
+                </td>
+        
+            </tr>
+            <tr class="c2">
+                <td class="c13" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">Mobile: {{purchase.supplier.mobile}}</span></p>
+                </td>
+                <td class="c25" colspan="3" rowspan="1">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c99" colspan="6" rowspan="1">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+            </tr>
+
+            <tr class="c26">
+                <td class="c38" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c8">ITEM #</span></p>
+                </td>
+                <td class="c35" colspan="2" rowspan="1">
+                    <p class="c17"><span class="c8">DESCRIPTION</span></p>
+                </td>
+                <td class="c67" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c8">QTY</span></p>
+                </td>
+                <td class="c7" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c8">UNIT PRICE</span></p>
+                </td>
+                <td class="c75 c101" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c8">TOTAL</span></p>
+                </td>
+            </tr>
+            {% for quote in quotes %}
+            <tr class="c2">
+                <td class="c97" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3">{{quote.product_name}}</span></p>
+                </td>
+                <td class="c9" colspan="2" rowspan="1">
+                    <p class="c10"><span class="c3">{{quote.product_description}}</span></p>
+                </td>
+                <td class="c46" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c3">{{quote.quantity}}</span></p>
+                </td>
+                <td class="c41" colspan="1" rowspan="1">
+                    <p class="c14"><span class="c3">{{quote.unit_price}}</span></p>
+                </td>
+                <td class="c79" colspan="1" rowspan="1">
+                    <p class="c14"><span class="c3">{{quote.total_price}}</span></p>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="c26">
+                <td class="c36" colspan="3" rowspan="1">
+                    <p class="c10"><span class="c39">&nbsp;</span></p>
+                </td>
+                <td class="c80" colspan="1" rowspan="5">
+                    <p class="c4"><span class="c56"></span></p>
+                </td>
+                <td class="c55" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3">SUBTOTAL</span></p>
+                </td>
+                <td class="c63" colspan="1" rowspan="1">
+                    <p class="c14"><span class="c3">{{purchase.sub_total}}</span></p>
+                </td>
+            </tr>
+            <tr class="c26">
+                <td class="c36" colspan="3" rowspan="1">
+                    <p class="c10"><span class="c39"></span></p>
+                </td>
+                
+                <td class="c55" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3">SGST</span></p>
+                </td>
+                <td class="c63" colspan="1" rowspan="1">
+                    <p class="c14"><span class="c3">{{purchase.sgst_total}}</span></p>
+                </td>
+            </tr>
+            <tr class="c26">
+                <td class="c21" colspan="3" rowspan="1">
+                    <p class="c10"><span class="c47">Comments or Special Instructions</span></p>
+                </td>
+                <td class="c65" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3">CGST</span></p>
+                </td>
+                <td class="c81" colspan="1" rowspan="1">
+                    <p class="c14 c16"><span class="c3">{{purchase.csgst_total}}</span></p>
+                </td>
+            </tr>
+            <tr class="c26">
+                <td class="c102" colspan="3" rowspan="3">
+                    <p class="c10"><span class="c3">Notes And Comment: </span>{{purchase.notes_comments|linebreaks}}</p>
+                </td>
+               
+                
+            </tr>
+            <tr class="c26">
+                
+                <td class="c5" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3">OTHER</span></p>
+                </td>
+                <td class="c57" colspan="1" rowspan="1">
+                    <p class="c14 c16"><span class="c3">{{purchase.Others}}</span></p>
+                </td>
+            </tr>
+            <tr class="c26">
+                <td class="c5" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c3"></span></p>
+                </td>
+                <td class="c55" colspan="1" rowspan="1">
+                    <p class="c10"><span class="c47">TOTAL</span></p>
+                </td>
+                <td class="c75 c82" colspan="1" rowspan="1">
+                    <p class="c14"><span class="c47">&#8377;{{purchase.final_amt}}</span></p>
+                </td>
+            </tr>
+            
+            <tr class="c2">
+                <td class="c60" colspan="6" rowspan="1">
+                    <p class="c4"><span class="c18"></span></p>
+                </td>
+            </tr>
+            <tr class="c2">
+                <td class="c60" colspan="6" rowspan="1">
+                    <p class="c4"><span class="c3"></span></p>
+                </td>
+            </tr>
+            <tr class="c26">
+                <td class="c38" colspan="1" rowspan="1">
+                    <p class="c17"><span class="c8">REQUISITIONER</span></p>
+                </td>
+           
+                <td class="c70" colspan="3" rowspan="1">
+                    <p class="c17"><span class="c8">SHIPPING TERMS</span></p>
+                </td>
+            </tr>
+            <tr class="c26" style="height: 150px;">
+                <td class="c34" colspan="1" rowspan="20">
+                    <p class="c17 c16"><span class="c3">{{request.user}}</span></p>
+                </td>
+
+              
+                <td class="c87" colspan="3" rowspan="10">
+                    <p class="c17 c16"><span class="c3">{{ purchase.terms_and_conditions|linebreaks }}</span></p>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+<script>
+const btn = document.getElementById("pdfButton");
+
+btn.addEventListener("click", function(){
+    console.log('hiiiiiii')
+var element = document.getElementById('pdf-content');
+html2pdf().from(element).save('filename.pdf');
+});
+</script>
+{% endblock %}

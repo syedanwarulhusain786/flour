@@ -1,0 +1,81 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+
+<div class="datatables">
+    <!-- File export -->
+    <div class="row">
+      <div class="col-12">
+        <!-- ---------------------
+                    start File export
+                ---------------- -->
+        <!-- <div class="card"> -->
+          <div class="card-body">
+            <div class="mb-2">
+              <h5 class="mb-0">All Quotations</h5>
+            </div>
+
+            <div class="table-responsive">
+              <table id="file_export" class="table border table-striped table-bordered display text-nowrap" >
+                <thead>
+                  <!-- start row -->
+                  <tr >
+                    <th>Quote Id</th>
+                    <th>Customer Name</th>
+                    <th>Company Name</th>
+                    <th>Contact Person</th>
+
+                    <th>Quotation Date</th>
+                    <th>Expiry DAte</th>
+                    <th>Sub Total</th>
+                    <th>Tax Amt</th>
+                    <th>Final Amt</th>
+                    <th>View</th>
+
+
+                  </tr>
+                  <!-- end row -->
+                </thead>
+                <tbody>
+                  <!-- start row -->
+                  {% for quote in quotes %}
+                  <tr>
+                    <td>{{quote.quotation_number}}</td>
+                    <td>{{quote.customer_name}}</td>
+                    <td>{{quote.company_name}}</td>
+                    <td>{{quote.contact_person}}</td>
+                    <td>{{quote.quotation_date}}</td>
+                    <td>{{quote.expiry_date}}</td>
+                    <td>{{quote.sub_total}}</td>
+                    <td>{{quote.tax_total}}</td>
+                    <td>{{quote.final_amt}}</td>
+
+                    <td><a href="" type="button" class="btn btn-danger">View</a></td>
+
+                  </tr>
+                  {% endfor %}
+                  <!-- end row -->
+
+                  <!-- end row -->
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        
+        <!-- ---------------------
+                    end File export
+                ---------------- -->
+      </div>
+    </div>
+
+
+  </div>
+
+  {% endblock %}

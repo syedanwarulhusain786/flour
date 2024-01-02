@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(80vh - 100px);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+
+<div class="card">
+  <div class="card-header">
+     Customer
+  </div>
+
+    <div class="card-body">
+
+      <table class="table table-striped" id="productsTable">
+        <div>
+          
+        </div>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Username</th>
+
+
+            <th scope="col">Mailing Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">GST No</th>
+            <th scope="col">TIN No</th>
+            <th scope="col">Pan</th>
+            <th scope="col">Address</th>
+
+
+       
+
+
+
+
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Supplier in cust_List %}
+
+          <tr>
+            <td scope="row">{{ forloop.counter }}</td>
+            <td>{{ Supplier.customer_id }}</td>
+            <td>{{ Supplier.customer_name }}</td>
+            
+            <td>{{ Supplier.user.username }}</td>
+            <td>{{ Supplier.mailing_name }}</td>
+            <td>{{ Supplier.phone }}</td>
+            <td>{{ Supplier.email }}</td>
+            <td>{{ Supplier.gst_no }}</td>
+            <td>{{ Supplier.tin }}</td>
+            <td>{{ Supplier.pan }}</td>
+            <td>{{ Supplier.address }}</td>
+
+
+
+            <td>
+
+              <button type="button" class="btn btn-danger"
+                onclick="DeleteAction('delete',{{ Supplier.user.id }},'{{ Supplier.user.username }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Delete Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModals" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-body" id="subTableContent">
+            <p>Account Number: <input type="text" id="accountNumberc" value ='' name="accountNumberc" ></p>
+            <p>Account Name: <input type="text" id="accountNamec"  name="accountNamec" value ='' ></p>
+            <p>Are you sure you want to delete this account?</p>
+
+        </div>
+        <div class="modal-footer">
+            
+            <button type="submit" class="mb-1 btn btn-pill btn-success" name="delete">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelDeleteBtn">No</button>
+
+        </div>
+    </form>
+
+    </div>
+  </div>
+</div>
+<script src="{% static '\home\js\chatOfAccount.js' %}"></script>
+
+
+{% endblock %}

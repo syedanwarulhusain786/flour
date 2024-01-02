@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+  margin-top: 50px;
+  width: auto;
+  max-width: 100%; /* Adjust the maximum width as needed */
+  margin-left: auto;
+  margin-right: auto;
+  height: calc(80vh - 100px);
+}
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  .text-center {
+  text-align: left !important;
+}
+label {
+  font-weight: bold; /* Make the label bold */
+  padding:5px;
+}
+</style>
+
+<div class="card text-center">
+    <div class="card-header">
+      Add Category
+    </div>
+    <div class="card-body">
+      <form name="customerForm" method="POST">
+        {% csrf_token %}
+          
+            <div class="row" style="padding:20px">
+
+
+              <div class="col-md-4">
+                <div class="form-group ">
+                  <label for="CategoryName">Category Name</label>
+                  <input type="text" class="form-control" name="CategoryName" placeholder="Enter Service Name">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="customerCode">Description</label>
+                  <input type="text" class="form-control" name="description" id="customerCode" placeholder="Description" >
+                </div>
+              </div>
+      
+            </div>
+  
+
+
+
+
+        
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
+      </form>
+    </div>
+
+</div>
+<script>
+  // JavaScript to show/hide dropdowns based on checkbox state
+  document.addEventListener('DOMContentLoaded', function () {
+      var checkbox = document.getElementById('enableOptionsCheckbox');
+      var dropdown1 = document.getElementById('accountNumber1');
+      var dropdown2 = document.getElementById('accountNumber2');
+
+      function toggleDropdowns() {
+          if (checkbox.checked) {
+              dropdown1.removeAttribute('disabled');
+              dropdown2.removeAttribute('disabled');
+          } else {
+              dropdown1.setAttribute('disabled', 'disabled');
+              dropdown2.setAttribute('disabled', 'disabled');
+          }
+      }
+
+      // Initial state
+      toggleDropdowns();
+
+      // Add event listener to the checkbox
+      checkbox.addEventListener('change', toggleDropdowns);
+  });
+</script>
+<script>
+  function saveCustomer() {
+    // Add your JavaScript logic for saving the Supplierhere
+    alert('Supplier saved!');
+  }
+
+  function cancel() {
+    // Add your JavaScript logic for canceling here
+    alert('Action canceled!');
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+  const voucher_numbe = document.getElementById("voucher_no");
+  const customerCode = document.getElementById("customerCode");
+
+  generateAccountNumber()
+
+
+  function generateAccountNumber() {
+  // Make an AJAX request to your Django backend to get the next available account number
+  fetch("/get_next_supplier_number/") // Replace with your Django endpoint URL
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              voucher_numbe.value = data.account_number;
+              customerCode.value = 'sup-'+data.account_number;
+
+          }
+      })
+      .catch(error => {
+          console.error("Error fetching account number:", error);
+      });
+}
+
+  // You can also submit the form data to the Django backend using AJAX or a form submission, depending on your preference.
+});
+</script>
+
+
+
+
+
+
+
+  {% endblock %}

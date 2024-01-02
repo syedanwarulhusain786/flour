@@ -1,0 +1,93 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ 
+       
+       
+       <!-- ====================================
+        ——— CONTENT WRAPPER
+        ===================================== -->
+        <div class="content-wrapper">
+          <div class="content">                
+                  <!-- Top Statistics -->
+<div class="container mt-5 text-center" style="max-width:1450;">
+    <div class="card">
+        <div class="card-header text-left">
+            <form method="GET">
+              {% csrf_token %}
+            <label> <input type="search" class="form-control rounded-pill" placeholder="Search..." aria-controls="productsTable" name="q"></label>
+            <label> <input type="date" class="form-control rounded-pill" placeholder="Search..." aria-controls="productsTable" name="from"></label>
+
+            <label> <input type="date" class="form-control rounded-pill" placeholder="Search..." aria-controls="productsTable" name="to"></label>
+            <label> <input type="submit" class="btn btn-success form-control rounded-pill" value="Search" name="apply"></label>
+            <label> <input type="button" class="btn btn-danger form-control rounded-pill" value="Reset" name="reset"></label>
+          </form>
+
+
+   
+            <!-- Expand Left -->
+        </div>
+   
+        <div class="card-body">
+          <table id="productsTable" class="table table-hover table-product" style="width:100%">
+            <thead>
+              <tr>
+                <th scope="col">S No</th>
+
+                    <th scope="col">VoucherNo</th>
+                    <th scope="col">VoucherCode</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Narration</th>
+                    <th scope="col">Ledger</th>
+                    <th scope="col">Group</th>
+
+                    <th scope="col">Primary Group</th>
+
+                    <th scope="col">Debit</th>
+                    <th scope="col">Credit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for journal in journal_page_obj %}
+              <tr>
+                <td class="py-0">
+                  {{journal.s_no}}
+                </td>
+                <td>{{journal.voucherNo}}</td>
+                <td>{{journal.voucherCode}}</td>
+                <td>{{journal.date}}</td>
+                <td>{{journal.narration}}</td>
+                <td>{{journal.ledger.ledger_name}}</td>
+                <td>
+                  {{journal.group.group_name}}
+                </td>
+                <td>
+                  {{journal.primary_group.primary_group_name}}
+                </td>
+                <td>{{journal.debit}}</td>
+                <td>{{journal.credit}}</td>
+           
+              </tr>
+
+              {% endfor %}
+
+
+
+
+
+
+            </tbody>
+          </table>
+
+  
+              
+        </div>
+    </div>
+</div>
+
+           </div>
+        </div>
+
+
+  {% endblock %}

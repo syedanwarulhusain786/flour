@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container" style="padding-top: 50px;">
+    <h2>Add Product Stock for {{ product.name }}</h2>
+    <form method="post" action="{% url 'add_product_stock' product.id %}">
+      {% csrf_token %}
+      {{ form.quantity }}
+      <br>
+      <button type="submit" class="btn btn-primary">Add Product Stock</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .card-header {
+    background-color: #a12b66;
+    color: #746b6b;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+<div style="padding-top: 60px;"></div>
+    <!-- <div style="padding-top: 60px;">
+      <div class="row">
+        <div class="col-sm-6 col-xl-4">
+          <div class="card bg-primary-subtle shadow-none">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center">
+                <div class="round rounded text-bg-primary d-flex align-items-center justify-content-center">
+                  <i>
+                    <img src="{% static 'icons/add-cart.png' %}" alt="All Products Icon" width="50" height="50">
+                </i>
+                </div>
+                <h6 class="mb-0 ms-3">Total Quantity</h6>
+                <div class="ms-auto text-primary d-flex align-items-center">
+      
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-4">
+                <h3 class="mb-0 fw-semibold fs-7">{{ product_report.total_quantity }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+          <div class="card bg-danger-subtle shadow-none">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center">
+                <div class="round rounded text-bg-danger d-flex align-items-center justify-content-center">
+                  <i>
+                    <img src="{% static 'icons/mySales.png' %}" alt="All Products Icon" width="50" height="50">
+                </i>
+                </div>
+                <h6 class="mb-0 ms-3">Total Cost</h6>
+                <div class="ms-auto text-danger d-flex align-items-center">
+        
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-4">
+                <h3 class="mb-0 fw-semibold fs-7">Rs{{ product_report.total_cost }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+          <div class="card bg-success-subtle shadow-none">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center">
+                <div class="round rounded text-bg-danger d-flex align-items-center justify-content-center">
+                  <i>
+                    <img src="{% static 'icons/cash.png' %}" alt="All Products Icon" width="50" height="50">
+                </i>
+                </div>
+                <h6 class="mb-0 ms-3">Total Value</h6>
+                <div class="ms-auto text-info d-flex align-items-center">
+
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-4">
+                <h3 class="mb-0 fw-semibold fs-7">Rs{{ product_report.total_value }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+     
+    </div>
+    <div class="row">
+    <div class="col-sm-6 col-xl-6">
+      <div class="card bg-success-subtle shadow-none">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="round rounded text-bg-danger d-flex align-items-center justify-content-center">
+              <i>
+                <img src="{% static 'icons/cash.png' %}" alt="All Products Icon" width="50" height="50">
+            </i>
+            </div>
+            <h6 class="mb-0 ms-3">Average Cost per Unit</h6>
+            <div class="ms-auto text-info d-flex align-items-center">
+
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <h3 class="mb-0 fw-semibold fs-7">Rs{{ average_cost_per_unit_product }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-6">
+      <div class="card bg-success-subtle shadow-none">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="round rounded text-bg-danger d-flex align-items-center justify-content-center">
+              <i>
+                <img src="{% static 'icons/cash.png' %}" alt="All Products Icon" width="50" height="50">
+            </i>
+            </div>
+            <h6 class="mb-0 ms-3">Product Entries</h6>
+            <div class="ms-auto text-info d-flex align-items-center">
+
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <h3 class="mb-0 fw-semibold fs-7">{{ product_count }}</h3>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+  </div> -->
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Sales Product</h5>
+          <p class="card-subtitle mb-0">Product Inventory </p>
+          <div class="table-responsive mt-4">
+            <table class="table table-borderless text-nowrap align-middle mb-0" >
+              <thead>
+                <tr>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">Quantity</th>
+
+                  <th scope="col">Total Value</th>
+
+                
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in sales_product_list %}
+                  <tr>
+                    <td>{{ product.product__name }}</td>
+                    <td>{{ product.total_quantity_sales }}</td>
+
+                    <td>Rs .{{ product.total_value_sales }}</td>
+                   
+
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title fw-semibold">Purchase Product</h5>
+            <p class="card-subtitle mb-0">Product Inventory </p>
+            <div class="table-responsive mt-4">
+              <table class="table table-borderless text-nowrap align-middle mb-0" >
+                <thead>
+                  <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Quantity</th>
+  
+                    <th scope="col">Total Value</th>
+  
+                  
+  
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in purchase_product_list %}
+                    <tr>
+                      <td>{{ product.product__name }}</td>
+                      <td>{{ product.total_quantity_sales }}</td>
+  
+                      <td>Rs .{{ product.total_value_sales }}</td>
+                     
+  
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title fw-semibold">Packaging Product</h5>
+            <p class="card-subtitle mb-0">Product Inventory </p>
+            <div class="table-responsive mt-4">
+              <table class="table table-borderless text-nowrap align-middle mb-0" >
+                <thead>
+                  <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Quantity</th>
+  
+                    <th scope="col">Total Value</th>
+  
+                  
+  
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in pack_product_list %}
+                    <tr>
+                      <td>{{ product.product__name }}</td>
+                      <td>{{ product.total_quantity_sales }}</td>
+  
+                      <td>Rs .{{ product.total_value_sales }}</td>
+                     
+  
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-header">
+      
+    <h2>Product List</h2>
+  
+    </div>
+  
+      <div class="card-body">
+  
+        <table class="table table-striped" id="productsTable">
+          <div>
+            
+            <a href="{% url 'product_create' %}" target="_blank" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Product</a>
+          </div>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Product name</th>
+              <th scope="col">Product Description</th>
+              <th scope="col">Product Cost</th>
+              <th scope="col">Product Selling</th>
+  
+           
+  
+  
+          
+  
+  
+  
+  
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+  
+            <tr>
+              <td scope="row">{{ forloop.counter }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.productCost }}</td>
+              <td>{{ product.productSelling }}</td>
+       
+             
+  
+  
+  
+              <td>
+                <a class="btn btn-success" href="{% url 'product_update' product.id %}">Edit</a>
+                  <a class="btn btn-danger" href="{% url 'product_delete' product.id %}">Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+  
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+              
+            <h2>Brand List</h2>
+          
+            </div>
+          
+              <div class="card-body">
+          
+                <table class="table table-striped">
+                  <div>
+                    
+                    <a href="{% url 'add_brands' %}" target="_blank" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Brand</a>
+                  </div>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Brand name</th>
+                      <th scope="col">Description</th>   
+          
+          
+                  
+          
+          
+          
+          
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for Supplier in brand %}
+          
+                    <tr>
+                      <td scope="row">{{ forloop.counter }}</td>
+                      <td>{{ Supplier.name }}</td>
+                      <td>{{ Supplier.description }}</td>
+          
+               
+                     
+          
+          
+          
+                      <td>
+                        <a class="btn btn-success" href="{% url 'edit_brands' Supplier.id %}">Edit</a>
+                          <a class="btn btn-danger" href="{% url 'delete_brands' Supplier.id %}">Delete</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+          
+                  </tbody>
+                </table>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+              
+            <h2>Category List</h2>
+          
+            </div>
+          
+              <div class="card-body">
+          
+                <table class="table table-striped">
+                  <div>
+                    
+                    <a href="{% url 'add_category' %}" target="_blank" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Category</a>
+                  </div>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Category name</th>
+                      <th scope="col">Description</th>   
+          
+          
+                  
+          
+          
+          
+          
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for Supplier in cat %}
+          
+                    <tr>
+                      <td scope="row">{{ forloop.counter }}</td>
+                      <td>{{ Supplier.name }}</td>
+                      <td>{{ Supplier.description }}</td>
+          
+               
+                     
+          
+          
+          
+                      <td>
+                        <a class="btn btn-success" href="{% url 'edit_category' Supplier.id %}">Edit</a>
+                          <a class="btn btn-danger" href="{% url 'delete_category' Supplier.id %}">Delete</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+          
+                  </tbody>
+                </table>
+              </div>
+          </div>
+      </div>
+</div>
+  {% endblock %}
+
+
+
+

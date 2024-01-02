@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* Loading animation styles (you can replace this with your animation) */
+    .loading {
+        width: 50px;
+        height: 50px;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Checkmark styles */
+    .checkmark {
+        font-size: 48px;
+        color: #4CAF50;
+        /* Green color for checkmark */
+        display: none;
+        /* Initially hide the checkmark */
+    }
+</style>
+
+<style>
+    /* Custom CSS for styling */
+    .icon-label {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        /* Adjust the font size as needed */
+    }
+
+    .icon {
+        width: 64px;
+        /* Adjust the icon size as needed */
+        height: 64px;
+        margin-right: 10px;
+        /* Add some spacing between the icon and text */
+    }
+
+    .radio-button {
+        width: 24px;
+        /* Adjust the radio button size as needed */
+        height: 24px;
+        margin-right: 5px;
+        /* Add some spacing between the radio button and text */
+    }
+</style>
+
+
+<!-- ====================================
+        ——— CONTENT WRAPPER
+        ===================================== -->
+<div class="content-wrapper">
+    <div class="content">
+        <!-- Top Statistics -->
+        <div class="container mt-5 text-center" style="max-width:1920px;">
+            <div class="card">
+                <div class="card-header text-left">
+                    <label for="cashRadio">
+                        <img src="{% static 'icons/cash.png' %}" alt="Cash Icon" width="55" height="64">
+                        Cash
+                    </label>
+                    <input type="radio" id="cashRadio" name="paymentType" value="cash" checked>
+                    <label for="bankRadio">
+                        <img src="{% static 'icons/bank.png' %}" alt="Bank Icon" width="55" height="64">
+                        Bank
+                    </label>
+                    <input type="radio" id="bankRadio" name="paymentType" value="bank">
+                </div>
+
+                <div class="card-body">
+                    <form id="myActualForm" method="Post">
+
+                        {% csrf_token %}
+
+           
+
+
+
+
+
+                       
+                        <div id="bankForm" style="display: block;">
+                            <div class="card">
+                                <div class="form-group">
+                                    <div class="container">
+                                        <div class="row">
+
+                                            <div class="col">
+                                                <label class="col-form-label" for="bankjournal_date">Date <span
+                                                        class="text-danger">*&emsp;</span></label>
+                                                <input type="date" class="form-control" id="bankjournal_date" required>
+                                            </div>
+                                            <div class="col">
+                                                <label class="col-form-label" for="voucher_no">Reciept Voucher No <span
+                                                        class="text-danger">*&emsp;</span></label>
+                                                <input type="text" class="form-control " id="bankvoucher_no" readonly
+                                                    value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="card">
+                                <div class="form-group">
+                                    <div class="row">
+
+
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="bankDr">Debit&emsp;</label>
+                                                    <select class="form-control" id="bankDr">
+                                                        {% for bank in banks %}
+                                                        <option id="cur" value="{{ bank.ledger_name }}">{{ bank.ledger_name }}
+                                                        </option>
+
+
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="bank_currency">Transaction
+                                                        Currency&emsp;</label>
+                                                    <select class="form-control" id="bank_currency">
+                                                        {% for curr in currency %}
+                                                        <option id="cur" value="{{ curr.key }}">{{ curr.value }}
+                                                        </option>
+
+
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label class="col-form-label" for="bankAmt_inWords"> Amount In Words
+                                                        :&emsp;</label>
+                                                    <input type="text" class="form-control" id="bankAmt_inWords" 
+                                                        value="">
+                                                </div>
+                                                <div class="col">
+                                                    <label class="col-form-label" for="bankAmt_in_No"> Amount in
+                                                        Figures: &emsp;</label>
+                                                    <input type="number" class="form-control" id="bankAmt_in_No"  step="0.1"
+                                                        value="">
+                                                </div>
+                                                
+
+                                            </div>
+                                 
+
+
+                                            <div class="row">
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="chequeNumber">Cheque Number
+                                                        &emsp;</label>
+                                                    <input type="text" class="form-control" id="chequeNumber" value="" disabled  >
+                                                </div>
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="chequeDate">Date
+                                                        &emsp;</label>
+                                                    <input type="date" class="form-control" id="chequeDate" value="" disabled >
+                                                </div>
+                                                
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="clearanceDate">Clearance Date
+                                                        &emsp;</label>
+                                                    <input type="date" class="form-control" id="clearanceDate" value="" disabled>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col" style="display: none;">
+                                                    <label class="col-form-label" for="transactionType">Transaction Type
+                                                        &emsp;</label>
+                                                    <select class="form-control" id="transactionType">
+
+                                                        <option value="NEFT">NEFT (National Electronic Funds Transfer)
+                                                        </option>
+                                                        <option value="RTGS">RTGS (Real Time Gross Settlement)
+                                                        </option>
+                                                        <option value="IMPS">IMPS (Immediate Payment Service)
+                                                        </option>
+                                                        <option value="UPI">UPI (Unified Payments Interface)
+                                                        </option>
+                                                        <option value="SWIFT">SWIFT (Society for Worldwide Interbank
+                                                            Financial Telecommunication)
+
+                                                        </option>
+                                                        <option value="Cheque">Cheque
+                                                        </option>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="col-form-label" for="cashTransaction_Id">Remark/Transaction Id
+                                                        &emsp;</label>
+                                                    <input type="text" class="form-control" id="cashTransaction_Id" value="">
+                                                </div>
+                                                <div class="col">
+                                                    <label class="col-form-label" for="RecievedFrom">Recieved From
+                                                        &emsp;</label>
+                                                    <input type="text" class="form-control" id="RecievedFrom" value="">
+                                                </div>
+                                                <div class="col" id="cash_ledgers">
+                                                    <label class="col-form-label" for="cashtransactionType">Debit
+                                                        &emsp;</label>
+                                                        <select class="form-control" id="cashtransactionType">
+
+                                                            {% for cash in cashs %}
+                                                            <option id="cur" value="{{ cash.ledger_name }}">{{ cash.ledger_name }}
+                                                            </option>
+                                                            {% endfor %}
+    
+                                                        </select>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left: 400px; padding-top: 10px;">
+                                                <div class="col-form-label">
+                                                    <label for="Banknotes"
+                                                        style="font-size: 24px; font-weight: bold;">Narrations
+                                                        &emsp;</label>
+                                                    <textarea id="Banknotes" rows="5" cols="10"
+                                                        style="font-size: 18px; width: 500px; border: 2px solid #ccc; padding: 10px;"
+                                                        placeholder="Write something here..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            
+                            <!-- Table -->
+
+                        </div>
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="transactionTable">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Account</th>
+                                            <th>Primary Group</th>
+                                            <th>Group</th>
+                                            <th>Reference</th>
+                                            <th>Bill Number</th>
+                                            <th>Amount</th>
+                                            <th>Credit</th>
+                                            <th>Remove</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                            
+                                            <td>
+                                                <select class="form-control" id="dropdown1">
+                                                    {% for account in account_list %}
+                                                    <option
+                                                        data-value="{{ account.group.primary_group.primary_group_name }}"
+                                                        data-tokens="{{ account.group }}"
+                                                        id="{{ account.ledger_number.subcategory_name }}"
+                                                        value="{{ account.ledger_number }}">{{ account.ledger_name }}
+                                                    </option>
+
+
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="cat1" name="cat1" disabled>
+
+                                            </td>
+                                            <td>
+                                                <input type="text" id="sub1" disabled>
+                                            </td>
+
+                                            <td><input type="text" class="form-control" id="ref1"></td>
+                                            <td><input type="text" class="form-control" id="bill1"></td>
+                                            <td><input type="number" class="form-control" step="0.01" id="amt1"></td>
+                                            <td><input type="number" class="form-control" step="0.01" id="cre1"></td>
+
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                
+                                                        <button type="button" class="btn btn-primary" id="addRowButton">Add Row</button>
+                                            </td>
+                                            <td>
+
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td><span><b>Total:</b></span></td>
+                                            <td><input type="number" class="form-control" step="0.01" id="d_total"
+                                                    disabled>
+                                            </td>
+
+                                            <td><input type="number" class="form-control" step="0.01" id="c_total"
+                                                    disabled>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <!-- Submit Button -->
+                            <div class="form-group text-center my-5">
+                                <button type="button" class="btn btn-primary" id="submitForm" disabled>Submit</button>
+                                <button type="button" class="btn btn-primary" id="clearFormButton">Clear</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subTableModalLabel">
+                    <h2 style="margin-left: 200px;">
+                        <div id="loading-animation" class="loading"></div>
+                        <div id="success-checkmark" class="checkmark">&#10003;</div>
+                    </h2>
+                </h5>
+                <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="subTableContent">
+
+                <p>Voucher No: <span><input type="text" id="voucherNo"></span></p>
+                <p>Voucher Code: <span><input type="text" id="voucherCode"></span></p>
+                <p>Account: <span><input type="text" id="account"></span></p>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalq"
+                    aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static '\home\js\reciept.js' %}"></script>
+
+{% endblock %}

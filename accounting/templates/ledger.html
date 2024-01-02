@@ -1,0 +1,98 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="content-wrapper">
+    <div class="content">  
+        <div class="container mt-5 text-center" style="max-width:1450;">
+            <div class="card">
+                <div class="card-header text-Center">
+                
+                    <h1>{{heading}}<span class="badge badge-primary badge-pill">Ledger</span></h1>
+                    <!-- Expand Left -->
+                    <div>
+                      <button type="button" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Primary Group</button>
+                    </div>
+                </div>
+                <div class="card-header text-left">
+                    <form method="GET" >
+                        {% csrf_token %}
+                      <label>
+                          <select class="form-control rounded-pill" name="q">
+                              <option value=0 selected>Select Accounts</option>
+                              {% for names in account_list %}
+                              <option value={{names.account_name}}>{{names.account_name}}</option>
+                              <!-- Add more options as needed -->
+                              {% endfor %}
+                          </select>
+                      </label>
+                      <label> <input type="submit" class="btn btn-success form-control rounded-pill" value="Show Ledger" name="apply"></label>
+                      <label> <input type="button" class="btn btn-danger form-control rounded-pill" value="Reset" name="reset"></label>
+                    </form>
+
+                </div>
+                
+                <div class="card-body">
+                    <!-- Breadcrumb light -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-light">
+                    <li class="breadcrumb-item"><a href="#">{{cat}}</a></li>
+                    <li class="breadcrumb-item"><a href="#">{{subcat}}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{heading}}</li>
+                    </ol>
+                </nav>
+                    <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Account</th>
+                            <th scope="col">Narrations</th>
+                            <th scope="col">Sum Of Debit</th>
+                            <th scope="col">Sum Of Credit</th>
+                            <th scope="col">Sum Of Balance</th>
+
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ledger %}
+                          <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{row.date}}</td>
+                            <td>{{row.account.account_name}}</td>
+                            <td>{{row.narration}}</td>
+                            <td>{{row.debit}}</td>
+                            <td>{{row.credit}}</td>
+                            <td>{{row.Balance}}</td>
+
+
+
+                            
+                          </tr>
+                          {%  endfor %}
+                          <tr class="table-dark">
+                            <td scope="row">Grand Total</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{result.deb_result}}</td>
+                            <td>{{result.cred_result}}</td>
+                            <td>{{result.bal_result}}</td>
+                            
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                      
+                                
+                
+                </div>
+            </div>
+        </div>
+</div>    
+</div>  
+
+{% endblock %}

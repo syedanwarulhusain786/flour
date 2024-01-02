@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+  margin-top: 50px;
+  width: auto;
+  max-width: 100%; /* Adjust the maximum width as needed */
+  margin-left: auto;
+  margin-right: auto;
+  height: calc(100vh - 100px);
+}
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  .text-center {
+  text-align: left !important;
+}
+label {
+  font-weight: bold; /* Make the label bold */
+  padding:5px;
+}
+
+
+
+.go-back-link {
+    color: #ffffff; /* Set the color to match your design */
+    text-decoration: none;
+    display: flex;
+    align-items: right;
+}
+
+.go-back-link i {
+    margin-right: 5px; /* Adjust the spacing between the icon and text */
+}
+</style>
+
+<div class="card text-center">
+    <div class="card-header">
+     
+
+     <a href="{% url 'create_material' %}"  class="go-back-link">Add Material<i class="fa fa-mail-reply-all" style="
+      margin-left: 90%;
+  ">Go Back</i>  </a>
+    </div>
+   
+  <div class="card-body">
+  <div class="container" style="padding-top: 20px;">
+    <h2>Material List</h2>
+    <form method="get" action="{% url 'material_list' %}">
+      {{ form.search }}
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <table class="table" id="productsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Unit of Measurement</th>
+          <th>Unit Cost</th>
+          <th>Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for material in materials %}
+          <tr>
+            <td>{{ material.name }}</td>
+            <td>{{ material.description }}</td>
+            <td>{{ material.get_unit_of_measurement_display }}</td>
+            <td>{{ material.unit_cost }}</td>
+            <td>{{ material.unit_cost }}</td>
+            <td>
+              <!-- Button to delete the material -->
+              <a href="{% url 'delete_material' material.id %}" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

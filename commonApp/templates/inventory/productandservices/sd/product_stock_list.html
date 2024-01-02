@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(80vh - 100px);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Product Stock Entries</h2>
+  </div>
+    <table class="table table-striped" id="productsTable">
+      <thead>
+        <tr>
+          <th scope="col">Entry Date</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Entry Type</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Cost per Single</th>
+          <th scope="col">Total Value</th>
+          <th scope="col">Action</th>
+
+        
+        </tr>
+      </thead>
+      <tbody>
+        {% for stock in product_stocks %}
+          <tr>
+            <td>{{ stock.entry_date }}</td>
+
+            <td>{{ stock.product.name }}</td>
+            <td>{{ stock.type }}</td>
+
+            <td>{{ stock.quantity }}</td>
+            <td>{{ stock.cost_of_single }}</td>
+            <td>{{ stock.cost_of_all }}</td>
+            <td>{{ stock.delivery }}</td>
+            <!-- <td>
+              <a href="{% url 'add_product_stock' product_id=stock.id %}" class="btn btn-primary btn-sm">Add Stock</a>
+            </td> -->
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

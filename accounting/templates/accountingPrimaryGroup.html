@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(80vh - 100px);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+
+<div class="card">
+  <div class="card-header">
+    Add Primary Group
+  </div>
+
+    <div class="card-body">
+
+      <table class="table table-striped" id="productsTable">
+        <div>
+          <button type="button" class="mb-1 btn btn-pill btn-primary"  onclick="addNew()">Add New Primary Group</button>
+        </div>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Primary Group No</th>
+            <th scope="col">Primary Group Name</th>
+            <th scope="col">Primary Group Type</th>
+
+
+
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for IndividualAccount in IndividualAccount_list %}
+
+          <tr>
+            <td scope="row">{{ forloop.counter }}</td>
+            <td>{{ IndividualAccount.primary_group_number }}</td>
+            <td>{{ IndividualAccount.primary_group_name }}</td>
+            <td>{{ IndividualAccount.primary_group_type }}</td>
+
+
+            <td>
+
+              <button type="button" class="btn btn-danger"
+                onclick="DeleteAction('delete',{{ IndividualAccount.primary_group_number }},'{{ IndividualAccount.primary_group_name }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Add New Primary Group</h2>
+        </h5>
+        <button type="button" class="close" onclick="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="subTableContent">
+        <form method="POST" id="accountForm">
+          {% csrf_token %}
+
+          <!-- <label for="accountNumber">Account Number:</label>
+                <input type="text" id="accountNumber" name="accountNumber" readonly> -->
+          <br>
+          <label for="account_category">Account Category:</label>
+          <select class="selectpicker" id="primaryType" name="primaryType" data-live-search="true">
+            <option data-tokens="debit" id="debit"
+              value="debit">Debit</option>
+            <option data-tokens="credit" id="credit"
+              value="credit">Credit</option>
+
+          </select>
+
+          <br>
+          <label for="accountName">Primary Group Name:</label>
+          <input type="text" id="accountName" name="GroupName" required>
+          <br>
+
+
+      </div>
+      <div class="modal-footer">
+          <button type="submit" class="mb-1 btn btn-pill btn-success" name="save">Save</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"  onclick="close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- The confirmation modal -->
+<!-- Modal -->
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Delete Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModals" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-body" id="subTableContent">
+            <p>Account Number: <input type="text" id="accountNumberc" value ='' name="accountNumberc" ></p>
+            <p>Account Name: <input type="text" id="accountNamec"  name="accountNamec" value ='' ></p>
+            <p>Are you sure you want to delete this account?</p>
+
+        </div>
+        <div class="modal-footer">
+            
+            <button type="submit" class="mb-1 btn btn-pill btn-success" name="delete">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelDeleteBtn">No</button>
+
+        </div>
+    </form>
+
+    </div>
+  </div>
+</div>
+<script src="{% static '\home\js\primaryGroup.js' %}"></script>
+<script>
+  function addNew() {
+    document.getElementById("accountModal").style.display = "block"
+  }
+
+
+</script>
+<script>
+
+  function close() {
+    document.getElementById("accountModal").style.display = "none"
+  }
+</script>
+{% endblock %}

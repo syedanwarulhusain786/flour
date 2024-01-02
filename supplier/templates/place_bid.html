@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+
+
+  #loading {
+      display: block;
+      text-align: center;
+  }
+
+  #success {
+      display: none;
+      text-align: center;
+      color: green;
+  }
+
+  #loading-spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+  }
+
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+</style>
+
+
+
+
+
+
+
+<div class="card" style="padding:200px">
+  <div id="loading">
+    <div id="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="card-body">  
+      <div id="success">
+        <h1>Order placed successfully! ✔</h1>
+        <p>Your Order Number{{order_number}}</p>
+      </div>
+    
+    </div>
+
+
+<script>
+  // Simulate a delay for demonstration purposes
+  setTimeout(function() {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+  }, 3000);  // Adjust the delay time as needed
+</script>
+
+
+  {% endblock %}

@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(80vh - 100px);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+
+<div class="card">
+  <div class="card-header">
+    Add New Ledger
+  </div>
+
+    <div class="card-body">
+
+      <table class="table table-striped" id="productsTable">
+        <div>
+          <button type="button" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Account</button>
+        </div>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Primary Group No</th>
+            <th scope="col">Primary Group Name</th>
+            <th scope="col">Group No</th>
+            <th scope="col">Group Name</th>
+            <th scope="col">Ledger Name</th>
+            <th scope="col">Ledger No</th>
+
+
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for IndividualAccount in IndividualAccount_list %}
+
+          <tr>
+            <td scope="row">{{ forloop.counter }}</td>
+            <td>{{ IndividualAccount.group.primary_group.primary_group_number }}</td>
+            <td>{{ IndividualAccount.group.primary_group.primary_group_name }}</td>
+            <td>{{ IndividualAccount.group.group_number }}</td>
+            <td>{{ IndividualAccount.group.group_name}}</td>
+            <td>{{ IndividualAccount.ledger_name }}</td>
+            <td>{{ IndividualAccount.ledger_number }}</td>
+
+            <td>
+
+              <button type="button" class="btn btn-danger"
+                onclick="DeleteAction('delete',{{ IndividualAccount.ledger_number }},'{{ IndividualAccount.ledger_name }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Add New Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="subTableContent">
+        <form id="accountForm">
+          <!-- <label for="accountNumber">Account Number:</label>
+                <input type="text" id="accountNumber" name="accountNumber" readonly> -->
+          <br>
+          <label for="account_category">Account Category:</label>
+          <select class="selectpicker" id="accountNumber" data-live-search="true">
+            {% for category in account_subcategory %}
+            <option data-tokens="{{ category.group_number }}" id="{{ category.group_number }}"
+              value="{{ category.group_number }}">{{ category.group_name }}</option>
+
+
+            {% endfor %}
+          </select>
+
+          <br>
+          <label for="accountName">Account Name:</label>
+          <input type="text" id="accountName" name="accountName" required>
+          <br>
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <form>
+          {% csrf_token %}
+          <button type="button" class="mb-1 btn btn-pill btn-success" id="save">Save</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeme">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- The confirmation modal -->
+<!-- Modal -->
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Delete Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModals" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="subTableContent">
+        <p>Account Number: <input type="text" id="accountNumberc" disabled></p>
+        <p>Account Name: <input type="text" id="accountNamec" disabled></p>
+        <p>Are you sure you want to delete this account?</p>
+
+      </div>
+      <div class="modal-footer">
+        <form>
+          {% csrf_token %}
+          <button type="button" class="mb-1 btn btn-pill btn-success" id="confirmDeleteBtn">Yes</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelDeleteBtn">No</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static '\home\js\chatOfAccount.js' %}"></script>
+
+
+{% endblock %}

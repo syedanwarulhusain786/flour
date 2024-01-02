@@ -1,0 +1,74 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+    <div class="content">  
+        <div class="container mt-5 text-center" style="max-width:1450;">
+            <div class="card">
+                <div class="card-header text-Center">
+                
+                    <h1>{{heading}}<span class="badge badge-primary badge-pill">Sales List</span></h1>
+                    <!-- Expand Left -->
+                </div>
+                
+                
+                <div class="card-body">
+                    <!-- Breadcrumb light -->
+            
+                    <table id="productsTable" class="table table-hover table-product" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Voucher</th>
+                            <th scope="col">VoucherCode</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">View</th>
+
+
+
+                          </tr>
+                        </thead>
+                        
+                        <tbody>
+                          {% for receipt in SalesReceipt %}
+                          <tr>
+                            <td class="py-0">
+                              {{receipt.s_no}}
+                            </td>
+                            <td>{{receipt.date}}</td>
+                            <td>{{receipt.voucherNo}}</td>
+
+                            <td>{{receipt.voucherCode}}</td>
+                            <td>{{receipt.decsription}}</td>
+                            <td>{{receipt.amount}}</td>
+                            <td>{{receipt.total}}</td>
+                            <td><a href="{% url 'item_detail' receipt.voucherCode %}" target="_blank" class="btn btn-danger"> View Reciept</a></td>
+
+                            
+                       
+                          </tr>
+            
+                          {% endfor %}
+            
+            
+            
+            
+            
+            
+                        </tbody>
+                      </table>
+                      
+                                
+                
+                </div>
+            </div>
+        </div>
+</div>    
+</div>  
+
+{% endblock %}

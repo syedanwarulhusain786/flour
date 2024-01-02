@@ -1,0 +1,682 @@
+{% load static %}
+<aside class="left-sidebar with-vertical">
+    <div><!-- ---------------------------------- -->
+      <!-- Start Vertical Layout Sidebar -->
+      <!-- ---------------------------------- -->
+      <div class="brand-logo d-flex align-items-center justify-content-between">
+        <a href="https://bootstrapdemos.adminmart.com/modernize/dist/main/index.html" class="text-nowrap logo-img">
+          <img src="{% static '/assets\images\logos\favicon.png' %}" class="dark-logo" alt="Logo-Dark" id="logo" />
+          <img src="{% static '/assets\images\logos\favicon.png' %}" class="light-logo" alt="Logo-light" id="logo" />
+        </a>
+        <a href="javascript:void(0)" class="sidebartoggler ms-auto text-decoration-none fs-5 d-block d-xl-none">
+          <i class="ti ti-x"></i>
+        </a>
+      </div>.
+
+
+
+
+
+      {% if user.department.name == "SALES" or user.department.name == "ADMIN" %}
+      <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+        <ul id="sidebarnav">
+           <!-- ---------------------------------- -->
+           <!-- Home -->
+           <!-- ---------------------------------- -->
+           <li class="nav-small-cap">
+             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+             <span class="hide-menu">Dashboard</span>
+           </li>
+           <li class="sidebar-item">
+             <a class="sidebar-link" href="{% url 'sales-home' %}" aria-expanded="false">
+               <span>
+                 <img src="{% static 'icons/dashboard.png' %}" alt="All Products Icon" width="24" height="24">
+ 
+               </span>
+               <span class="hide-menu">Home</span>
+             </a>
+           </li>
+    
+
+
+           <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Products</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'products' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">All Products</span>
+            </a>
+          </li>
+<!-- 
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'products' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/product.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Add Custom Products</span>
+            </a>
+          </li> -->
+  
+
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Quotation</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'create_quotation' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Create Quotation</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'quotelist' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/addCustomer.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Quotations</span>
+            </a>
+          </li>
+ 
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Sales</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'sales' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/add-cart.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Create Order</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'sales_list' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/mySales.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">My Sales</span>
+            </a>
+          </li>
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
+       </nav>
+       
+
+  {% elif user.department.name == "ACCOUNT" or user.department.name == "ADMIN" %}
+  <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+  <ul id="sidebarnav">
+    <!-- ---------------------------------- -->
+    <!-- Home -->
+    <!-- ---------------------------------- -->
+    <li class="nav-small-cap">
+      <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+      <span class="hide-menu">Dashboard</span>
+    </li>
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="#" aria-expanded="false">
+        <span>
+          <i class="ti ti-home"></i>
+
+        </span>
+        <span class="hide-menu">Home</span>
+      </a>
+    </li>
+    <!-- ---------------------------------- -->
+    <!-- Dashboard -->
+    <!-- ---------------------------------- -->
+
+    <li class="nav-small-cap">
+      <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+      <span class="hide-menu">Master</span>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+        <span class="d-flex">
+          <i class="ti ti-user-code"></i>
+
+        </span>
+        <span class="hide-menu">Manager</span>
+      </a>
+      <ul aria-expanded="false" class="collapse first-level">
+        <li class="sidebar-item">
+          <a href="{% url 'primaryGroup' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Primary Group</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'groupage' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Account Groups</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'accountingledger' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Account Ledger</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'addsupplier' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Add User</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'customer' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Customers</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'supplier' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Suppliers</span>
+          </a>
+        </li>
+
+
+      </ul>
+    </li>
+    <!-- ---------------------------------- -->
+    <!-- PAGES -->
+    <!-- ---------------------------------- -->
+
+    <li class="sidebar-item">
+      <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+        <span class="d-flex">
+          <i class="ti ti-brand-producthunt"></i>
+        </span>
+        <span class="hide-menu">Services</span>
+      </a>
+      <ul aria-expanded="false" class="collapse first-level">
+       
+
+
+
+
+
+        <li class="sidebar-item">
+          <a href="{% url 'list_services' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Add Services</span>
+          </a>
+        </li>
+
+      </ul>
+    </li>
+
+
+
+    <li class="sidebar-item">
+      <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+        <span class="d-flex">
+          <i class="ti ti-shopping-cart"></i>
+        </span>
+        <span class="hide-menu">Purchases</span>
+      </a>
+      <ul aria-expanded="false" class="collapse first-level">
+        <li class="sidebar-item">
+          <a href="{% url 'approve' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Order Approval</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'adminapproved' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Order Approved</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'admindisapproved' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Order Disapproved</span>
+          </a>
+        </li>
+
+
+        <!-- <li class="sidebar-item">
+          <a href="{% url 'purchaseOrder' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Purchase Invoices</span>
+          </a>
+        </li>
+
+        <li class="sidebar-item">
+          <a href="{% url 'list_services' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Purchase Return</span>
+          </a>
+        </li> -->
+        
+      </ul>
+    </li>
+    <li class="sidebar-item">
+      <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+        <span class="d-flex">
+          <i class="ti ti-shopping-cart"></i>
+        </span>
+        <span class="hide-menu">Sales</span>
+      </a>
+      <ul aria-expanded="false" class="collapse first-level">
+        <li class="sidebar-item">
+          <a href="{% url 'salesapprove' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Sales Order Approval</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'salesapproved' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Sales Order Approved</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'salesdisapproved' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Sales Order Disapproved</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+          <span class="d-flex">
+            <i class="ti ti-shopping-cart"></i>
+          </span>
+          <span class="hide-menu">Inventory</span>
+        </a>
+        <ul aria-expanded="false" class="collapse first-level">
+          <li class="sidebar-item">
+            <a href="{% url 'add_product_stock' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Add Inventory</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="{% url 'stock_report' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Inventory Report</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="{% url 'product_stock_list' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Inventory Entries</span>
+            </a>
+          </li>
+          
+          <li class="sidebar-item">
+            <a href="{% url 'product_list' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Products</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a href="{% url 'brand_category' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Brands and Category</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="{% url 'startproduction' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Start Production</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="sidebar-item">
+        <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+          <span class="d-flex">
+            <i class="ti ti-shopping-cart"></i>
+          </span>
+          <span class="hide-menu">Production</span>
+        </a>
+        <ul aria-expanded="false" class="collapse first-level">
+
+          <li class="sidebar-item">
+            <a href="{% url 'pendingOrder' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Order in Queue</span>
+            </a>
+          </li>
+          
+          <li class="sidebar-item">
+            <a href="{% url 'product_list' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Completed Productions</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a href="{% url 'brand_category' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Production Reports</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+
+</nav>
+  {% elif user.department.name == "INVENTORY" or user.department.name == "ADMIN" %}
+  <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+    <ul id="sidebarnav">
+       <!-- ---------------------------------- -->
+       <!-- Home -->
+       <!-- ---------------------------------- -->
+       <li class="nav-small-cap">
+         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+         <span class="hide-menu">Dashboard</span>
+       </li>
+       <li class="sidebar-item">
+         <a class="sidebar-link" href="{% url 'logout' %}" aria-expanded="false">
+           <span>
+             <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+           </span>
+           <span class="hide-menu">Home</span>
+         </a>
+       </li>
+       <!-- ---------------------------------- -->
+       <!-- Dashboard -->
+       <!-- ---------------------------------- -->
+
+       <li class="nav-small-cap">
+         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+         <span class="hide-menu">Inventory</span>
+       </li>
+
+       <li class="sidebar-item">
+         <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+           <span class="d-flex">
+             <i class="ti ti-user-code"></i>
+
+           </span>
+           <span class="hide-menu">Manager</span>
+         </a>
+         <ul aria-expanded="false" class="collapse first-level">
+           <li class="sidebar-item">
+             <a href="{% url 'primaryGroup' %}" class="sidebar-link">
+               <div class="round-16 d-flex align-items-center justify-content-center">
+                 <i class="ti ti-circle"></i>
+               </div>
+               <span class="hide-menu">Primary Group</span>
+             </a>
+           </li>
+          </ul>
+        </li>
+     </ul> 
+   </nav>
+
+
+   {% elif user.department.name == "Production" or user.department.name == "ADMIN" %}
+   <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+     <ul id="sidebarnav">
+        <!-- ---------------------------------- -->
+        <!-- Home -->
+        <!-- ---------------------------------- -->
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Dashboard</span>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'logout' %}" aria-expanded="false">
+            <span>
+              <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+ 
+            </span>
+            <span class="hide-menu">Home</span>
+          </a>
+        </li>
+        <!-- ---------------------------------- -->
+        <!-- Dashboard -->
+        <!-- ---------------------------------- -->
+ 
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Inventory</span>
+        </li>
+ 
+        <li class="sidebar-item">
+          <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+            <span class="d-flex">
+              <i class="ti ti-user-code"></i>
+ 
+            </span>
+            <span class="hide-menu">Manager</span>
+          </a>
+          <ul aria-expanded="false" class="collapse first-level">
+            <li class="sidebar-item">
+              <a href="{% url 'primaryGroup' %}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-circle"></i>
+                </div>
+                <span class="hide-menu">Primary Group</span>
+              </a>
+            </li>
+           </ul>
+         </li>
+      </ul> 
+    </nav>
+  {% elif user.department.name == "NONE" and user.account_type.name == "Supplier" %}
+
+      <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+        <ul id="sidebarnav">
+           <!-- ---------------------------------- -->
+           <!-- Home -->
+           <!-- ---------------------------------- -->
+           <li class="nav-small-cap">
+             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+             <span class="hide-menu">Dashboard</span>
+           </li>
+           <li class="sidebar-item">
+             <a class="sidebar-link" href="{% url 'supplier-home' %}" aria-expanded="false">
+               <span>
+                 <img src="{% static 'icons/dashboard.png' %}" alt="All Products Icon" width="24" height="24">
+ 
+               </span>
+               <span class="hide-menu">Home</span>
+             </a>
+           </li>
+    
+
+
+           <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Orders</span>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'createorder' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Create Order</span>
+            </a>
+          </li>
+
+
+   
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'supplierapproved' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Approved Order</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'supplierdisapproved' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">Disapproved Order</span>
+            </a>
+          </li>
+         
+         
+
+          
+        </ul>
+
+
+</nav>
+{% elif user.department.name == "NONE" and user.account_type.name == "Customer" %}
+
+<nav class="sidebar-nav scroll-sidebar" data-simplebar>
+  <ul id="sidebarnav">
+     <!-- ---------------------------------- -->
+     <!-- Home -->
+     <!-- ---------------------------------- -->
+     <li class="nav-small-cap">
+       <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+       <span class="hide-menu">Dashboard</span>
+     </li>
+     <li class="sidebar-item">
+       <a class="sidebar-link" href="{% url 'customer_home' %}" aria-expanded="false">
+         <span>
+           <img src="{% static 'icons/dashboard.png' %}" alt="All Products Icon" width="24" height="24">
+
+         </span>
+         <span class="hide-menu">Home</span>
+       </a>
+     </li>
+
+
+
+     <li class="nav-small-cap">
+      <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+      <span class="hide-menu">Orders</span>
+    </li>
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'sale_order_page' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">Create Order</span>
+      </a>
+    </li>
+
+
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'customerdisapproved' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">Approved Order</span>
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'customerdisapproved' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">Disapproved Order</span>
+      </a>
+    </li>
+   
+   
+
+    
+  </ul>
+
+
+</nav>
+  {% else %}
+      <!-- Default sidebar or no sidebar -->
+  {% endif %}
+
+
+ 
+
+      <!-- ---------------------------------- -->
+      <!-- Start Vertical Layout Sidebar -->
+      <!-- ---------------------------------- -->
+    </div>
+  </aside>

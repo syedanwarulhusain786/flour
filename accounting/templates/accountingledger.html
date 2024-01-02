@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+    /* Adjust the maximum width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(80vh - 100px);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-SC/3f/ob93RVjLK9WA6bHLcaCuNymCWBCx7jDBweCQxex9Me8dKO10F2UfNlY86hP89WNIdRfV/8Wn6r15eCDHg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha512-oD6+6t5X1dk23Vz/BWYqEFfUnsgLmGZ9QcMQd7F9xKZ5ePc+rd8AE5zp5wtmRU+Mq6rjR6N5JDR/G1A9uGuv0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-h6/GzH4PvKVfCNjj7gY5CqXQRv+O/VV7X5maGcXn6mtDS1Jys33u30I5qyGImifD5fDs36LcVexXwbyFpDnbMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<div class="card">
+  <div class="card-header">
+    Add New Ledger
+  </div>
+
+  <div class="card-body">
+
+    <table class="table table-striped" id="productsTable">
+      <div>
+        <button type="button" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add New Ledger</button>
+      </div>
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Primary Group No</th>
+          <th scope="col">Primary Group Name</th>
+          <th scope="col">Group No</th>
+          <th scope="col">Group Name</th>
+          <th scope="col">Ledger Number</th>
+          <th scope="col">Ledger Name</th>
+          <!-- <th scope="col">Select Customer/Supplier:</th> -->
+
+
+
+
+
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for IndividualAccount in IndividualAccount_list %}
+
+        <tr>
+          <td scope="row">{{ forloop.counter }}</td>
+          <td>{{ IndividualAccount.group.primary_group.primary_group_number }}</td>
+          <td>{{ IndividualAccount.group.primary_group.primary_group_name }}</td>
+
+
+
+          <td>{{ IndividualAccount.group.group_number }}</td>
+          <td>{{ IndividualAccount.group.group_name}}</td>
+
+          <td>{{ IndividualAccount.ledger_number}}</td>
+
+         
+
+          <td>{{ IndividualAccount.ledger_name}}</td>
+
+
+          <td>
+
+            <button type="button" class="btn btn-danger"
+              onclick="DeleteAction('delete',{{ IndividualAccount.ledger_number }},'{{ IndividualAccount.ledger_name }}')">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Add New Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="subTableContent">
+      <form id="accountForm" method="POST">
+          {% csrf_token %}
+
+          <br>
+          <!-- <label for="account_category">Primary Group:</label>
+          <select class="selectpicker" id="accountNumber" name="primaryGroupName" data-live-search="true">
+
+            {% for category in primaryGroup %}
+            <option data-tokens="{{ category.primary_group_number }}" id="{{ category.primary_group_number }}"
+              value="{{ category.primary_group_name }}">{{ category.primary_group_name }}</option>
+
+
+            {% endfor %}
+          </select> -->
+
+          <br>
+          <label for="account_category">Group:</label>
+          <select class="selectpicker" id="accountNumber" name="primaryGroupName" data-live-search="true">
+
+            {% for category in group %}
+            <option data-tokens="{{ category.group_number }}" id="{{ category.group_number }}"
+              value="{{ category.group_number }}">{{ category.group_name }}</option>
+
+
+            {% endfor %}
+          </select>
+          <br>
+
+
+          <label for="accountName">Ledger Name:</label>
+          <input type="text" id="accountName" name="GroupName" required>
+          <br>
+
+
+  
+      <div class="modal-footer">
+        <button type="submit" class="mb-1 btn btn-pill btn-success" name="save" id="save">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeme">Close</button>
+      </div>
+      
+</form>
+    </div>
+  </div>
+</div>
+<!-- The confirmation modal -->
+<!-- Modal -->
+
+</div>
+
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="subTableModalLabel">
+          <h2>Delete Account</h2>
+        </h5>
+        <button type="button" class="close" id="closeModals" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-body" id="subTableContent">
+          <p>Group Number: <input type="text" id="accountNumberc" name="accountNumberc"></p>
+          <p>Group Name: <input type="text" id="accountNamec" name="accountNamec"></p>
+          <p>Are you sure you want to delete this account?</p>
+
+        </div>
+        <div class="modal-footer">
+
+          <button type="submit" class="mb-1 btn btn-pill btn-success" id="delete" name="delete">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelDeleteBtn">No</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+<script src="{% static '\home\js\ledger.js' %}"></script>
+
+
+{% endblock %}

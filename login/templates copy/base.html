@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
+
+
+<!-- Mirrored from bootstrapdemos.adminmart.com/modernize/dist/main/index2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 07 Nov 2023 09:20:49 GMT -->
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <!-- Favicon icon-->
+  <link rel="shortcut icon" type="image/png" href="{% static '/assets/images/logos/favicon.png' %}" />
+
+  <!-- Core Css -->
+  <link rel="stylesheet" href="{% static '/assets/css/styles.css' %}" />
+
+  <title>Modernize Bootstrap Admin</title>
+  <style>
+    #logo {
+      width: 200px;
+      /* Set the width of the logo */
+      height: 200px;
+      /* Set the height of the logo */
+      background-size: cover;
+      /* Scale the image to cover the element */
+      background-repeat: no-repeat;
+      /* Prevent image repetition */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <img src="{% static '/assets/images/logos/favicon.png' %}" alt="loader" class="lds-ripple img-fluid" />
+  </div>
+  <div id="main-wrapper">
+    <!-- Sidebar Start -->
+    {% include 'vertical.html' %}
+
+    <!--  Sidebar End -->
+    <div class="page-wrapper">
+      <!--  Header Start -->
+{% include 'nav.html' %}
+      <!--  Header End -->
+      <!-- {% debug %} -->
+      {% include 'horizontal.html' %}
+
+
+
+      <div class="body-wrapper">
+        <div class="container-fluid">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+      <script>
+        function handleColorTheme(e) {
+          $("html").attr("data-color-theme", e);
+          $(e).prop("checked", !0);
+        }
+      </script>
+    {% include 'settings.html' %}
+      
+    </div>
+    {% include 'modals.html' %}
+
+    <!--  Search Bar -->
+
+
+  </div>
+  <div class="dark-transparent sidebartoggler"></div>
+  <!-- Import Js Files -->
+
+  <script src="{% static '/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static '/assets/js/app.min.js' %}"></script>
+  <script src="{% static '/assets/js/app.init.js' %}"></script>
+  <script src="{% static '/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static '/assets/libs/simplebar/dist/simplebar.min.js' %}"></script>
+
+  <script src="{% static '/assets/js/sidebarmenu.js' %}"></script>
+  <script src="{% static '/assets/js/theme.js' %}"></script>
+
+  <script src="{% static '/assets/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/js/dashboards/dashboard2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@1.74.0/icons-react/dist/index.umd.min.js"></script>
+</body>
+
+
+<!-- Mirrored from bootstrapdemos.adminmart.com/modernize/dist/main/index2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 07 Nov 2023 09:20:50 GMT -->
+
+</html>

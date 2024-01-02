@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+ 
+
+  .card {
+    margin-top: 50px;
+    width: auto;
+    max-width: 100%;
+
+  }
+
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  label {
+    font-weight: bold;
+    /* Make the label bold */
+    padding: 5px;
+  }
+  .red-row {
+    background-color: red;
+}
+</style>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h2 class="mb-0">Requirements For Sales ID SL-{{ sales_id }}</h2>
+
+    <a href="#" class="btn btn-danger" disabled>Order Accepted</a>
+
+</div>
+
+
+  
+  {% for order in final %}
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading{{ order.id }}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="true" aria-controls="collapse{{ order.id }}">
+  <span>{{order.Product}}</span>  
+   <!-- success_page_template.html -->
+
+
+        </button>
+      </h2>
+      <div id="collapse{{ order.id }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form method="post" action="{% url 'allocate' sales_id %}">
+            {% csrf_token %}
+            <table>
+              <thead>
+                <tr>
+                  <th>Material</th>
+                  <th>Unit</th>
+                  <th class="accordion">Quantity per Piece</th>
+                  <th>Order Quantity</th>
+                  <th>Required</th>
+                  <th>Available</th>
+                  <th>Allocated</th>
+                  <th>Allocate</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for or in order.needed %}
+                  <tr>
+                    <td>
+                      <!-- Input field for material within the form -->
+                      <input type="text" class='form-control' name="material_{{order.id}}_{{forloop.counter}}" value="{{ or.material }}" readonly/>
+                    </td>
+                    <td>
+                      <!-- Input field for unit within the form -->
+                      <input type="text" class='form-control' name="unit_{{order.id}}_{{forloop.counter}}" value="{{ or.unit }}" readonly/>
+                    </td>
+                    <td class="accordion">
+                      <!-- Input field for quantity_per_piece within the form -->
+                      <input type="text" class='form-control' name="quantity_per_piece_{{order.id}}_{{forloop.counter}}" value="{{ or.quantity_per_piece }}"  readonly/>
+                    </td>
+                    <td>
+                      <!-- Input field for order_quantity within the form -->
+                      <input type="number" class='form-control' name="order_quantity_{{order.id}}_{{forloop.counter}}" value="{{ or.order_quantity }}"  readonly/>
+                    </td>
+                    <td>
+                      <!-- Input field for required within the form -->
+                      <input type="text" class='form-control'  name="required_{{order.id}}_{{forloop.counter}}" value="{{ or.required }}"  readonly/>
+                    </td>
+                    <td>
+                      <!-- Input field for available within the form -->
+                      <input type="text" class='form-control' name="available_{{order.id}}_{{forloop.counter}}" value="{{ or.available }}"  readonly/>
+                    </td>
+                    <td>
+                      <!-- Input field for available within the form -->
+                      <input type="text" class='form-control' name="allocated_{{order.id}}_{{forloop.counter}}" value={{or.allocated}} readonly/>
+                      
+                    </td>
+                    <td>
+                      <!-- Input field for available within the form -->
+                      <input type="text" class='form-control' name="allocate_{{order.id}}_{{forloop.counter}}"  oninput="updateAllocate('{{order.id}}_{{forloop.counter}}')"/>
+                      
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          
+            <!-- Button to submit the form -->
+            <button type="submit" class="btn btn-secondary">Allocate Material</button>
+            <button class="btn btn-primary btn-default print-page" type="button">
+              <span><i class="ti ti-eye fs-5"></i>
+                <a href="{% url 'start_production' sales_id %}" >
+                  Start Production
+              </a></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {% for message in success_messages %}
+  <div class="alert alert-danger" role="alert">
+      {{ message }}
+  </div>
+{% endfor %}
+  {% endfor %}
+
+<!-- Include this script in the HTML file, preferably at the end of the body or in the head section -->
+<script>
+  // Function to update the allocate input field
+  function updateAllocate(orId) {
+      // Get the required, available, and allocate input fields
+      var requiredField = document.querySelector('input[name="required_' + orId + '"]');
+      var availableField = document.querySelector('input[name="available_' + orId + '"]');
+      var allocatedField = document.querySelector('input[name="allocated_' + orId + '"]');
+      var allocateField = document.querySelector('input[name="allocate_' + orId + '"]');
+
+
+
+      // Get the values from the input fields
+      var required = parseFloat(requiredField.value);
+      var available = parseFloat(availableField.value);
+      var allocate = parseFloat(allocateField.value);
+      var allocated = parseFloat(allocateField.value);
+
+      console.log(required,available,allocate,availableField)
+      // Check if allocate is greater than required or available
+      if (allocate > required || allocate > available) {
+          // If so, set allocate to 0
+          allocateField.value = 0;
+      }
+      
+  }
+</script>
+<script>
+  
+</script>
+  <script>
+    // Initialize Bootstrap components
+    $(document).ready(function () {
+        $('[data-bs-toggle="collapse"]').each(function () {
+            $(this).click(function () {
+                var target = $(this).data('bs-target');
+                $(target).collapse('toggle');
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,71 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+    <div class="content">  
+        <div class="container mt-5 text-center" style="max-width:1450;">
+            <div class="card">
+                <div class="card-header text-Center" >
+                
+                    <h1>{{heading}}<span class="badge badge-primary badge-pill">Payment List</span></h1>
+                    <!-- Expand Left -->
+                </div>
+                
+                
+                <div class="card-body">
+                    <!-- Breadcrumb light -->
+            
+                    <table class="table table-striped" id="productsTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Account</th>
+                            <th scope="col">Sum Of Debit</th>
+                            <th scope="col">Sum Of Credit</th>
+                            <th scope="col">Sum Of Balance</th>
+
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                          <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{row.type}}</td>
+                            <td>{{row.deb}}</td>
+                            <td>{{row.cred}}</td>
+                            
+                            <td>{% if row.bal < 0 %}
+                                ({{ row.bal }})
+                            {% else %}
+                                {{ row.bal }}
+                            {% endif %}</td>
+
+
+
+                            
+                          </tr>
+                          {%  endfor %}
+                          <tr class="table-dark">
+                            <td scope="row">Grand Total</td>
+                            <td></td>
+                            <td>{{result.deb_result}}</td>
+                            <td>{{result.cred_result}}</td>
+                            <td>{{result.bal_result}}</td>
+                            
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                      
+                                
+                
+                </div>
+            </div>
+        </div>
+</div>    
+</div>  
+
+{% endblock %}

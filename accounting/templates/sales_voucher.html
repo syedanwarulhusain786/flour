@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* Loading animation styles (you can replace this with your animation) */
+    .loading {
+        width: 50px;
+        height: 50px;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Checkmark styles */
+    .checkmark {
+        font-size: 48px;
+        color: #4CAF50;
+        /* Green color for checkmark */
+        display: none;
+        /* Initially hide the checkmark */
+    }
+</style>
+
+<style>
+    /* Custom CSS for styling */
+    .icon-label {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        /* Adjust the font size as needed */
+    }
+
+    .icon {
+        width: 64px;
+        /* Adjust the icon size as needed */
+        height: 64px;
+        margin-right: 10px;
+        /* Add some spacing between the icon and text */
+    }
+
+    .radio-button {
+        width: 24px;
+        /* Adjust the radio button size as needed */
+        height: 24px;
+        margin-right: 5px;
+        /* Add some spacing between the radio button and text */
+    }
+</style>
+
+
+<!-- ====================================
+        ——— CONTENT WRAPPER
+        ===================================== -->
+<div class="content-wrapper">
+    <div class="content">
+        <!-- Top Statistics -->
+        <div class="container mt-5 text-center" style="max-width:1920px;">
+            <div class="card">
+                <div class="col-md-3" style="display: block;">
+                    <label class="col-form-label" for="bankDr">Debit&emsp;</label>
+                    <select class="form-control" id="bankDr">
+                        {% for bank in debit %}
+                        <option id="cur" value="{{ bank.ledger_name }}">{{ bank.ledger_name }}
+                        </option>
+
+
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="card-body">
+                    <form id="myActualForm" method="Post">
+
+                        {% csrf_token %}
+
+
+
+
+
+
+
+
+                        <div id="bankForm" style="display: block;">
+                            <div class="card">
+                                <div class="form-group">
+                                    <div class="container">
+                                        <div class="row">
+
+                                            <div class="col">
+                                                <label class="col-form-label" for="bankjournal_date">Date <span
+                                                        class="text-danger">*&emsp;</span></label>
+                                                <input type="date" class="form-control" id="bankjournal_date" readonly>
+                                            </div>
+                                            <div class="col">
+                                                <label class="col-form-label" for="voucher_no">Sales Voucher No <span
+                                                        class="text-danger">*&emsp;</span></label>
+                                                <input type="text" class="form-control " id="bankvoucher_no" readonly
+                                                    value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                            <!-- Table -->
+
+                        </div>
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="transactionTable">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Account</th>
+                                            <th>Primary Group</th>
+                                            <th>Group</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+
+                                            <th>Amount</th>
+                                            <th>Remove</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td>
+                                                <select class="form-control" id="dropdown1">
+                                                    {% for account in account_list %}
+                                                    <option
+                                                        data-value="{{ account.group.primary_group.primary_group_name }}"
+                                                        data-tokens="{{ account.group }}"
+                                                        id="{{ account.ledger_number.subcategory_name }}"
+                                                        value="{{ account.ledger_number }}">{{ account.ledger_name }}
+                                                    </option>
+
+
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="cat1" name="cat1" disabled>
+
+                                            </td>
+                                            <td>
+                                                <input type="text" id="sub1" disabled>
+                                            </td>
+
+                                            <td><input type="text" class="form-control" id="ref1"></td>
+                                            <td><input type="text" class="form-control" id="qty1" value=1></td>
+                                            <td><input type="text" class="form-control" id="unt1" ></td>
+
+
+                                            <td><input type="number" class="form-control" step="0.01" id="amt1" ></td>
+
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+
+                                          
+                                            </td>
+                                            <td>
+
+
+                                            </td>
+                                            <td>
+                                                
+
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <span><b>Sub Total:</b></span>
+                                            </td>
+                                            <!-- <td><input type="number" class="form-control" step="0.01" id="c_total"
+                                                    disabled>
+                                            </td> -->
+                                            <td><input type="number" class="form-control" step="0.01" id="d_total"
+                                                ></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+
+                                            </td>
+                                            <td>
+                                                <span><b></b></span>
+
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                Tax (10%)
+                                            </td>
+                                            <!-- <td><input type="number" class="form-control" step="0.01" id="c_total"
+                                                    disabled>
+                                            </td> -->
+                                            <td><input type="number" class="form-control" step="0.01" id="d_tax"
+                                                ></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+
+                                                <button type="button" class="btn btn-primary" id="addRowButton">Add
+                                                    Row</button>
+                                            </td>
+                                            <td>
+
+
+                                            </td>
+                                            <td>
+                                                <span><b></b></span>
+
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                Grand Total :
+                                            </td>
+                                            <!-- <td><input type="number" class="form-control" step="0.01" id="c_total"
+                                                    disabled>
+                                            </td> -->
+                                            <td><input type="number" class="form-control" step="0.01" id="final"
+                                                ></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <!-- Submit Button -->
+                            <div class="form-group text-center my-5">
+                                <button type="button" class="btn btn-primary" id="submitForm">Submit</button>
+                                <button type="button" class="btn btn-primary" id="clearFormButton">Clear</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subTableModalLabel">
+                    <h2 style="margin-left: 200px;">
+                        <div id="loading-animation" class="loading"></div>
+                        <div id="success-checkmark" class="checkmark">&#10003;</div>
+                    </h2>
+                </h5>
+                <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="subTableContent">
+
+                <p>Voucher No: <span><input type="text" id="voucherNo"></span></p>
+                <p>Voucher Code: <span><input type="text" id="voucherCode"></span></p>
+                <p>Account: <span><input type="text" id="account"></span></p>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalq"
+                    aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <script>
+    // Add event listeners to each row's "Quantity" and "Unit Price" fields
+    document.addEventListener('DOMContentLoaded', function() {
+        var table = document.querySelector('table');
+
+        table.addEventListener('input', function (event) {
+            var target = event.target;
+            if (target.tagName === 'INPUT' && target.id.startsWith('qty') || target.id.startsWith('unt')) {
+                updateAmount(target);
+            }
+        });
+
+        function updateAmount(input) {
+            var row = input.closest('tr');
+            var qtyInput = row.querySelector('input[id^="qty"]');
+            var untInput = row.querySelector('input[id^="unt"]');
+            var amtInput = row.querySelector('input[id^="amt"]');
+            const total_tax = document.getElementById("d_tax");
+            console.log('ggg')
+            var quantity = parseFloat(qtyInput.value) || 0;
+            var unitPrice = parseFloat(untInput.value) || 0;
+            var tota_tax = quantity * unitPrice;
+            amtInput.value = amount.toFixed(2);
+        }
+    });
+</script> -->
+<!-- <script src="{% static '\home\js\sales.js' %}"></script> -->
+
+{% endblock %}

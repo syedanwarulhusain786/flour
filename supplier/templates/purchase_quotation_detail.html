@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+  body {
+    margin-top: 20px;
+    background: #eee;
+  }
+
+  .ui-w-40 {
+    width: 40px !important;
+    height: auto;
+  }
+
+  .card {
+    box-shadow: 0 1px 15px 1px rgba(52, 40, 104, .08);
+  }
+
+  .ui-product-color {
+    display: inline-block;
+    overflow: hidden;
+    margin: .144em;
+    width: .875rem;
+    height: .875rem;
+    border-radius: 10rem;
+    -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+    vertical-align: middle;
+  }
+</style>
+
+
+  <!-- Shopping cart table -->
+  <div class="card" style="padding-top: 50px;">
+  <form method="post" action="{% url 'place_bid' quotation_number=purchase.quotation_number %}">
+      {% csrf_token %}
+    <div class="card-header">
+      <h2>Purchase Requirements</h2>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+
+          <div class="col-md-3">
+            <label class="col-form-label" for="bankjournal_date">Date <span class="text-danger">*&emsp;</span></label>
+            <input type="date" class="form-control" id="quotation_number"
+              value="{{purchase.quotation_date|date:'Y-m-d'}}" readonly>
+          </div>
+          <div class="col-md-3">
+            <label class="col-form-label" for="bankvoucher_no">Purchase Voucher No <span
+                class="text-danger">*&emsp;</span></label>
+            <input type="text" class="form-control " id="bankvoucher_no" readonly value="{{purchase.quotation_number}}">
+          </div>
+          <div class="col-md-3">
+            <label class="col-form-label" for="bankvoucher_no">Delivery Date<span
+                class="text-danger">*&emsp;</span></label>
+            <input type="date" class="form-control" id="quotation_number"
+              value="{{purchase.delivery_date|date:'Y-m-d'}}" readonly>
+          </div>
+          <div class="col-md-3">
+            <label class="col-form-label" for="bankvoucher_no">Status<span class="text-danger">*&emsp;</span></label>
+            <input type="text" class="form-control" id="quotation_number"
+              value="{% if purchase.status %}Active{% else %}Inactive{% endif %}" readonly>
+          </div>
+
+
+
+
+        </div>
+        <div class="row">
+
+          <div class="col-md-6">
+            <div class="form-group">
+                <label for="billingAddress">Billing Address</label>
+                <textarea class="form-control" id="billingAddress" name="billing_address" rows="3" readonly>{{purchase.billing_address}}</textarea>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label for="billingAddress">Billing Address</label>
+                <textarea class="form-control" id="billingAddress" name="billing_address" rows="3" readonly>{{purchase.shipping_address}}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-6">
+            <div class="form-group">
+                <label for="billingAddress">Terms and Conditions</label>
+                <textarea class="form-control" id="billingAddress" name="billing_address" rows="3" readonly>{{purchase.terms_and_conditions}}</textarea>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label for="billingAddress">Notes Comments</label>
+                <textarea class="form-control" id="billingAddress" name="billing_address" rows="3" readonly>{{purchase.notes_comments}}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <!-- Set columns width -->
+
+                    <th class="text-center py-3 px-4" style="min-width: 200px;">Product Name </th>
+                    <th class="text-center py-3 px-4" style="min-width: 300px;">Details</th>
+                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
+                    <th class="text-right py-3 px-4" style="width: 150px;">Price</th>
+                    <th class="text-right py-3 px-4" style="width: 150px;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in purchase.items.all %}
+                <!-- display item details -->
+                <tr>
+                    <td class="p-4">
+                        <div class="media align-items-center">
+                            <div class="media-body">
+                              <input type="text" class="form-control" name="prod{{ forloop.counter }}" value="{{item.id}}-{{item.product_name}}" readonly>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="media align-items-center">
+                            <div class="media-body">
+                                <a href="#" class="d-block text-dark">{{item.product_description}}</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td id="quantity" class="text-right font-weight-semibold align-middle p-4"
+                        value="{{item.quantity}}">{{item.quantity}}</td>
+                    <td class="align-middle p-4"><input type="text" name="price{{ forloop.counter }}" class="form-control text-center unitPrice" id="unitPrice" value=0>
+                    </td>
+                    <td class="text-right font-weight-semibold align-middle p-4 "  ><input type="text" name="product{{ forloop.counter }}" class="form-control text-center total-product-price" id="TotalProductprice" value=0></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- / Shopping cart table -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+        <div class="d-flex">
+            <div class="text-right mt-4">
+                <label class="text-muted font-weight-normal m-0">Total price</label>
+                <div class="text-large"><input type="number" id="overall-total"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+      <div class="d-flex">
+        <div class="text-right mt-4">
+          <label class="text-muted font-weight-normal m-0">Change Delivery Date</label>
+          <input type="date" class="form-control" id="deliveryChange" value="{{purchase.delivery_date|date:'Y-m-d'}}">
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="float-right">
+        <button type="submit" class="btn btn-lg btn-primary mt-2">Place Bid</button>
+    </div>
+  </form>
+</div>
+</div>
+
+
+<script>
+    // Your JavaScript code
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all unit price input fields
+        const unitPriceInputs = document.querySelectorAll('.unitPrice');
+        console.log(unitPriceInputs)
+
+        // Update total product price and overall total when input changes
+        unitPriceInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                const quantity = parseInt(input.closest('tr').querySelector('#quantity').textContent, 10);
+                const unitPrice = parseFloat(input.value);
+                const totalProductPrice = quantity * unitPrice;
+                const totalProductPriceCell = input.closest('tr').querySelector('.total-product-price');
+                totalProductPriceCell.value = totalProductPrice.toFixed(2);
+
+                // Recalculate overall total
+                updateOverallTotal();
+            });
+        });
+
+        // Function to update the overall total
+        function updateOverallTotal() {
+            const totalProductPrices = document.querySelectorAll('.total-product-price');
+            let overallTotal = 0;
+
+            totalProductPrices.forEach(function (totalProductPrice) {
+                overallTotal += parseFloat(totalProductPrice.value);
+            });
+
+            const overallTotalElement = document.getElementById('overall-total');
+            overallTotalElement.value = overallTotal.toFixed(2);
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,278 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .invisible-button {
+      border: none;
+      background-color: transparent;
+      padding: 0; /* Remove padding to make it more compact */
+      cursor: pointer;
+      text-decoration: none; /* Remove default underline for links */
+  }
+
+  .icon-view {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 5px;
+  }
+
+  .icon-status-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+</style>
+  <div class="card" style="padding: 50px;">
+    <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
+      <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+          <div class="col-9">
+            <h4 class="fw-semibold mb-8">Invoice</h4>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a class="text-muted text-decoration-none"
+                    href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Invoice</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-3">
+            <div class="text-center mb-n5">
+              <img src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/images/breadcrumb/ChatBc.png" alt=""
+                class="img-fluid mb-n4" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card overflow-hidden invoice-application">
+      <div class="d-flex align-items-center justify-content-between gap-3 m-3 d-lg-none">
+        <button class="btn btn-primary d-flex" type="button" data-bs-toggle="offcanvas" data-bs-target="#chat-sidebar"
+          aria-controls="chat-sidebar">
+          <i class="ti ti-menu-2 fs-5"></i>
+        </button>
+        <form class="position-relative w-100">
+          <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search Invoice">
+          <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+        </form>
+      </div>
+      <div class="d-flex">
+        <div class="w-25 d-none d-lg-block border-end user-chat-box">
+          <div class="p-3 border-bottom">
+            <form class="position-relative">
+              <input type="search" class="form-control search-invoice ps-5" id="text-srh"
+                placeholder="Search Invoice" />
+              <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+            </form>
+          </div>
+          <div class="app-invoice">
+            <ul class="overflow-auto invoice-users" style="height: calc(100vh - 262px)" data-simplebar>
+              {% for result in result_list %}
+              <li>
+                <a href="javascript:void(0)"
+                  class="p-3 bg-hover-light-black border-bottom d-flex align-items-start invoice-user listing-user bg-light"
+                  id="invoice-{{result.sale_number}}" data-invoice-id="{{result.sale_number}}">
+                  <div class="btn btn-primary round rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="ti ti-user fs-6"></i>
+                  </div>
+                  <div class="ms-3 d-inline-block w-75">
+                    <h6 class="mb-0 invoice-customer">{{result.customer_name}}/{{result.company_name}}</h6>
+
+                    <span class="fs-3 invoice-id text-truncate text-body-color d-block w-85">Id: #{{result.sale_number}}</span>
+                    
+                    <span class="fs-3 invoice-date text-nowrap text-body-color d-block">{{result.sale_date}}</span>
+                    <span class="fs-3 invoice-date text-nowrap text-body-color d-block">Status:{{result.status}}</span>
+                  
+                   
+                    
+                      <!-- <a href="{% url 'sales_order_requirements' sales_id=result.sale_number %}" class="btn btn-success">View Requirements</a> -->
+
+                  </div>
+                  
+
+                </a>
+                
+              </span>
+
+
+              </li>
+
+              {% endfor %}
+              <li></li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-75 w-xs-100 chat-container">
+          <div class="invoice-inner-part h-100">
+            <div class="invoiceing-box">
+              <div class="invoice-header d-flex align-items-center border-bottom p-3">
+                <h4 class="font-medium text-uppercase mb-0">Invoice</h4>
+                <div class="ms-auto">
+                  <h4 class="invoice-number"></h4>
+                  
+                </div>
+              </div>
+              {% for result in result_list %}
+              <div class="p-3" id="custom-invoice">
+                <div class="invoice-{{result.sale_number}}" id="printableArea">
+                  <div class="row pt-3">
+                    <div class="col-md-12">
+                      <div class="">
+                        <address>
+                          <h6>&nbsp;From,</h6>
+                          <h6 class="fw-bold">&nbsp;{{company.name}}</h6>
+                          <p class="ms-1">
+                            {{company.address}}, <br />{{company.city}},
+                            <br />{{company.state}} - {{company.postal_Code}}
+                          </p>
+                        </address>
+                      </div>
+                      <div class="text-end">
+                        <address>
+                          <h6>To,</h6>
+                          <h6 class="fw-bold invoice-customer">
+                            {{result.company_name}}/{{result.contact_person}},
+                          </h6>
+                          <p class="ms-4">
+                            {{result.billing_address}}
+                          </p>
+                          <p class="mt-4 mb-1">
+                            <span>Invoice Date :</span>
+                            <i class="ti ti-calendar"></i>
+                            {{result.sale_date}}
+                          </p>
+                          <p>
+                            <span>Due Date :</span>
+                            <i class="ti ti-calendar"></i>
+                            {{result.delivery_datesale}}
+                          </p>
+                        </address>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="table-responsive mt-5" style="clear: both">
+                        <table class="table table-hover">
+                          <thead>
+                            <!-- start row -->
+                            <tr>
+                              <th class="text-center">#</th>
+                              <th>Product Name</th>
+
+                              <th>Description</th>
+                              <th class="text-end">Quantity</th>
+                            </tr>
+                            <!-- end row -->
+                          </thead>
+                          <tbody>
+                            <!-- start row -->
+                            {% for row in result.items %}
+                            <tr>
+                              <td class="text-center">{{ forloop.counter }}</td>
+                              <td>{{row.product_name}}</td>
+                              <td >{{row.product_description}}</td>
+                              <td class="text-end">{{row.quantity}}</td>
+
+                            </tr>
+                            <!-- end row -->
+                        
+                          
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      
+                      <div class="clearfix"></div>
+                      <hr />
+                      <div class="text-end">
+                        <span class="fs-3 invoice-date text-nowrap text-body-color d-block icon-status-container">
+                          
+                      </span>
+                        <button class="btn btn-primary btn-default print-page" type="button">
+                          <span><i class="ti ti-eye fs-5"></i>
+                            <a href="{% url 'allocate' sales_id=result.sale_number %}" >
+                              Allocate Material
+                          </a></span>
+                        </button>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 2 -->
+
+              </div>
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+        <div class="offcanvas offcanvas-start user-chat-box" tabindex="-1" id="chat-sidebar"
+          aria-labelledby="offcanvasExampleLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">
+              Invoice
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="p-3 border-bottom">
+            <form class="position-relative">
+              <input type="search" class="form-control search-invoice ps-5" id="text-srh" placeholder="Search Invoice">
+              <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+            </form>
+          </div>
+          <div class="app-invoice overflow-auto">
+            <ul class="invoice-users">
+              {% for result in result_list %}
+              <li>
+                <a href="javascript:void(0)"
+                  class="p-3 bg-hover-light-black border-bottom d-flex align-items-start invoice-user listing-user bg-light"
+                  id="invoice-{{result.sale_number}}" data-invoice-id="{{result.sale_number}}">
+                  <div class="btn btn-primary round rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="ti ti-user fs-6"></i>
+                  </div>
+                  <div class="ms-3 d-inline-block w-75">
+                    <h6 class="mb-0 invoice-customer">{{result.customer_name}}/{{result.company_name}}</h6>
+
+                    <span class="fs-3 invoice-id text-truncate text-body-color d-block w-85">Id: #{{result.sale_number}}</span>
+                    <span class="fs-3 invoice-date text-nowrap text-body-color d-block">{{result.sale_date}}</span>
+                  </div>
+                </a>
+              </li>
+              {% endfor %}
+           
+ 
+
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+  function handleColorTheme(e) {
+    Rs. ("html").attr("data-color-theme", e);
+    Rs. (e).prop("checked", !0);
+  }
+</script>
+<button class="btn btn-primary p-3 rounded-circle d-flex align-items-center justify-content-center customizer-btn"
+  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+  <i class="icon ti ti-settings fs-7"></i>
+</button>
+
+
+
+
+
+</div>
+<div class="dark-transparent sidebartoggler"></div>
+
+{% endblock %}

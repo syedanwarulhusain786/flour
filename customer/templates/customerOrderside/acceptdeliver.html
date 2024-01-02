@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      position: relative;
+    }
+  
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  
+    /* Add more styling as needed */
+  </style>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
+<div class="datatables" style="padding-top: 50px;">
+    <!-- basic table -->
+    <div class="row">
+      <div class="col-12">
+        <!-- ---------------------
+                              start Zero Configuration
+                          ---------------- -->
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-2">
+              <h5 class="mb-0">Order Details # {{orders.OrderFk.quotation_number}}</h5>
+            </div>
+           
+         
+            <form method="POST">
+              {% csrf_token %}
+
+              <div class="accordion accordion-flush position-relative overflow-hidden" id="accordionFlushExample">
+                <div class="accordion-item mb-3 shadow-none border rounded-top">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed fs-4 fw-semibold px-3 py-6 lh-base border-0 rounded-top"
+                      type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse1" aria-expanded="false"
+                      aria-controls="flush-collapse1"> Dispatch Form </button>
+                  </h2>
+                  <div id="flush-collapse1" class="accordion-collapse collapse" aria-labelledby="flush-heading1" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body px-3 fw-normal">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Order Id</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="exampleInputtext" name="order"
+                                value="{{orders.OrderFk.quotation_number}}" readonly>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Product Id</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="exampleInputtext" name="product"
+                                value="{{orders.order.product.name}}" readonly>
+                                <input type="text" class="form-control" id="exampleInputtext" 
+                                value="{{orders.order.product.id}}" readonly>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Vehicle Number</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="exampleInputtext" name="vehicle" value="{{orders.vehicle_number}}">
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Date Of Delivery</label>
+                            <div class="col-sm-9">
+                              <div class="input-group border rounded-1">
+                                <input type="date" class="form-control p-7 border-0" value="{{formatted_date}}" name="deliveryDate">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">No of Bags</label>
+                            <div class="col-sm-9">
+                              <input type="number" class="form-control" id="exampleInputtext" placeholder="100"
+                                name="allBags" value="{{orders.no_of_bags}}">
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity</label>
+                            <div class="col-sm-9">
+                              <input type="number" class="form-control" id="exampleInputtext" placeholder="100"
+                                name="quantity" value="{{orders.quantity}}">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Jute Bag</label>
+                            <div class="col-sm-9">
+                              <div class="input-group">
+                                <input type="number" class="form-control" id=""  name="jute" value="{{orders.jute_bags}}">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Plastic Bag</label>
+                            <div class="col-sm-9">
+                              <div class="input-group">
+                                <input type="number" class="form-control" id=""  name="plastic" value="{{orders.plastic_bags}}">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">FSSI</label>
+                            <div class="col-sm-9">
+                              <div class="input-group">
+                                <input type="number" class="form-control" id="" name="fssi" value="{{orders.fssi}}">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mb-4 row align-items-center">
+                            <label for="exampleInputPassword1"
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Loose</label>
+                            <div class="col-sm-9">
+                              <div class="input-group">
+                                <input type="text" class="form-control" id="" name="loose"  value="{{orders.loose}}">
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+                      <div>
+                         
+                    </div>
+                  </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <button type="submit" class="btn btn-success">Accept Delivery</button>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+
+
+
+    
+      </div>
+    </div>
+ 
+    <!-- ---------------------
+                              end Table Responsive 
+                          ---------------- -->
+  </div>
+ <!-- Your modal structure -->
+<!-- Your modal structure -->
+
+  <script>
+    function handleColorTheme(e) {
+      $("html").attr("data-color-theme", e);
+      $(e).prop("checked", !0);
+    }
+  </script>
+
+
+
+<script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/js/datatable/datatable-basic.init.js"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/js/forms/repeater-init.js"></script>
+  {% endblock %}

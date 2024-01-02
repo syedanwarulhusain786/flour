@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="col-12" style="padding-top: 50px;">
+    <!-- ---------------------
+                        start Event Registration
+                    ---------------- -->
+    <div class="card" >
+      <div class="card-body">
+        <h5>Create Order</h5>
+
+      </div>
+      <form class="form-horizontal r-separator border-top" method="POST">
+        {% csrf_token %}
+        <div class="card-body">
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Select Product</label>
+            <div class="col-sm-9">
+              <select class="form-control" id="inputEmail3" name="product" required>
+                <option selected>--Select Product--</option>
+               
+                {% for product in products %}
+                <option
+                    value="{{ product.id }}">{{ product.name }}
+                </option>
+
+
+                {% endfor %}
+            </select>
+            </div>
+          </div>
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Quantity(unit quantal)</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity Here" required> 
+            </div>
+          </div>
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Price Per Quantal</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="price" name="price" placeholder="Price Per Quantal Here" required>
+            </div>
+          </div>
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">End Delivery Date</label>
+            <div class="col-sm-9">
+              <input type="date" class="form-control" id="endDelivery" name="endDelivery" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Supplier Type</label>
+            <div class="col-sm-9">
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="supplierRadio" name="radio-stacked" value="supplier" required>
+                <label class="form-check-label" for="customControlValidation2">Supplier</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="agentRadio" name="radio-stacked" value=0 required>
+                <label class="form-check-label" for="customControlValidation3">Agent</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Agent Commission (per quantal)</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="commission" name ="commision" placeholder="Commission in Rs" value=0 >
+            </div>
+          </div>
+
+          <div class="form-group mb-3 row pb-3">
+            <label for="inputEmail3" class="col-sm-3 text-end control-label col-form-label">Total</label>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="total" name ="total" placeholder="Commission in Rs" />
+            </div>
+          </div>
+        </div>
+        <div class="p-3 border-top">
+          <div class="form-group text-end">
+            <button type="submit" class="btn btn-info rounded-pill px-4 waves-effect waves-light">
+              Save
+            </button>
+            <button type="submit" class="btn btn-dark rounded-pill px-4 waves-effect waves-light">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- ---------------------
+                        end Event Registration
+                    ---------------- -->
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var quantityInput = document.getElementById("quantity");
+      var priceInput = document.getElementById("price");
+      var supplierTypeInputs = document.getElementsByName("radio-stacked");
+      var totalInput = document.getElementById("total");
+      var supplierRadio = document.getElementById("supplierRadio");
+      var agentRadio = document.getElementById("agentRadio");
+      var commissionInput = document.getElementById("commission");
+  
+      // Disable the commission input initially
+      commissionInput.disabled = true;
+  
+      // Add event listeners to inputs
+      quantityInput.addEventListener("input", updateTotal);
+      priceInput.addEventListener("input", updateTotal);
+      commissionInput.addEventListener("input", updateTotal);
+  
+      // Add event listeners to radio buttons
+      supplierTypeInputs.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+          // Reset total when supplier type changes
+          totalInput.value = priceInput.value;
+          updateTotal();
+        });
+      });
+  
+      // Function to update the total based on inputs
+      function updateTotal() {
+        var quantity = parseFloat(quantityInput.value) || 0;
+        var price = parseFloat(priceInput.value) || 0;
+        var commission = parseFloat(commissionInput.value) || 0;
+  
+        // Calculate total based on supplier type
+        var supplierType = getSelectedSupplierType();
+        var total = (supplierType === "supplier") ? quantity * price : quantity * (price + commission);
+        supplierType === "supplier"?agentRadio.value=0:agentRadio.value=1;
+        // Update the total input field
+        totalInput.value = total.toFixed(2);
+      }
+  
+      // Function to get the selected supplier type
+      function getSelectedSupplierType() {
+        var selectedSupplierType;
+        supplierTypeInputs.forEach(function (radio) {
+          if (radio.checked) {
+            selectedSupplierType = radio.value;
+          }
+        });
+        return selectedSupplierType;
+      }
+  
+      // Add event listeners to radio buttons
+      supplierRadio.addEventListener("change", function () {
+        commissionInput.disabled = true;
+        updateTotal();
+      });
+  
+      agentRadio.addEventListener("change", function () {
+        commissionInput.disabled = false;
+        updateTotal();
+      });
+    });
+  </script>
+  
+  
+  {% endblock %}
