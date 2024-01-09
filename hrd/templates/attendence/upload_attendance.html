@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Upload Attendance</h1>
+        </div>
+        <div class="card-body">
+            {% if error_message %}
+                <p class="text-danger">{{ error_message }}</p>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateFile()">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_csv_file">CSV File</label>
+                    {{ form.csv_file }}
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function uploadAttendance() {
+        var form = document.getElementById('attendanceUploadForm');
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/your-upload-url/');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alert('Attendance data imported successfully');
+            } else {
+                alert('Error uploading attendance data');
+            }
+        };
+        xhr.send(formData);
+    }
+</script>
+{% endblock %}

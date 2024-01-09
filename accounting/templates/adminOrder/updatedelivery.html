@@ -76,6 +76,13 @@
                                           <input type="text" class="form-control" id="exampleInputtext" name="order" value="{{delivery.order.id}}" readonly>
                                         </div>
                                       </div>
+                                      <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Agreed Amount per QTL</label>
+                                        <div class="col-sm-9">
+                                          <input type="text" class="form-control" id="Agreed" name="Agreed" value="{{delivery.order.price_per_quantal}}">
+                                        </div>
+                                      </div>
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
                                         class="form-label fw-semibold col-sm-3 col-form-label text-end">Vehicle Number</label>
@@ -83,6 +90,7 @@
                                         <input type="text" class="form-control" id="exampleInputtext" name="vehicle" value="{{delivery.vehicle_number}}">
                                       </div>
                                     </div>
+
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
                                         class="form-label fw-semibold col-sm-3 col-form-label text-end">Date Of Delivery</label>
@@ -103,9 +111,17 @@
                                         <label for="exampleInputPassword1"
                                           class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity</label>
                                         <div class="col-sm-9">
-                                          <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="quantity"  value="{{delivery.quantity}}">
+                                          <input type="number" class="form-control" id="quantity" placeholder="100" name="quantity"  value="{{delivery.quantity}}">
                                         </div>
+                                    </div>
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Price Before Deduction</label>
+                                      <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="before" placeholder="100" name="before"  >
                                       </div>
+                                    </div>
+                                      
                                   </div>
                                   <div class="col-lg-6">
                                     <div class="mb-4 row align-items-center">
@@ -157,6 +173,153 @@
                                     
 
                                   </div>
+                                  <br>
+                                  <hr>
+                                  <h6>Deductions in Quantity</h6>
+                                  <div class="col-lg-6">
+                                    <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Deduction in (%)</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <input type="number" class="form-control" id="qd" name="qd" value=0 step="any" >
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Accepted Quantity</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <input type="number" class="form-control" id="aq" name="aq" value=0 step="any">
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div class="mb-4 row align-items-center">
+                                    <label for="exampleInputPassword1"
+                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Price After Deduction</label>
+                                    <div class="col-sm-9">
+                                      <div class="input-group">
+                                        <input type="number" class="form-control" id="price_after_deduction" name="price_after_deduction" value=0 step="any">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <hr>
+                                  <h6>Deductions</h6>
+                                  <div class="col-lg-6">
+                                    <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Freight</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <input type="number" class="form-control" id="Freight" name="Freight" value=0 step="any">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Dala</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="Dala"   name="Dala" value=0 step="any">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Cash Discount</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="cd"  name="cd" value=0 step="any">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Kata</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="Kata" name="Kata" value=0 step="any">
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+
+
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">TDS/TCS</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="tds" name="tds" value=0 step="any">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Bardana</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <input type="number" class="form-control" id="Bardana" name="Bardana" value=0 step="any">
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Brokerage</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="Brokerage" name="Brokerage" value=0>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="mb-4 row align-items-center">
+                                      <label for="exampleInputPassword1"
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Commission</label>
+                                      <div class="col-sm-9">
+                                        <div class="input-group">
+                                          <input type="number" class="form-control" id="Commission" name="Commission" value=0 step="any">
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                  
+                                    
+
+                                  </div>
+
+                                  <div class="mb-4 row align-items-center">
+                                    <label for="exampleInputPassword1"
+                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Total Deducted</label>
+                                    <div class="col-sm-9">
+                                      <div class="input-group">
+                                        <input type="number" class="form-control" id="total" name="total" value=0 step="any">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="mb-4 row align-items-center">
+                                    <label for="exampleInputPassword1"
+                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Final Amount</label>
+                                    <div class="col-sm-9">
+                                      <div class="input-group">
+                                        <input type="number" class="form-control" id="final" name="final" value=0 step="any">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+
+
+
+
+
+
+
+
+
                                   <div>
                                   <button type="submit" class="btn btn-success" >Start Delivery Process</button>
                                 </div>
@@ -182,5 +345,114 @@
   </div>
  <!-- Your modal structure -->
 <!-- Your modal structure -->
+<!-- Add this script tag in your HTML file, preferably at the end before the closing </body> tag -->
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the input element for quantity
+    var quantityInput = document.getElementById('quantity');
+
+    // Get the input element for price per quantal
+    var pricePerQuantalInput = document.getElementById('Agreed');
+
+    // Get the Agreed input element
+    var before = document.getElementById('before');
+
+    // Add input event listener to quantity and price per quantal inputs
+    quantityInput.addEventListener('input', updateAgreed);
+    pricePerQuantalInput.addEventListener('input', updateAgreed);
+
+    // Function to update the Agreed value
+    function updateAgreed() {
+      // Get the current values of quantity and price per quantal
+      var quantity = parseFloat(quantityInput.value) || 0;
+      var pricePerQuantal = parseFloat(pricePerQuantalInput.value) || 0;
+
+      // Calculate the Agreed value
+      var agreedValue = quantity * pricePerQuantal;
+
+      // Update the Agreed input field with the calculated value
+      before.value = agreedValue;
+    }
+    updateAgreed()
+  });
+</script>
+
+<!-- Add this script tag in your HTML file, preferably at the end before the closing </body> tag -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the input elements for Deduction in (%), Quantity, and Accepted Quantity
+    var deductionPercentInput = document.getElementById('qd');
+    var quantityInput = document.getElementById('quantity');
+    var acceptedQuantityInput = document.getElementById('aq');
+
+    // Get the Agreed and Price After Deduction input elements
+    var agreedInput = document.getElementById('Agreed');
+    var priceAfterDeductionInput = document.getElementById('price_after_deduction');
+
+    // Add input event listener to Deduction in (%) input field
+    deductionPercentInput.addEventListener('input', updateAcceptedQuantity);
+
+   
+
+    // Function to update Accepted Quantity based on Deduction in (%) and Quantity
+    function updateAcceptedQuantity() {
+      // Get the current values of quantity and deduction percentage
+      var quantity = parseFloat(quantityInput.value) || 0;
+      var deductionPercent = parseFloat(deductionPercentInput.value) || 0;
+
+      // Calculate the Accepted Quantity
+      var acceptedQuantity = quantity - (quantity * deductionPercent / 100);
+
+      // Update the Accepted Quantity input field with the calculated value
+      acceptedQuantityInput.value = acceptedQuantity;
+      updatePriceAfterDeduction()
+    }
+
+    // Function to update Price After Deduction based on Accepted Quantity and Agreed value
+    function updatePriceAfterDeduction() {
+      // Get the current values of Accepted Quantity and Agreed
+      var acceptedQuantity = parseFloat(acceptedQuantityInput.value) || 0;
+      var agreedValue = parseFloat(agreedInput.value) || 0;
+
+      // Calculate the Price After Deduction
+      var priceAfterDeduction = acceptedQuantity * agreedValue;
+
+      // Update the Price After Deduction input field with the calculated value
+      priceAfterDeductionInput.value = priceAfterDeduction;
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get all input elements for deduction
+    var deductionInputs = document.querySelectorAll('input[name^="Freight"], input[name^="Dala"], input[name^="cd"], input[name^="Kata"], input[name^="tds"], input[name^="Bardana"], input[name^="Brokerage"], input[name^="Commission"]');
+
+    // Get the total input element
+    var totalInput = document.getElementById('total');
+    var final = document.getElementById('final');
+    var priceAfterDeductionInput = document.getElementById('price_after_deduction')
+    // Add change event listener to each deduction input
+    deductionInputs.forEach(function (input) {
+      input.addEventListener('change', updateTotal);
+    });
+
+    // Function to update the total value
+    function updateTotal() {
+      // Initialize total value
+      var total = 0;
+
+      // Loop through all deduction inputs and sum their values
+      deductionInputs.forEach(function (input) {
+        total += parseFloat(input.value) || 0;
+      });
+      
+      // Update the total input field with the calculated total
+      totalInput.value = total;
+      // var dedu=parseFloat(priceAfterDeductionInput.value) || 0;
+      final.value=priceAfterDeductionInput.value-totalInput.value
+    }
+  });
+</script>
   {% endblock %}

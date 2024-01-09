@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.db.models import Sum  
 from login.models import *
+from decimal import Decimal
 def get_image_filename(instance, filename):
     """Generate a unique filename for each uploaded image."""
     ext = filename.split('.')[-1]
@@ -101,7 +102,7 @@ class Order(models.Model):
     final_price = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     is_approved = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     order_date=models.DateField(auto_now_add=True,null=True, blank=True)
-    quantity_left=models.PositiveIntegerField(default=0)
+    quantity_left=models.FloatField(default=0)
     
     def __str__(self):
             return f"Order Id {self.id} User "
@@ -116,6 +117,12 @@ class DeliveryDetails(models.Model):
     ('pending', 'Pending'),
     ('delivered', 'Delivered'),
     ]
+    payment_row = [
+    ('pending', 'Pending'),
+    
+    ('due', 'Due'),
+    ('paid', 'Paid'),
+    ]
     created_at=models.DateField(auto_now_add=True,null=True, blank=True)
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -125,18 +132,35 @@ class DeliveryDetails(models.Model):
     date_of_delivery = models.DateField()
     no_of_bags = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
+    
     jute_bags = models.PositiveIntegerField()
     plastic_bags = models.PositiveIntegerField()
     fssi = models.PositiveIntegerField()
     loose = models.PositiveIntegerField()
+    freight = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    data = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    kanta = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    cashDiscount = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    tdsTcs = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    bardana = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    brokerage = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    commission = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    deductedAmt = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    finalAmt = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    
+    dueDate = models.DateField(null=True, blank=True)
+    
+    
+    
     status = models.CharField(max_length=20, choices=status_row,default='pending')
+    payment= models.CharField(max_length=20, choices=payment_row,default='due')
 
     
 
     # Calculate final quantity price based on the order's price per quantal
     def calculate_final_quantity_price(self):
         order_price_per_quantal = self.order.price_per_quantal
-        self.final_quantity_price = self.quantity * order_price_per_quantal
+        self.final_quantity_price = Decimal(self.quantity) * Decimal(order_price_per_quantal)
 
     final_quantity_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
@@ -145,7 +169,7 @@ class DeliveryDetails(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"DeliveryDetails for Order {self.order.id}"
+        return f"Order {self.order.id} Delivery {self.id}"
     
     
     

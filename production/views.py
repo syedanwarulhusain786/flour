@@ -8,8 +8,7 @@ from decimal import Decimal
 # Create your views here.
 def pendingOrder(request):
     # Your delete logic here
-    orders=SalesQuotation.objects.filter(status='inProduction')
-    print(orders)
+    orders=SalesQuotation.objects.filter(approval='inProduction')
     template_name = 'pendingorder.html'  # Replace with your actual template name
     context = {'orders':orders}
     return render(request, template_name, context)
@@ -65,7 +64,7 @@ def delete_produced(request, quotation_number):
 def send_to_inventory(request, quotation_number):
     sales_quotation = get_object_or_404(SalesQuotation, quotation_number=quotation_number)
      # Add logic to mark the order as sent for production
-    sales_quotation.status = 'inProduction'
+    sales_quotation.approval = 'produced'
     productionrows = ProducedRow.objects.filter(sales_order=quotation_number)
 
     for row in productionrows:
@@ -120,8 +119,7 @@ def orders(request):
 
 def Startproduction(request):
     # Your delete logic here
-    orders=SalesQuotation.objects.filter(status='pending')
-    print(orders)
+    orders=SalesQuotation.objects.filter(approval='approved')
     template_name = 'production.html'  # Replace with your actual template name
     context = {'orders':orders}
     return render(request, template_name, context)
@@ -170,7 +168,7 @@ def delete_production(request, quotation_number):
 def send_for_production(request, quotation_number):
     sales_quotation = get_object_or_404(SalesQuotation, quotation_number=quotation_number)
      # Add logic to mark the order as sent for production
-    sales_quotation.status = 'inProduction'
+    sales_quotation.approval = 'inProduction'
     productionrows = ProductionRow.objects.filter(sales_order=quotation_number)
     for row in productionrows:
         sock=ProductStock()

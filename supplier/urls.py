@@ -23,6 +23,7 @@ from accounting.consumers import PurchaseQuotationConsumer
 urlpatterns = [
     path('supplier-home/', views.supplier_home, name='supplier-home'),
     path('all-orders/', views.supplier_home, name='myorders'),
+    path('suppliercompleted/', views.suppliercompleted, name='suppliercompleted'),
     path('startdelivery/<int:order_id>/', views.startdelivery, name='startdelivery'),
     
     path('createorder/', views.purchase_order_page, name='createorder'),

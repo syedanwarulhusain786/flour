@@ -1,0 +1,88 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ 
+       
+ 
+    <div class="card" style="padding-top: 50px;">
+       <div class="card-header">
+        <h1>Payments List</h1>
+       </div>
+   
+        <div class="card-body">
+          <table id="productsTable" class="table table-hover table-product" style="width:100%">
+            <div>
+          
+              <a href="{% url 'add_employee' %}" target="_blank" class="mb-1 btn btn-pill btn-primary" id="openModalBtn">Add  Employee</a>
+            </div>
+            <thead>
+              <tr>
+                    <th scope="col">S No</th>
+
+                    <th scope="col">Employee Id</th>
+                    <th scope="col">Employee First Name</th>
+                    <th scope="col">Employee Last Name</th>
+
+                    <th scope="col">Employee Mobile</th>
+                    <th scope="col">Employee Joining Date</th>
+                    <th scope="col">Employee Salary</th>
+                    <th scope="col">Employee Role</th>
+                    <th scope="col">Employee Pan Card</th>
+                    <th scope="col">Employee Address</th>
+                    <th scope="col">Employee Working Days</th>
+
+
+                    <th scope="col">Action</th>
+
+
+
+
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for employee in employees %}
+              <tr>
+                <td class="py-0">
+                 {{employee.id}}
+                </td>
+                <td>{{employee.employee_id}}</td>
+
+                <td>{{employee.first_name}}</td>
+                <td>{{employee.last_name}}</td>
+                <td>{{employee.mobile}}</td>
+                <td>{{employee.joining}}</td>
+                <td>{{employee.salary}}</td>
+                <td>{{employee.position}}</td>
+                <td>{{employee.pan_card}}</td>
+                <td>{{employee.address}}</td>
+                <td>{{employee.working_days}}</td>
+                <td>  <a class="btn btn-primary" href="{% url 'employee_edit' employee.id %}">Edit</a>
+                  <a class="btn btn-danger" href="{% url 'employee_delete' employee.id %}">Delete</a></td>
+
+
+
+
+
+
+           
+              </tr>
+
+              {% endfor %}
+
+
+
+
+
+            </tbody>
+          </table>
+
+  
+              
+        </div>
+    </div>
+
+
+
+  {% endblock %}

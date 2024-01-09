@@ -86,7 +86,7 @@ def startdelivery(request,order_id):
         vehicle = request.POST.get('vehicle')
         allBags = int(request.POST.get('allBags', 0))
         deliveryDate = request.POST.get('deliveryDate')
-        
+        print(deliveryDate)
         quantity = int(request.POST.get('quantity'))
         jute = int(request.POST.get('jute'))
         plastic = int(request.POST.get('plastic'))
@@ -133,7 +133,9 @@ def startdelivery(request,order_id):
 
 
 
-
+def suppliercompleted(request):
+    Orders=Order.objects.filter(is_approved='approved',user=request.user)
+    return render(request, 'supplierOrderside/supplier_completed.html', {'Orders': Orders}) 
 
 
 def supplierapproved(request):

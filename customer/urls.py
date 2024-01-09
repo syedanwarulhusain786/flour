@@ -26,6 +26,8 @@ urlpatterns = [
     # path('startOrder/<int:order_id>/', views.startOrder, name='startOrder'),
     
     path('sale_order_page/', views.sale_order_page, name='sale_order_page'),
+    path('customercompleted/', views.customercompleted, name='customercompleted'),
+    
     #  path('purchase_quotations/<int:quotation_number>/place_bid/', views.place_bid, name='place_bid'),
     
     path('mybids/', views.mybids, name='mybids'),

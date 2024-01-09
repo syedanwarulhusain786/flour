@@ -285,24 +285,27 @@ def startdelivery(request,order_id):
 #     return render(request, 'place_bid.html', {'purchase': purchase})
 
 
-
+def customercompleted(request):
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='completed')
+  
+    return render(request, 'customerOrderside/approved.html', {'orders': Orders})
 
 
 
 
 
 def customerapproved(request):
-    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='Approved')
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='approved')
   
     return render(request, 'customerOrderside/approved.html', {'orders': Orders})  
 def customerdisapproved(request):
-    Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='Disapproved')
+    Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='disapproved')
  
     return render(request, 'customerOrderside/disapproved.html', {'orders': Orders})  
 
 
 def CustomerQuotationDetailView(request,pk):
-    print(pk)
+
     sales_quotation_with_items = SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(quotation_number=pk).first()
     delivery=SalesDeliveryDetails.objects.filter(OrderFk__quotation_number=pk)
     # print(sales_quotation_with_items.items.all())
@@ -315,6 +318,7 @@ def CustomerQuotationDetailView(request,pk):
 def salesaccept(request,order_id):
     tObj=SalesDeliveryDetails.objects.get(id=order_id)
     deliverydate = tObj.date_of_delivery.strftime('%Y-%m-%d')
+    
     if request.method=='POST':
         order = request.POST.get('order')
         
@@ -328,10 +332,10 @@ def salesaccept(request,order_id):
         fssi = int(request.POST.get('fssi'))
         loose = int(request.POST.get('loose'))
         item=SalesItemRow.objects.get(id=tObj.order.id)
-        print(item.quantity_left-quantity)
         item.quantity_left=item.quantity_left-quantity
         tObj.status='delivered'
-        order = SalesDeliveryDetails(
+        
+        orders = SalesDeliveryDetails(
             user=CustomUser.objects.get(username=request.user),
             OrderFk=SalesQuotation.objects.get(quotation_number=order),
             order=SalesItemRow.objects.get(id=item.id),
@@ -346,9 +350,31 @@ def salesaccept(request,order_id):
             loose = loose,
             status='delivered'
         )
-        order.save()
+        orders.save()
         tObj.save()
         item.save()
-        
-        return redirect('approved')
+        if SalesDeliveryDetails.objects.filter(OrderFk=SalesQuotation.objects.get(quotation_number=order), status='delivered').count() == SalesDeliveryDetails.objects.filter(OrderFk=SalesQuotation.objects.get(quotation_number=order)).count():
+            app=SalesQuotation.objects.get(quotation_number=order)
+            app.approval='completed'
+            app.save()
+            
+        ledger_entry=LedgerEntry(
+            salesdelivery=tObj,
+            saleorder = SalesQuotation.objects.get(quotation_number=order),
+            account = Ledger.objects.get(ledger_name='CUSTOMER SALES'),
+          
+            description = f"For Sales OrderId:-{tObj.OrderFk.quotation_number} DeliveryID:-{tObj.id}" ,
+            debit_amount =0 ,
+            credit_amount = Decimal(tObj.order.total_price),
+        ).save()
+        ledger_entry=LedgerEntry(
+            salesdelivery=tObj,
+            saleorder = SalesQuotation.objects.get(quotation_number=order),
+            account = Ledger.objects.get(ledger_name=request.user),
+          
+            description = f"For Sales OrderId:-{tObj.OrderFk.quotation_number} DeliveryID:-{tObj.id}" ,
+            debit_amount = Decimal(tObj.order.total_price),
+            credit_amount = 0,
+        ).save()
+        return redirect('salesapproved')
     return render(request, 'customerOrderside/acceptdeliver.html',{'orders':tObj,"formatted_date":deliverydate})

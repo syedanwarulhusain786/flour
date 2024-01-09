@@ -137,7 +137,7 @@
                         {% endif %}</td>
                         <td>{% if product.status == 'pending' %}
                           <a class="btn btn-success" href="{% url 'salesaccept' order_id=product.id %}">Accept Delivery</a>
-                      {% elif product.status == 'delivered' %}
+                      {% elif product.status == 'Delivered' %}
                           <button class="btn btn-danger" disabled>Delivered</button>
                       {% endif %}</td>
                         

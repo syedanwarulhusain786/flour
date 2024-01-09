@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-xrP5cdXjr9TTL8snE90OE2iTNvaP6a1d8m74wRQy+Jbl5Fb7u6ENsk+MckpuP0xgezD8rjK3JZUaTRVXeZ/MPQ==" crossorigin="anonymous" />
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        margin-top: 50px;
+        width: auto;
+
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .text-center {
+        text-align: left !important;
+    }
+
+    label {
+        font-weight: bold;
+        /* Make the label bold */
+        padding: 5px;
+    }
+</style>
+<div style="padding-top: 50px;">
+
+
+    <h1 class="mb-4">Month-wise Attendance</h1>
+    <form method="get">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="id_month">Select Month:</label>
+          <select class="form-select" id="id_month" name="month">
+            {% for month_num, month_name in months %}
+              <option value="{{ month_num }}" {% if month_num == selected_month %}selected{% endif %}>
+                {{ month_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="id_year">Select Year:</label>
+          <select class="form-select" id="id_year" name="year">
+            {% for year_num in years %}
+              <option value="{{ year_num }}" {% if year_num == selected_year %}selected{% endif %}>
+                {{ year_num }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </div>
+      </div>
+    </form>
+      <div class="card-body">
+    <p class="mb-4">Year: {{ year }}, Month: {{ month }}</p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Employee Name</th>
+              {% for date in all_dates %}
+                <th scope="col">{{ date.day }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for user_data in attendance_data %}
+              <tr>
+                <td>{{ user_data.employee_id }}</td>
+                <td>{{ user_data.user }}</td>
+                {% for date, status_data in user_data.attendance.items %}
+                   <td>
+            {% if status_data.status == 'present' %}
+              <i class="btn btn-success rounded-circle" disabled>present</i>
+            {% elif status_data.status == 'absent' %}
+              <i class="btn btn-danger rounded-circle" disabled>absent</i>
+            {% elif status_data.status == 'paid-leave' %}
+              <i class="btn btn-info rounded-circle" disabled>paid-leave</i>
+            {% elif status_data.status == 'unpaid-leave' %}
+              <i class="btn btn-warning rounded-circle" disabled>unpaid-leave</i>
+            {% else %}
+              <!-- Handle any other status here -->
+              <i class="btn btn-secondary rounded-circle" disabled>N/A</i>
+            {% endif %}
+          </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+</div>
+
+{% endblock %}

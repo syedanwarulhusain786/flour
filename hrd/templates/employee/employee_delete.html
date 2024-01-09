@@ -1,0 +1,21 @@
+<!-- employee_delete.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="padding-top: 50px;">
+    <div class="card-header">
+        <h1>Delete Employee</h1>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete {{ employee.first_name }} {{ employee.last_name }}?</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a class="btn btn-primary" href="{% url 'hr_department' %}">Cancel</a>
+
+        </form>
+    </div>
+</div>
+  
+  
+{% endblock %}

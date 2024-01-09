@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@$v^t6^aont_-2t^vqk_g5go-45^e=r-fwx78q^ldjak+_$c_2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["62.72.57.19","*"]
 
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'commonApp',
     'accounting',
     'production',
+    'django_filters',
+    'hrd'
     
 ]
 # ASGI_APPLICATION = 'erp.asgi.application'

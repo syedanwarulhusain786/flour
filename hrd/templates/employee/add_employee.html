@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        margin-top: 50px;
+        width: auto;
+        max-width: 100%;
+
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .text-center {
+        text-align: left !important;
+    }
+
+    label {
+        font-weight: bold;
+        /* Make the label bold */
+        padding: 5px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h1>Add Employee</h1>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="alert alert-success">
+                <strong>Error!</strong> {{ form.errors }}
+              </div>
+              {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.employee_id.label_tag }}
+                    {{ form.employee_id }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-md-6">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.mobile.label_tag }}
+                    {{ form.mobile }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.salary.label_tag }}
+                    {{ form.salary }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.working_days.label_tag }}
+                    {{ form.working_days }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.position.label_tag }}
+                    {{ form.position }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.pan_card.label_tag }}
+                    {{ form.pan_card }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                </div>
+            </div>
+            <div class="row">
+               
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -30,3 +30,17 @@ class JournalEntryFilter(django_filters.FilterSet):
             
         ]
         
+
+import django_filters
+from .models import LedgerEntry
+
+class LedgerEntryFilter(django_filters.FilterSet):
+    date_range = django_filters.DateFromToRangeFilter(
+        field_name='date',
+        widget=django_filters.widgets.RangeWidget(attrs={'type': 'date', 'class': 'form-control'}),
+        label='Date Range'
+    )
+
+    class Meta:
+        model = LedgerEntry
+        fields = ['date_range']

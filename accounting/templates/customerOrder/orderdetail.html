@@ -81,14 +81,16 @@
             <button class="btn btn-danger disapprove-btn" data-order-id="{{ sales_quotation.quotation_number }}">Disapprove</button>
         </div>
         {% elif sales_quotation.approval == 'Approved' %}
-        <!-- <div>
-          <a href="{% url 'salesstartdelivery' sales_quotation.quotation_number %}" class="btn btn-success" style="color: white;">Start Delivery</a>
-        </div> -->
-        {% if sales_quotation.status == 'Produced' %}
-        <a href="{% url 'salesstartdelivery' sales_quotation.quotation_number %}" class="btn btn-success" style="color: white;">Start Delivery</a>
-        {% else %}
+        <div>
         <a class="btn btn-danger" style="color: white;" disabled>Production In Progress</a>
-        {% endif %}
+      </div>
+
+        {% elif sales_quotation.approval == 'produced' %}
+        <div>
+
+        <a href="{% url 'salesstartdelivery' sales_quotation.quotation_number %}" class="btn btn-success" style="color: white;">Start Delivery</a>
+       
+      </div>
         
         {% elif sales_quotation.approval == 'Disapproved' %}
         <div>

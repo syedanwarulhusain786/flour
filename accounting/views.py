@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect 
-# Create your views here.
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from commonApp.forms import ProductBrandForm
 from datetime import datetime
@@ -31,7 +31,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.views import View
 from django.contrib.staticfiles import finders
-
+from decimal import Decimal
 from commonApp.forms import ProductCategoryForm
 
 from django.shortcuts import render, redirect
@@ -123,7 +123,12 @@ def approve(request):
 ####################a
 
 def SalesQuotationDetailView(request,pk):
+    delivery=SalesDeliveryDetails.objects.filter(OrderFk=pk)
     
+    try:
+        latest_delivery = SalesDeliveryDetails.objects.filter(order__quotation_number=order_id, row_type='delivery')[0].created_at
+    except:
+        latest_delivery=''
     sales_quotation_with_items = SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(quotation_number=pk).first()
     if request.method=='POST':
         order_id = request.POST.get('order_id')
@@ -131,7 +136,7 @@ def SalesQuotationDetailView(request,pk):
         delivery = request.POST.get('delivery_date')
         if action=='approved':
             ord=SalesQuotation.objects.get(quotation_number=order_id)
-            ord.approval="Production"
+            ord.approval="approved"
             ord.delivery_date=delivery
             
             ord.save()
@@ -143,7 +148,8 @@ def SalesQuotationDetailView(request,pk):
             pass
 
     if str(request.user.account_type) =='Customer':
-        return render(request, 'customerOrderside\orderdetail.html', {'sales_quotation': sales_quotation_with_items})  
+        
+        return render(request, 'customerOrderside\orderdetail.html', {'sales_quotation': sales_quotation_with_items,'delivery':delivery})  
     else:    
         return render(request, 'customerOrder\orderdetail.html', {'sales_quotation': sales_quotation_with_items})  
 
@@ -160,10 +166,11 @@ def salesapprove(request):
       
     return render(request,'customerOrder\order_approval.html',{'orders':approved_quotations})
 def salesapproved(request):
-    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval ='Approved')
+    print('hiii')
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').exclude(approval__in =['pending','disapproved','completed'])
     return render(request, 'customerOrder/adminOrder/approved.html', {'orders': Orders})  
 def salesdisapproved(request):
-    Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='Disapproved')
+    Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='disapproved')
     return render(request, 'customerOrder/adminOrder/disapproved.html', {'orders': Orders})  
 
 def salesstartdelivery(request,order_id):
@@ -228,31 +235,90 @@ def acceptDelivery(request,order_id):
         
         
     return render(request, 'adminOrder/acceptdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
+@login_required(login_url='login')
+def payables(request):
+    all_pay=DeliveryDetails.objects.filter(row_type='delivery')
+    print(all_pay)
+    return render(request,'account/payables.html',{'all_pay':all_pay})
+@login_required(login_url='login')
+def recievables(request):
+    
+    return render(request,'account/recievables.html')
+
+@login_required(login_url='login')
+def viewdelivery(request,pk):
+    purchase = get_object_or_404(DeliveryDetails, order=pk)
+    company = get_object_or_404(Company, name=request.user.company)
+    quote = PurchaseItemRow.objects.filter(quotation=purchase)
+    
+    
 
 
+    return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
+
+
+
+
+
+
+
+
+
+
+
+
+
+@login_required(login_url='login')
+def PurchaseQuotationDetailView(request,pk):
+    print(request.user.company)
+    purchase = get_object_or_404(PurchaseQuotation, quotation_number=pk)
+    company = get_object_or_404(Company, name=request.user.company)
+    quote = PurchaseItemRow.objects.filter(quotation=purchase)
+    
+    
+
+
+    return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
 
 def updateDelivery(request,order_id):
-
+    
     delivery=DeliveryDetails.objects.get(id=order_id)
     formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
-
+    
     if request.method=='POST':
+        current_date = datetime.now()
+        supp=Supplier.objects.get(user=delivery.order.user)
+        due_date = current_date + timedelta(days=supp.credit_period)
         order = request.POST.get('order')
         
         vehicle = request.POST.get('vehicle')
         allBags = int(request.POST.get('allBags', 0))
         deliveryDate = request.POST.get('deliveryDate')
         
-        quantity = int(request.POST.get('quantity'))
+        quantity = Decimal(request.POST.get('aq'))
         jute = int(request.POST.get('jute'))
         plastic = int(request.POST.get('plastic'))
         fssi = int(request.POST.get('fssi'))
         loose = int(request.POST.get('loose'))
+        Freight = int(request.POST.get('Freight'))
+        Dala = int(request.POST.get('Dala'))
+        cd = int(request.POST.get('cd'))
+        tds = int(request.POST.get('tds'))
+        Bardana = int(request.POST.get('Bardana'))
+        Brokerage = int(request.POST.get('Brokerage'))
+        Commission = int(request.POST.get('Commission'))
+        Kata = int(request.POST.get('Kata'))
+        
+        
+        total = int(request.POST.get('total'))
+        final = int(request.POST.get('final'))
+        
         tObj=Order.objects.get(id=order)
-        tObj.quantity_left-=quantity
+        tObj.quantity_left=Decimal(tObj.quantity_left)-Decimal(quantity)
         tObj.save()
         delivery.status='delivered'
         delivery.save()
+        
         order = DeliveryDetails(
             user=CustomUser.objects.get(username=request.user),
             order=tObj,
@@ -265,17 +331,46 @@ def updateDelivery(request,order_id):
             plastic_bags = plastic,
             fssi = fssi,
             loose = loose,
+            freight = Freight ,
+            data = Dala,
+            kanta = Kata ,
+            cashDiscount = cd,
+            tdsTcs = tds,
+            bardana = Bardana,
+            brokerage = Brokerage,
+            commission = Commission,
+            deductedAmt = total,
+            finalAmt = final,
+            dueDate=due_date,
             status='delivered'
         )
         order.save()
         sock=ProductStock()
        
-        sock.product = tObj.order.product
+        sock.product = tObj.product
         
         sock.type='purchase'
         sock.quantity =quantity
-        sock.cost_of_single =tObj.order.price_per_quantal
+        sock.cost_of_single =tObj.price_per_quantal
         sock.save()
+        ledger_entry=LedgerEntry(
+            delivery = order,
+            order = tObj,
+            account = Ledger.objects.get(ledger_name='SUPPLIER PURCHASES'),
+            # Other fields for ledger entry details
+            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery}" ,
+            debit_amount = Decimal(final),
+            credit_amount = 0,
+        ).save()
+        ledger_entry=LedgerEntry(
+            delivery = order,
+            order = tObj,
+            account = Ledger.objects.get(ledger_name=delivery.order.user),
+            # Other fields for ledger entry details
+            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery}" ,
+            debit_amount = 0,
+            credit_amount = Decimal(final),
+        ).save()
         # Notification.objects.create(user=order.user, message=f'Delivery Accepted: Order #{order.id}')
         return redirect('adminapproved')
         
@@ -308,7 +403,7 @@ def admindisapproved(request):
     Orders=Order.objects.filter(is_approved='disapproved')
     return render(request, 'adminOrder/disapproved.html', {'Orders': Orders})  
 
-def acceptDelivery(request,order_id):
+def salesacceptDelivery(request,order_id):
     
     Orders=Order.objects.filter(id=order_id,is_approved='approved')
     delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
@@ -324,56 +419,56 @@ def acceptDelivery(request,order_id):
 
 
 
-def updateDelivery(request,order_id):
+# def updateDelivery(request,order_id):
 
-    delivery=DeliveryDetails.objects.get(id=order_id)
-    formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
+#     delivery=DeliveryDetails.objects.get(id=order_id)
+#     formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
 
-    if request.method=='POST':
-        order = request.POST.get('order')
+#     if request.method=='POST':
+#         order = request.POST.get('order')
         
-        vehicle = request.POST.get('vehicle')
-        allBags = int(request.POST.get('allBags', 0))
-        deliveryDate = request.POST.get('deliveryDate')
+#         vehicle = request.POST.get('vehicle')
+#         allBags = int(request.POST.get('allBags', 0))
+#         deliveryDate = request.POST.get('deliveryDate')
         
-        quantity = int(request.POST.get('quantity'))
-        jute = int(request.POST.get('jute'))
-        plastic = int(request.POST.get('plastic'))
-        fssi = int(request.POST.get('fssi'))
-        loose = int(request.POST.get('loose'))
-        tObj=Order.objects.get(id=order)
-        tObj.quantity_left-=quantity
-        tObj.save()
-        delivery.status='delivered'
-        delivery.save()
-        order = DeliveryDetails(
-            user=CustomUser.objects.get(username=request.user),
-            order=tObj,
-            row_type='delivery',
-            vehicle_number=vehicle,
-            date_of_delivery=deliveryDate,
-            no_of_bags=allBags,
-            quantity=quantity,
-            jute_bags = jute,
-            plastic_bags = plastic,
-            fssi = fssi,
-            loose = loose,
-            status='delivered'
-        )
-        order.save()
-        prod=ProductStock()  
-        prod.delivery=delivery  
-        prod.product=tObj.product  
-        prod.type='purchase'
-        prod.quantity=quantity  
-        prod.cost_of_single=tObj.price_per_quantal
-        prod.save()
-        # Notification.objects.create(user=order.user, message=f'Your Delivery is Accepted: Order #{order.id}')
-        return redirect('adminapproved')
+#         quantity = int(request.POST.get('quantity'))
+#         jute = int(request.POST.get('jute'))
+#         plastic = int(request.POST.get('plastic'))
+#         fssi = int(request.POST.get('fssi'))
+#         loose = int(request.POST.get('loose'))
+#         tObj=Order.objects.get(id=order)
+#         tObj.quantity_left-=quantity
+#         tObj.save()
+#         delivery.status='delivered'
+#         delivery.save()
+#         order = DeliveryDetails(
+#             user=CustomUser.objects.get(username=request.user),
+#             order=tObj,
+#             row_type='delivery',
+#             vehicle_number=vehicle,
+#             date_of_delivery=deliveryDate,
+#             no_of_bags=allBags,
+#             quantity=quantity,
+#             jute_bags = jute,
+#             plastic_bags = plastic,
+#             fssi = fssi,
+#             loose = loose,
+#             status='delivered'
+#         )
+#         order.save()
+#         prod=ProductStock()  
+#         prod.delivery=delivery  
+#         prod.product=tObj.product  
+#         prod.type='purchase'
+#         prod.quantity=quantity  
+#         prod.cost_of_single=tObj.price_per_quantal
+#         prod.save()
+#         # Notification.objects.create(user=order.user, message=f'Your Delivery is Accepted: Order #{order.id}')
+#         return redirect('adminapproved')
         
         
         
-    return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
+#     return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
 
 
 
@@ -640,17 +735,6 @@ def quotepurchaseList(request):
     quotes=PurchaseQuotation.objects.all()
     return render(request,'purchase\PurchaseOrder\PurchaseOrders.html',{'quotes':quotes})
 
-@login_required(login_url='login')
-def PurchaseQuotationDetailView(request,pk):
-    print(request.user.company)
-    purchase = get_object_or_404(PurchaseQuotation, quotation_number=pk)
-    company = get_object_or_404(Company, name=request.user.company)
-    quote = PurchaseItemRow.objects.filter(quotation=purchase)
-    
-    
-
-
-    return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
 
 @login_required(login_url='login')
 def PurchaseQuotationDeleteView(request,pk):
@@ -1376,7 +1460,7 @@ def Journal_entry(request):
         for index in range(1,count+1):
                 led = request.POST.get(f'dropdown{index}')
                 comment=request.POST.get(f'nar{index}')
-                
+                print(comment)
                 try:
                     cred=float(request.POST.get(f'deb{index}'))
                 except:
@@ -1397,6 +1481,12 @@ def Journal_entry(request):
 
                     # Add other fields as needed
                 )
+                LedgerEntry.objects.create(
+                    account = Ledger.objects.get(ledger_number=led),
+                    description = notes,
+                    debit_amount = cred,
+                    credit_amount = deb,
+                )
 
 
 
@@ -1412,22 +1502,32 @@ def Journal_entry(request):
     'next_quotation_number':next_quotation_number})
     
     
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def payments(request):
+    paymentsV=PaymentEntry.objects.all()
+    return render (request, 'vouchers/Payment/paymentList.html',  context={'paymentsV':paymentsV})
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def reciepts(request):
+    RecieptEntryV=RecieptEntry.objects.all()
+    return render (request, 'vouchers/Reciept/receiptList.html',  context={'RecieptEntryV':RecieptEntryV})
 
 
 
 
+
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
 def payment(request):
                 
-    Category_list=Primary_Group.objects.all()
-    Subcategory_list = Group.objects.all()
-    account = VoucherLedgerVisibility.objects.get(voucher_type='PAY')
 
-    # Get all ledgers under the selected groups
-    selected_group_numbers = account.selected_groups.values_list('group_number', flat=True)
-    ledgers_under_selected_groups = Ledger.objects.filter(
-        Q(group__group_number__in=selected_group_numbers) |
-        Q(group__primary_group__primary_group_number__in=selected_group_numbers)
-    )
+    purchase=DeliveryDetails.objects.filter(payment__in=['due','pending'],row_type='delivery')
+   
+    pay = Ledger.objects.filter(group__group_name__in=['BANK ACCOUNTS', 'CASH-IN-HAND'])
+    to_ledger_accounts = Ledger.objects.exclude(group__group_name__in=['BANK ACCOUNTS', 'CASH-IN-HAND'])
+
+   
 
     if request.method=='POST':
         # Extract keys that match the pattern 'cat{number}', 'sub{number}', 'ref{number}', etc.
@@ -1441,52 +1541,57 @@ def payment(request):
         
         invoice_date = request.POST.get('invoice_date')
         
+        from_ledger = request.POST.get(f'dropdown1')
+        to_ledger=request.POST.get(f'dropdown2')
+  
         
-        d_total = float(request.POST.get('d_total'))
-        c_total = float(request.POST.get('c_total'))
-
-        count=int(request.POST.get('count'))
+        from_led=Ledger.objects.get(ledger_number=from_ledger)
+        to_led=Ledger.objects.get(ledger_number=to_ledger)
+        delivery=DeliveryDetails.objects.get(id=invoice_no)
+        
+        amt=float(request.POST.get(f'd_total'))
+        comment=request.POST.get(f'comment')
+   
         quote=PaymentEntry(
             date = journal_date,
             voucherNo=voucher_no,
-            invoice_no=invoice_no,
-            invoice_date=invoice_date,
-            
+            invoice_no = invoice_no,
+            invoice_date = invoice_date,
             narration = notes,
-            debit_total = d_total,  
-            credit_total = c_total, 
+            comment=comment,
+            from_ledger = from_led,
+            to_ledger = to_led,
+            debit_total = amt,
+            credit_total=amt,
         )
         quote.save()
-        # Add a discount field if you intend to use it
 
- 
-        for index in range(1,count+1):
-                led = request.POST.get(f'dropdown{index}')
-                comment=request.POST.get(f'nar{index}')
-                
-                try:
-                    cred=float(request.POST.get(f'deb{index}'))
-                except:
-                    cred=0.00
-                try:
-                    deb=float(request.POST.get(f'cre{index}'))
-                except:
-                    deb=0.00
-                
-                # Extract the index from the key (e.g., dropdown1, dropdown2, etc.)
-                PaymentEntryRow.objects.create(
-                    # quotation=quotation,
-                    entryFk=quote,
-                    ledger=Ledger.objects.get(ledger_number=led),
-                    comment=comment,
-                    
-                    debit=cred,
-                    credit=deb,
-
-                    # Add other fields as needed
-                )
-
-
+        delivery.payment='paid'
+        delivery.save()
+       
+        ledger_entry=LedgerEntry(
+            delivery = delivery,
+            order = delivery.order,
+            account =to_led,
+            # Other fields for ledger entry details
+            description = f"Payment For Purchase OrderId:-{delivery.order.id} DeliveryID:-{delivery.id}" ,
+            debit_amount = Decimal(request.POST.get(f'd_total')),
+            credit_amount = 0,
+        ).save()
+       
+        ledger_entry=LedgerEntry(
+                    delivery = delivery,
+                    order = delivery.order,
+                    account =from_led,
+                    # Other fields for ledger entry details
+                    description = f"Payment For OrderId:-{delivery.order.id} DeliveryID:-{delivery.id} comment:-{comment}" ,
+                    debit_amount = 0,
+                    credit_amount = Decimal(request.POST.get(f'd_total')),
+                ).save()
+        
+    
+   
+        
 
         # Redirect to the detail view for the created quotation
         return redirect('payment-entries')
@@ -1496,22 +1601,19 @@ def payment(request):
     latest_quotation = PaymentEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
     return render(request, 'vouchers\Payment\payment.html',  context={
-        'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
-    'next_quotation_number':next_quotation_number})
+        'username':request.user,'account_list':to_ledger_accounts,
+    'next_quotation_number':next_quotation_number,'purchases':purchase,'pay':pay})
 
 
 def reciept(request):
                 
-    Category_list=Primary_Group.objects.all()
-    Subcategory_list = Group.objects.all()
-    account = VoucherLedgerVisibility.objects.get(voucher_type='RCT')
+                    
 
-    # Get all ledgers under the selected groups
-    selected_group_numbers = account.selected_groups.values_list('group_number', flat=True)
-    ledgers_under_selected_groups = Ledger.objects.filter(
-        Q(group__group_number__in=selected_group_numbers) |
-        Q(group__primary_group__primary_group_number__in=selected_group_numbers)
-    )
+    purchase=SalesDeliveryDetails.objects.filter(payment__in=['due','pending'],row_type='delivery')
+    pay = Ledger.objects.filter(group__group_name__in=['BANK ACCOUNTS', 'CASH-IN-HAND'])
+    to_ledger_accounts = Ledger.objects.exclude(group__group_name__in=['BANK ACCOUNTS', 'CASH-IN-HAND'])
+
+   
 
     if request.method=='POST':
         # Extract keys that match the pattern 'cat{number}', 'sub{number}', 'ref{number}', etc.
@@ -1522,66 +1624,72 @@ def reciept(request):
         
         invoice_no = request.POST.get('invoice_no')
         notes = request.POST.get('notes')
+       
         
         invoice_date = request.POST.get('invoice_date')
         
+        from_ledger = request.POST.get(f'dropdown1')
+        to_ledger=request.POST.get(f'dropdown2')
+  
         
-        d_total = float(request.POST.get('d_total'))
-        c_total = float(request.POST.get('c_total'))
-
-        count=int(request.POST.get('count'))
+        from_led=Ledger.objects.get(ledger_number=from_ledger)
+        to_led=Ledger.objects.get(ledger_number=to_ledger)
+        delivery=SalesDeliveryDetails.objects.get(id=invoice_no)
+        
+        amt=float(request.POST.get(f'd_total'))
+        comment=request.POST.get(f'comment')
+   
         quote=RecieptEntry(
             date = journal_date,
             voucherNo=voucher_no,
-            invoice_no=invoice_no,
-            invoice_date=invoice_date,
-            
+            invoice_no = invoice_no,
+            invoice_date = invoice_date,
             narration = notes,
-            debit_total = d_total,  
-            credit_total = c_total, 
+            comment=comment,
+            from_ledger = from_led,
+            to_ledger = to_led,
+            debit_total = amt,
+            credit_total=amt,
         )
         quote.save()
-        # Add a discount field if you intend to use it
 
- 
-        for index in range(1,count+1):
-                led = request.POST.get(f'dropdown{index}')
-                comment=request.POST.get(f'nar{index}')
-                
-                try:
-                    cred=float(request.POST.get(f'deb{index}'))
-                except:
-                    cred=0.00
-                try:
-                    deb=float(request.POST.get(f'cre{index}'))
-                except:
-                    deb=0.00
-                
-                # Extract the index from the key (e.g., dropdown1, dropdown2, etc.)
-                RecieptEntryRow.objects.create(
-                    # quotation=quotation,
-                    entryFk=quote,
-                    ledger=Ledger.objects.get(ledger_number=led),
-                    comment=comment,
-                    
-                    debit=cred,
-                    credit=deb,
-
-                    # Add other fields as needed
-                )
-
-
+        delivery.payment='recieved'
+        delivery.save()
+        sq=SalesQuotation.objects.get(quotation_number=delivery.OrderFk.quotation_number)
+        ledger_entry=LedgerEntry(
+            salesdelivery = delivery,
+            saleorder = sq,
+            account =to_led,
+            # Other fields for ledger entry details
+            description = f"Payment Recieved For Purchase OrderId:-{delivery.order.id} DeliveryID:-{delivery.id}" ,
+            debit_amount = Decimal(request.POST.get(f'd_total')),
+            credit_amount = 0,
+        ).save()
+       
+        ledger_entry=LedgerEntry(
+                    salesdelivery = delivery,
+                    saleorder = sq,
+                    account =from_led,
+                    # Other fields for ledger entry details
+                    description = f"Payment Recieved For OrderId:-{delivery.order.id} DeliveryID:-{delivery.id} comment:-{comment}" ,
+                    debit_amount = 0,
+                    credit_amount = Decimal(request.POST.get(f'd_total')),
+                ).save()
+        
+    
+   
+        
 
         # Redirect to the detail view for the created quotation
-        return redirect('reciept-entries')
+        return redirect('payment-entries')
         
         
                   
     latest_quotation = RecieptEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\Reciept\receiptEntry.html',  context={
-        'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
-    'next_quotation_number':next_quotation_number})
+    return render(request, 'vouchers/Reciept/receiptEntry.html',  context={
+        'username':request.user,'account_list':to_ledger_accounts,
+    'next_quotation_number':next_quotation_number,'purchases':purchase,'pay':pay})
 
 
 
@@ -1600,69 +1708,69 @@ def contra(request):
 
     # Now `ledgers_under_selected_groups` contains all ledgers under the selected groups
     for ledger in ledgers_under_selected_groups:
-        print(ledger.ledger_name)
-    if request.method=='POST':
-        # Extract keys that match the pattern 'cat{number}', 'sub{number}', 'ref{number}', etc.
-        
-        # Handle POST request and process the form data
-        journal_date = request.POST.get('journal_date')
-        voucher_no = request.POST.get('voucher_no')
-        
-        invoice_no = request.POST.get('invoice_no')
-        notes = request.POST.get('notes')
-        
-        invoice_date = request.POST.get('invoice_date')
-        
-        
-        d_total = float(request.POST.get('d_total'))
-        c_total = float(request.POST.get('c_total'))
+   
+        if request.method=='POST':
+            # Extract keys that match the pattern 'cat{number}', 'sub{number}', 'ref{number}', etc.
+            
+            # Handle POST request and process the form data
+            journal_date = request.POST.get('journal_date')
+            voucher_no = request.POST.get('voucher_no')
+            
+            invoice_no = request.POST.get('invoice_no')
+            notes = request.POST.get('notes')
+            
+            invoice_date = request.POST.get('invoice_date')
+            
+            
+            d_total = float(request.POST.get('d_total'))
+            c_total = float(request.POST.get('c_total'))
 
-        count=int(request.POST.get('count'))
-        quote=ContraEntry(
-            date = journal_date,
-            voucherNo=voucher_no,
-            invoice_no=invoice_no,
-            invoice_date=invoice_date,
-            narration = notes,
-            debit_total = d_total,  
-            credit_total = c_total, 
-        )
-        quote.save()
-        # Add a discount field if you intend to use it
+            count=int(request.POST.get('count'))
+            quote=ContraEntry(
+                date = journal_date,
+                voucherNo=voucher_no,
+                invoice_no=invoice_no,
+                invoice_date=invoice_date,
+                narration = notes,
+                debit_total = d_total,  
+                credit_total = c_total, 
+            )
+            quote.save()
+            # Add a discount field if you intend to use it
 
- 
-        for index in range(1,count+1):
-                print(index)
-                led = request.POST.get(f'dropdown{index}')
-                try:
-                    cred=float(request.POST.get(f'deb{index}'))
-                except:
-                    cred=0.00
-                try:
-                    deb=float(request.POST.get(f'cre{index}'))
-                except:
-                    deb=0.00
-                comment=request.POST.get(f'nar{index}')
-                
-                # Extract the index from the key (e.g., dropdown1, dropdown2, etc.)
-                ContraEntryRow.objects.create(
-                    # quotation=quotation,
-                    entryFk=quote,
-                    ledger=Ledger.objects.get(ledger_number=led),
-                    comment=comment,
+    
+            for index in range(1,count+1):
+                    print(index)
+                    led = request.POST.get(f'dropdown{index}')
+                    try:
+                        cred=float(request.POST.get(f'deb{index}'))
+                    except:
+                        cred=0.00
+                    try:
+                        deb=float(request.POST.get(f'cre{index}'))
+                    except:
+                        deb=0.00
+                    comment=request.POST.get(f'nar{index}')
                     
-                    debit=cred,
-                    credit=deb,
+                    # Extract the index from the key (e.g., dropdown1, dropdown2, etc.)
+                    ContraEntryRow.objects.create(
+                        # quotation=quotation,
+                        entryFk=quote,
+                        ledger=Ledger.objects.get(ledger_number=led),
+                        comment=comment,
+                        
+                        debit=cred,
+                        credit=deb,
 
-                    # Add other fields as needed
-                )
+                        # Add other fields as needed
+                    )
 
 
 
-        # Redirect to the detail view for the created quotation
-        return redirect('contra')
-        
-        
+            # Redirect to the detail view for the created quotation
+            return redirect('contra')
+            
+            
                   
     latest_quotation = ContraEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
@@ -2143,111 +2251,119 @@ def  accountingledger(request):
 
 
 def journalEntries(request):
-    # context = {}
-    # q = request.GET.get('q')
-    # from_date = request.GET.get('from')
-    # to_date = request.GET.get('to')
+    normalized_data = []
+    journal_page_obj=JournalEntryRow.objects.all()
 
-    # context['username'] = request.user
-
-    # # Parse date inputs (assuming they are in a specific format)
-    # try:
-    #     from_date = datetime.strptime(from_date, '%Y-%m-%d').date() if from_date else None
-    #     to_date = datetime.strptime(to_date, '%Y-%m-%d').date() if to_date else None
-    # except ValueError:
-    #     from_date = None
-    #     to_date = None
-
-    # if q:
-    #     multiple_q = (
-    #         Q(voucherNo__icontains=q) |
-    #         Q(voucherCode__icontains=q) |
-    #         Q(rows__ledger__group__primary_group__primary_group_name__icontains=q) |
-    #         Q(rows__ledger__group__group_name__icontains=q) |
-    #         Q(rows__ledger__ledger_name__icontains=q)
-    #     )
-
-    #     # Apply date range filtering if both 'from_date' and 'to_date' are provided
-    #     if from_date and to_date:
-    #         filtered_entry = JournalEntryFilter(
-    #             request.GET,
-    #             queryset=JournalEntry.objects.filter(multiple_q, date__range=[from_date, to_date]).distinct()
-    #         )
-    #     else:
-    #         filtered_entry = JournalEntryFilter(request.GET, queryset=JournalEntry.objects.filter(multiple_q).distinct())
-    # else:
-    #     # Apply date range filtering if both 'from_date' and 'to_date' are provided
-    #     if from_date and to_date:
-    #         filtered_entry = JournalEntryFilter(
-    #             request.GET,
-    #             queryset=JournalEntry.objects.filter(date__range=[from_date, to_date]).distinct()
-    #         )
-    #     else:
-    #         filtered_entry = JournalEntryFilter(request.GET, queryset=JournalEntry.objects.all().distinct())
-
-    # context['filtered_journal'] = filtered_entry
-    # paginated_filtered_journal = Paginator(filtered_entry.qs, 50)
-    # page_number = request.GET.get('page')
-    
-    # journal_page_obj = paginated_filtered_journal.get_page(page_number)
-    # context['journal_page_obj'] = journal_page_obj
-    journal_page_obj=JournalEntry.objects.all()
-    return render(request, 'vouchers/Journal/journalEntries.html', context={'journal_page_obj':journal_page_obj})
-def Gernal_Ledger(request):
-                
-    accounts = Ledger.objects.all()           
-    q=request.GET.get('q')
-    lis=[]
-    result={}
-    cat=''
-    subcat=''
-    if 'q' in request.GET:
-        ledgers=JournalEntryRow.objects.filter(ledger__ledger_number=q)
-        cred=0
-       
-        deb=0
-        bal=0
-        for row in ledgers:
+    for journal_entry in journal_page_obj:
+        entry_data = {
             
-            led={}
-            led['idx']=row.entryFk
-            led['date']=row.entryFk.date
-            led['ledger']=row.ledger
-            led['narration']=row.entryFk.narration
-            led['debit']=row.debit
-            led['credit']=row.credit
-            if row.debit==0.00:
-                led['Balance']=-1*(row.credit)
-            else:
-                led['Balance']=row.debit
-            cred=cred+row.credit
-            deb=deb+row.debit
-            bal=bal+led['Balance']
-            lis.append(led)
+            'voucherNo': journal_entry.entryFk.voucherNo,
+            'voucherCode': journal_entry.entryFk.voucherCode,
+            'date': journal_entry.entryFk.date,
+            'invoice_no': journal_entry.entryFk.invoice_no,
+            'invoice_date': journal_entry.entryFk.invoice_date,
+            'narration': journal_entry.entryFk.narration,
+            'debit_total': journal_entry.entryFk.debit_total,
+            'credit_total': journal_entry.entryFk.credit_total,
             
-        result={
-          'deb_result':deb,
-          'cred_result':cred,
-          'bal_result':bal,
-        
+            'ledger_name': journal_entry.ledger.ledger_name,
+            'comment': journal_entry.comment,
+            'debit': journal_entry.debit,
+            'credit': journal_entry.credit,
         }
-        cat=row.ledger.group.primary_group.primary_group_name
-        subcat=row.ledger.group.group_name
-            
-
-         
-    return render(request, 'ledgers\ledger.html', context={'heading':q,'cat':cat,'subcat':subcat,
-        'username':request.user,'account_list':accounts,
-        'led':lis,'result':result
-    }) 
 
   
 
+        normalized_data.append(entry_data)
+    return render(request, 'vouchers/Journal/journalEntries.html', context={'journal_page_obj':normalized_data})
+def Gernal_Ledger(request):
+    if request.user.account_type.name == "Customer" or request.user.account_type.name == "Supplier":
+        accounts = Ledger.objects.filter(ledger_name=request.user)
+    else:
+        accounts = Ledger.objects.all()
+    q = request.GET.get('q')
+    types = ''
+    led = ''
+    lis = []
+    result = {}
+    cat = ''
+    subcat = ''
+    total_debit = 0
+    total_credit = 0
+    total_balance = 0
+
+    if q:
+        # Assuming you have a ForeignKey relationship between LedgerEntry and DeliveryDetails
+        # and LedgerEntry has fields like debit_amount, credit_amount, and date
+        ledgers = LedgerEntry.objects.filter(account=Ledger.objects.get(ledger_number=q))
+
+        # Calculate running balances and totals
+        running_balance = 0
+        for entry in ledgers:
+            entry.balance = running_balance + entry.debit_amount - entry.credit_amount
+            running_balance = entry.balance
+
+            # Update total debit and credit
+            total_debit += entry.debit_amount
+            total_credit += entry.credit_amount
+
+            if entry.balance < 0:
+                entry.balance = entry.balance * -1
+                types = 'Cr'
+            else:
+                types = 'Dr'
+
+        # Calculate total balance
+        total_balance = total_debit - total_credit
+        if total_balance<0:
+            total_balance=total_balance*-1
+        # Pass the ledger entries and totals to the template
+        lis = ledgers
+        
+        led = Ledger.objects.get(ledger_number=q)
+        
+
+    return render(request, 'ledgers/ledger.html', context={'heading': led, 'cat': cat, 'subcat': subcat,
+                                                             'username': request.user, 'account_list': accounts,
+                                                             'led': lis, 'result': result,
+                                                             'types': types,
+                                                             'total_debit': total_debit,
+                                                             'total_credit': total_credit,
+                                                             'total_balance': total_balance})
+
+
+# views.py
+from django.shortcuts import render
+from .models import LedgerEntry
+from .filters import LedgerEntryFilter
+
+def LedgerEntries(request):
+    if request.user.account_type.name == "Customer" :
+        ledger_entries = LedgerEntry.objects.filter(saleorder__customer=request.user)
+        
+    elif request.user.account_type.name == "Supplier":
+        ledger_entries = LedgerEntry.objects.filter(order__user=request.user)
+    else:
+        ledger_entries = LedgerEntry.objects.all()
+    print(ledger_entries)
+
+    # Apply the date range filter
+    ledger_filter = LedgerEntryFilter(request.GET, queryset=ledger_entries)
+
+    return render(request, 'ledgers/ledgerEntries.html', context={'ledger_filter': ledger_filter})
 
 
 
-
-
+def check_delivery_details(request,delivery_id):
+    ledg=LedgerEntry.objects.get(id=delivery_id)
+    
+    if ledg.saleorder :
+        delivery=ledg.salesdelivery
+        return render(request, 'ledgers/sale_delivery_details.html', context={'delivery': delivery})
+    else:
+        delivery=ledg.delivery
+    
+        return render(request, 'ledgers/delivery_details.html', context={'delivery': delivery})
 
 
 

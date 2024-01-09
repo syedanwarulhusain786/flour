@@ -12,7 +12,6 @@ from .models import (
     JournalEntry,
     JournalEntryRow,
     PaymentEntry,
-    PaymentEntryRow,
     ContraEntry,
     ContraEntryRow,
     SalesEntry,
@@ -24,7 +23,8 @@ from .models import (
     DebitNoteEntry,
     DebitNoteEntryRow,
     VoucherLedgerVisibility,
-    Tax,SalesDeliveryDetails,SalesItemRow,SalesQuotation
+    RecieptEntry,
+    Tax,SalesDeliveryDetails,SalesItemRow,SalesQuotation,LedgerEntry
 )
 def download_csv(modeladmin, request, queryset):
     response = HttpResponse(content_type='text/csv')
@@ -63,12 +63,8 @@ class JournalEntryRowInline(admin.TabularInline):
 class JournalEntryAdmin(admin.ModelAdmin):
     inlines = [JournalEntryRowInline]
     actions = [download_csv]
-class PaymentEntryRowInline(admin.TabularInline):
-    model = PaymentEntryRow
-    actions = [download_csv]
 
-class PaymentEntryAdmin(admin.ModelAdmin):
-    inlines = [PaymentEntryRowInline]
+
 
 
 
@@ -121,12 +117,15 @@ admin.site.register(SalesItemRow)
 
 admin.site.register(SalesDeliveryDetails)
 
+admin.site.register(RecieptEntry)
 admin.site.register(Ledger)
+admin.site.register(LedgerEntry)
+admin.site.register(PaymentEntry)
+
 admin.site.register(Customer)
 admin.site.register(Supplier)
 admin.site.register(PurchaseQuotation, PurchaseQuotationAdmin)
 admin.site.register(JournalEntry, JournalEntryAdmin)
-admin.site.register(PaymentEntry, PaymentEntryAdmin)
 admin.site.register(ContraEntry, ContraEntryAdmin)
 admin.site.register(SalesEntry, SalesEntryAdmin)
 admin.site.register(PurchaseEntry, PurchaseEntryAdmin)

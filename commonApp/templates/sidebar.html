@@ -245,6 +245,73 @@
       </ul>
     </li>
 
+    <li class="sidebar-item">
+      <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+        <span class="d-flex">
+          <i class="ti ti-shopping-cart"></i>
+        </span>
+        <span class="hide-menu">Accounts</span>
+      </a>
+      <ul aria-expanded="false" class="collapse first-level">
+        
+
+        <li class="sidebar-item">
+          <a href="{% url 'reciepts' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">All Reciept</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'payments' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">All Payment</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'generalLedger' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">General Ledger</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'LedgerEntries' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Ledger Entries</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{% url 'journal-entries' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Journal Entries</span>
+          </a>
+        </li>
+      </ul>
+        
+
+
+
+    </li>
+
+
+
+
+
+
+
+
+
+
+
 
 
     <li class="sidebar-item">
@@ -414,25 +481,76 @@
             </a>
           </li>
           
+          
+        </ul>
+      </li>
+
+
+
+      <li class="sidebar-item">
+        <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+          <span class="d-flex">
+            <i class="ti ti-shopping-cart"></i>
+          </span>
+          <span class="hide-menu">Humar Resource</span>
+        </a>
+        <ul aria-expanded="false" class="collapse first-level">
           <li class="sidebar-item">
-            <a href="{% url 'product_list' %}" class="sidebar-link">
+            <a href="{% url 'hr_department' %}" class="sidebar-link">
               <div class="round-16 d-flex align-items-center justify-content-center">
                 <i class="ti ti-circle"></i>
               </div>
-              <span class="hide-menu">Completed Productions</span>
+              <span class="hide-menu">Employess</span>
             </a>
           </li>
 
           <li class="sidebar-item">
-            <a href="{% url 'brand_category' %}" class="sidebar-link">
+            <a href="{% url 'month_wise_attendance' %}" class="sidebar-link">
               <div class="round-16 d-flex align-items-center justify-content-center">
                 <i class="ti ti-circle"></i>
               </div>
-              <span class="hide-menu">Production Reports</span>
+              <span class="hide-menu">Attendence</span>
             </a>
           </li>
+          <li class="sidebar-item">
+            <a href="{% url 'mark_attendance' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Add Attendence</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="{% url 'hr_department' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Employess</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="{% url 'upload_attendance_page' %}" class="sidebar-link">
+              <div class="round-16 d-flex align-items-center justify-content-center">
+                <i class="ti ti-circle"></i>
+              </div>
+              <span class="hide-menu">Attendence Upload</span>
+            </a>
+          </li>
+    
+          
+          
+          
         </ul>
       </li>
+
+
+
+
+
+
+
+
+
 
 
 </nav>
@@ -594,6 +712,36 @@
               <span class="hide-menu">Disapproved Order</span>
             </a>
           </li>
+
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'generalLedger' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">My Ledger</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'LedgerEntries' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+              </span>
+              <span class="hide-menu">My Ledger Entries</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'suppliercompleted' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+      
+              </span>
+              <span class="hide-menu">Completed Orders</span>
+            </a>
+          </li>
          
          
 
@@ -642,7 +790,7 @@
 
 
     <li class="sidebar-item">
-      <a class="sidebar-link" href="{% url 'customerdisapproved' %}" aria-expanded="false">
+      <a class="sidebar-link" href="{% url 'salesapproved' %}" aria-expanded="false">
         <span>
           <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
 
@@ -652,7 +800,7 @@
     </li>
 
     <li class="sidebar-item">
-      <a class="sidebar-link" href="{% url 'customerdisapproved' %}" aria-expanded="false">
+      <a class="sidebar-link" href="{% url 'salesdisapproved' %}" aria-expanded="false">
         <span>
           <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
 
@@ -661,7 +809,34 @@
       </a>
     </li>
    
-   
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'generalLedger' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/invoice.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">My Ledger</span>
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'LedgerEntries' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">My Ledger Entries</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'customercompleted' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">Completed Orders</span>
+      </a>
+    </li>
 
     
   </ul>

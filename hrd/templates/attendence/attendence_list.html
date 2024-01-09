@@ -1,0 +1,11 @@
+<!-- attendance_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Attendance List</h1>
+  <ul>
+    {% for attendance in attendance_list %}
+      <li>{{ attendance.employee.first_name }} {{ attendance.employee.last_name }} - {{ attendance.date }} - {{ attendance.status }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -14,4 +14,3 @@ class JournalEntryForm(forms.ModelForm):
 
 
 # forms.py
-

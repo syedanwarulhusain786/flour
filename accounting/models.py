@@ -226,24 +226,19 @@ class PurchaseInvoiceItemRow(models.Model):
 class SalesQuotation(models.Model):
    
     salesstatus_TYPE_CHOICES=[
-        ('Approved', 'Approved'),
-        ('Disapproved', 'Disapproved'),
-        ('Pending', 'Pending'),
-
+        ('pending', 'pending'),
+        ('approved', 'approved'),
+        ('disapproved', 'disapproved'),
+        ('inProduction', 'in Production'),
+        ('produced', 'produced'),
         
         
-        ('DeliverPending', 'DeliverPending'),
-        ('Completed', 'Completed'),
-        
-        
-    ]
-    Production_Status=[
-        ('pending', 'Pending'),
-        ('inProduction', 'In Production'),
-        ('Produced', 'Produced'),
+        ('deliverPending', 'deliverPending'),
+        ('completed', 'completed'),
         
         
     ]
+   
     quotation_number = models.AutoField(primary_key=True)  
     customer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,null=True, blank=True)
 
@@ -260,8 +255,7 @@ class SalesQuotation(models.Model):
     sub_total = models.CharField(max_length=255,null=True, blank=True)
 
     
-    approval = models.CharField(max_length=20, choices=salesstatus_TYPE_CHOICES)
-    status = models.CharField(max_length=20, choices=Production_Status)
+    approval = models.CharField(max_length=20, choices=salesstatus_TYPE_CHOICES,default='pending')
 
     def __str__(self):
         return f"SalesQuotation #{self.quotation_number}"
@@ -308,6 +302,10 @@ class SalesDeliveryDetails(models.Model):
     ('pending', 'Pending'),
     ('delivered', 'Delivered'),
     ]
+    status_payment= [
+    ('due', 'due'),
+    ('recieved', 'recieved'),
+    ]
     created_at=models.DateField(auto_now_add=True,null=True, blank=True)
     OrderFk = models.ForeignKey(SalesQuotation, on_delete=models.SET_NULL,null=True, blank=True)
 
@@ -323,11 +321,16 @@ class SalesDeliveryDetails(models.Model):
     fssi = models.PositiveIntegerField()
     loose = models.PositiveIntegerField()
     status = models.CharField(max_length=20, choices=status_row,default='pending')
+    dueDate = models.DateField(null=True, blank=True)
+    
+    
+    
+    payment= models.CharField(max_length=20, choices=status_payment,default='due')
     final_quantity_price= models.CharField(max_length=20,null=True, blank=True)
     
 
     def __str__(self):
-        return f"SalesDeliveryDetails for Order {self.order.id}"    
+        return f"SalesDeliveryDetails for Order {self.order}"    
     
     
     
@@ -488,75 +491,55 @@ class JournalEntryRow(models.Model):
 
 
 class PaymentEntry(models.Model):
-    s_no=models.AutoField(primary_key=True)
+    s_no = models.AutoField(primary_key=True)
     voucherNo = models.IntegerField() 
     voucherCode = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
-    invoice_no=models.CharField(blank=True,null=True,max_length=255)
-    invoice_date=models.DateField(blank=True,null=True)
-    narration = models.CharField(max_length=255,null=True, blank=True)
-    
+    invoice_no = models.CharField(blank=True, null=True, max_length=255)
+    invoice_date = models.DateField(blank=True, null=True)
+    narration = models.CharField(max_length=255, null=True, blank=True)
+    from_ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE, related_name='payments_made')
+    to_ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE, related_name='payments_received')
     debit_total = models.DecimalField(max_digits=10, decimal_places=2)    
     credit_total = models.DecimalField(max_digits=10, decimal_places=2)    
-    
-
+    comment=models.CharField(max_length=255, null=True, blank=True)
     def save(self, *args, **kwargs):
         if not self.voucherNo:
             # Get the maximum voucher number currently in the database
             max_voucher = PaymentEntry.objects.aggregate(models.Max('voucherNo'))['voucherNo__max']
             # Set the voucher number to the maximum + 1 or 100 if there are no records yet
             self.voucherNo = max_voucher + 1 if max_voucher else 100
-        self.voucherCode = "PV-"+str(self.voucherNo)
-            
+        self.voucherCode = f"PV-{self.voucherNo}"
         super(PaymentEntry, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.voucherNo}"
-class PaymentEntryRow(models.Model):
-    
-    entryFk = models.ForeignKey(PaymentEntry, on_delete=models.CASCADE , related_name='rows')
-    ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE)
-
-    debit = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)
-    credit = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)  
-
-
 
 
 class RecieptEntry(models.Model):
-    s_no=models.AutoField(primary_key=True)
+    s_no = models.AutoField(primary_key=True)
     voucherNo = models.IntegerField() 
     voucherCode = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
-    invoice_no=models.CharField(blank=True,null=True,max_length=255)
-    invoice_date=models.DateField(blank=True,null=True)
-    narration = models.CharField(max_length=255,null=True, blank=True)
-    comment=models.CharField(blank=True,null=True,max_length=499)
-    
+    invoice_no = models.CharField(blank=True, null=True, max_length=255)
+    invoice_date = models.DateField(blank=True, null=True)
+    narration = models.CharField(max_length=255, null=True, blank=True)
+    from_ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE, related_name='payments_from')
+    to_ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE, related_name='payments_to')
     debit_total = models.DecimalField(max_digits=10, decimal_places=2)    
     credit_total = models.DecimalField(max_digits=10, decimal_places=2)    
-    
-
+    comment=models.CharField(max_length=255, null=True, blank=True)
     def save(self, *args, **kwargs):
         if not self.voucherNo:
             # Get the maximum voucher number currently in the database
             max_voucher = RecieptEntry.objects.aggregate(models.Max('voucherNo'))['voucherNo__max']
             # Set the voucher number to the maximum + 1 or 100 if there are no records yet
             self.voucherNo = max_voucher + 1 if max_voucher else 100
-        self.voucherCode = "RV-"+str(self.voucherNo)
-            
+        self.voucherCode = f"RV-{self.voucherNo}"
         super(RecieptEntry, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.voucherNo}"
-class RecieptEntryRow(models.Model):
-    
-    entryFk = models.ForeignKey(RecieptEntry, on_delete=models.CASCADE , related_name='rows')
-    ledger = models.ForeignKey(Ledger, on_delete=models.CASCADE)
-    comment=models.CharField(blank=True,null=True,max_length=499)
-
-    debit = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)
-    credit = models.DecimalField(max_digits=10, decimal_places=2,blank=True,null=True)  
 
 
 
@@ -808,3 +791,22 @@ class Tax(models.Model):
 
     def __str__(self):
         return f"{self.type} - {self.percentage}%"
+    
+    
+class LedgerEntry(models.Model):
+    # Reference to Delivery and Order
+    salesdelivery = models.ForeignKey(SalesDeliveryDetails, on_delete=models.CASCADE, related_name='ledger_sales',null=True,blank=-True)
+    
+    delivery = models.ForeignKey(DeliveryDetails, on_delete=models.CASCADE, related_name='ledger_purchase' ,null=True,blank=-True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='ledger_entries' ,null=True,blank=-True)
+    saleorder = models.ForeignKey(SalesQuotation, on_delete=models.CASCADE, related_name='ledgerSalesQuotation_entries' ,null=True,blank=-True)
+    
+    account = models.ForeignKey(Ledger, on_delete=models.CASCADE, related_name='ledger_accounts')
+    # Other fields for ledger entry details
+    date = models.DateField(auto_now_add=True)
+    description = models.TextField()
+    debit_amount = models.DecimalField(max_digits=100, decimal_places=2)
+    credit_amount = models.DecimalField(max_digits=100, decimal_places=2)
+
+    def __str__(self):
+        return f"Ledger Entry #{self.id} - {self.date}"
