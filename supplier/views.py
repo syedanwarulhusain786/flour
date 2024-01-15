@@ -6,11 +6,24 @@ from django.shortcuts import render, redirect
 from commonApp.models import *
 from django.utils.dateparse import parse_date
 from decimal import Decimal
-
+from login.models import *
+from django.db.models import Sum, F, ExpressionWrapper, fields
+from datetime import timedelta
 # Create your views here.
 def supplier_home(request):
-    active_quotations = PurchaseQuotation.objects.filter(status=True).prefetch_related('items')
-    return render(request,'supplierhome.html',{"purchase":active_quotations})
+    one_year_ago = timezone.now() - timedelta(days=365)
+    active_quotations = Order.objects.filter(is_approved='pending',user=request.user)
+    total_orders = Order.objects.filter(user=request.user,order_date__gte=one_year_ago,).exclude(is_approved__in=['disapproved'])
+    order_count = total_orders.count()
+    total_final_amount = total_orders.aggregate(Sum('final_price'))['final_price__sum'] or 0
+
+    total_commission = total_orders.aggregate(
+    commission_sum=ExpressionWrapper(
+        Sum(F('agent_commission_per_quantal') * F('quantity'), output_field=fields.DecimalField()),
+        output_field=fields.DecimalField()
+        )
+    )['commission_sum'] or 0
+    return render(request,'supplierhome.html',{"orders":active_quotations,'order_count':order_count,'total_commission':total_commission,'total_final_amount':total_final_amount})
 
 # supplier/views.py
 from django.shortcuts import render
@@ -37,7 +50,6 @@ def purchase_order_page(request):
             supplier_type='supplier'
         productObj=Product.objects.get(id=product_id)
         total=float(total)
-
         order = Order(
             user=CustomUser.objects.get(username=request.user),
             product=productObj,
@@ -73,9 +85,17 @@ def purchase_quotation_detail(request, quotation_number):
     
     return render(request, 'purchase_quotation_detail.html', {'purchase': purchase})
 
-def startdelivery(request,order_id):
-    Orders=Order.objects.filter(id=order_id,is_approved='approved' ,user=CustomUser.objects.get(username=request.user))
-    delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
+def startdelivery(request,order_id,flag=None):
+    
+    user=CustomUser.objects.get(username=request.user)
+    if str(user.account_type) == 'ACCOUNTANT':
+        Orders=Order.objects.filter(id=order_id)
+        delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
+        billing=Billing_Company.objects.all()
+    else:
+        Orders=Order.objects.filter(id=order_id,user=CustomUser.objects.get(username=request.user))
+        delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
+        billing=Billing_Company.objects.all()
     try:
         latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, row_type='delivery')[0].created_at
     except:
@@ -86,15 +106,23 @@ def startdelivery(request,order_id):
         vehicle = request.POST.get('vehicle')
         allBags = int(request.POST.get('allBags', 0))
         deliveryDate = request.POST.get('deliveryDate')
-        print(deliveryDate)
-        quantity = int(request.POST.get('quantity'))
+        quantity = Decimal(request.POST.get('quantity'))
         jute = int(request.POST.get('jute'))
         plastic = int(request.POST.get('plastic'))
         fssi = int(request.POST.get('fssi'))
         loose = int(request.POST.get('loose'))
         tObj=Order.objects.get(id=order)
+        billing=request.POST.get('billing_company')
+        partyname=request.POST.get('partyName')
+        partaddress=request.POST.get('partyAddress')
+        
+        
+        
         order = DeliveryDetails(
             user=CustomUser.objects.get(username=request.user),
+            billing_company = Billing_Company.objects.get(id=billing) ,
+            partyName =partyname ,
+            partyAddress =partaddress ,
             order=tObj,
             row_type='dispatch',
             vehicle_number=vehicle,
@@ -111,7 +139,7 @@ def startdelivery(request,order_id):
         
         
         
-    return render(request, 'supplierOrderside/startdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
+    return render(request, 'supplierOrderside/startdelivery.html', {'completed':flag,'billing':billing,'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
 # def place_bid(request, quotation_number):
 #     purchase = get_object_or_404(PurchaseQuotation, quotation_number=quotation_number)
 #     active_quotations = PurchaseQuotation.objects.filter(status=True).prefetch_related('items')
@@ -134,8 +162,15 @@ def startdelivery(request,order_id):
 
 
 def suppliercompleted(request):
-    Orders=Order.objects.filter(is_approved='approved',user=request.user)
-    return render(request, 'supplierOrderside/supplier_completed.html', {'Orders': Orders}) 
+    
+    user=CustomUser.objects.get(username=request.user)
+    if str(user.account_type) == 'ACCOUNTANT':
+        Orders=Order.objects.filter(is_approved='completed')
+    else:
+        Orders=Order.objects.filter(is_approved='completed',user=request.user)
+        
+        
+    return render(request, 'supplierOrderside/supplier_completed.html', {'Orders': Orders,'user':user}) 
 
 
 def supplierapproved(request):

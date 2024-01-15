@@ -266,7 +266,7 @@ class ProductStockForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Customize the form as needed, e.g., set additional attributes or widgets
-        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Packaging'))
+        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Package'))
         # Update the queryset for the 'product' field
         self.fields['product'].queryset = packaging_products
         self.fields['type'].widget.choices = [

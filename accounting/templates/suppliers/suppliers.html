@@ -52,13 +52,13 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Username</th>
+            <th scope="col">User Type</th>
 
 
-            <th scope="col">Mailing Name</th>
+            <th scope="col">Credit Period</th>
             <th scope="col">Phone</th>
             <th scope="col">Email</th>
             <th scope="col">GST No</th>
-            <th scope="col">TIN No</th>
             <th scope="col">Pan</th>
             <th scope="col">Address</th>
 
@@ -76,24 +76,24 @@
 
           <tr>
             <td scope="row">{{ forloop.counter }}</td>
-            <td>{{ Supplier.supplier_id }}</td>
-            <td>{{ Supplier.supplier_name }}</td>
-            <td>{{ Supplier.user.username }}</td>
+            <td>{{ Supplier.id }}</td>
+            <td>{{ Supplier.ERPUsers_name }}</td>
+            <td>{{ Supplier.username }}</td>
+            <td>{{ Supplier.account_type }}</td>
 
-            <td>{{ Supplier.mailing_name }}</td>
+            <td>{{ Supplier.credit_period }}</td>
             <td>{{ Supplier.phone }}</td>
             <td>{{ Supplier.email }}</td>
             <td>{{ Supplier.gst_no }}</td>
-            <td>{{ Supplier.tin }}</td>
             <td>{{ Supplier.pan }}</td>
             <td>{{ Supplier.address }}</td>
 
 
 
             <td>
-
+              <a class="btn btn-success" href="{% url 'change_password' Supplier.id %}">Change Password</a>
               <button type="button" class="btn btn-danger"
-                onclick="DeleteAction('delete',{{ Supplier.user.id }},'{{ Supplier.user.username }}')">Delete</button>
+                onclick="DeleteAction('delete',{{ Supplier.id }},'{{ Supplier.username }}')">Delete</button>
             </td>
           </tr>
           {% endfor %}

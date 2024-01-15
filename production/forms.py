@@ -11,9 +11,9 @@ class ProductionRowForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.exclude(category__name='Packaging')
+        self.fields['product'].queryset = Product.objects.exclude(category__name='Package')
         # Filter products by category 'packaging'
-        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Packaging'))
+        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Package'))
         # Update the queryset for the 'product' field
         self.fields['package'].queryset = packaging_products
 
@@ -28,9 +28,9 @@ class PostProductionRowForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.exclude(category__name='Packaging')
+        self.fields['product'].queryset = Product.objects.exclude(category__name='Package')
         # Filter products by category 'packaging'
-        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Packaging'))
+        packaging_products = Product.objects.filter(category=ProductCategory.objects.get(name='Package'))
         # Update the queryset for the 'product' field
         self.fields['package'].queryset = packaging_products
 

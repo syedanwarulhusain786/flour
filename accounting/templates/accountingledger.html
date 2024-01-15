@@ -129,7 +129,7 @@
 
           <br>
           <label for="account_category">Group:</label>
-          <select class="selectpicker" id="accountNumber" name="primaryGroupName" data-live-search="true">
+          <select class="form-control"  id="accountNumber" name="primaryGroupName" data-live-search="true">
 
             {% for category in group %}
             <option data-tokens="{{ category.group_number }}" id="{{ category.group_number }}"
@@ -141,8 +141,44 @@
           <br>
 
 
-          <label for="accountName">Ledger Name:</label>
-          <input type="text" id="accountName" name="GroupName" required>
+          <label  for="accountName">Ledger Name:</label>
+          <input class="form-control" type="text" id="accountName" name="GroupName" required>
+          <br>
+          <label for="supp/cust">Supplier/Customer Name:</label>
+          <select class="form-control" id="supp_cust" name="supp_cust" required>
+            <optgroup label="Supplier">
+                <!-- Add supplier options dynamically from your backend (e.g., using Django) -->
+                <option value="None">----None----</option>
+
+                {% for sup in supplier %}
+                <option value={{supp.id}}>{{supp.name}}</option>
+                <!-- Add more supplier options as needed -->
+                {% endfor %}
+            </optgroup>
+            <optgroup label="Customer">
+                <!-- Add customer options dynamically from your backend (e.g., using Django) -->
+                <option value="None">----None----</option>
+
+                {% for cust in customer %}
+
+                <option value={{cust.id}}>{{cust.name}}</option>
+                <!-- Add more customer options as needed -->
+                {% endfor %}
+            </optgroup>
+            <optgroup label="Agent">
+              <!-- Add customer options dynamically from your backend (e.g., using Django) -->
+              <option value="None">----None----</option>
+
+              {% for agent in agents %}
+
+              <option value={{agent.id}}>{{agent.name}}</option>
+              <!-- Add more customer options as needed -->
+              {% endfor %}
+          </optgroup>
+        </select>
+          <br>
+          <label for="opening">Opening Balance</label>
+          <input class="form-control"  type="number" id="opening" name="opening" value="0">
           <br>
 
 
@@ -170,14 +206,14 @@
           <h2>Delete Account</h2>
         </h5>
         <button type="button" class="close" id="closeModals" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+          <span aria-hidden="true" class="text-dark">&times;</span>
+      </button>
       </div>
       <form method="POST">
         {% csrf_token %}
-        <div class="modal-body" id="subTableContent">
-          <p>Group Number: <input type="text" id="accountNumberc" name="accountNumberc"></p>
-          <p>Group Name: <input type="text" id="accountNamec" name="accountNamec"></p>
+        <div class="modal-body" class="form-control" id="subTableContent">
+          <p>Group Number: <input type="text"  class="form-control" id="accountNumberc" name="accountNumberc"></p>
+          <p>Group Name: <input type="text" class="form-control" id="accountNamec" name="accountNamec"></p>
           <p>Are you sure you want to delete this account?</p>
 
         </div>

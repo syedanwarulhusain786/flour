@@ -14,7 +14,7 @@
     /* Adjust the maximum width as needed */
     margin-left: auto;
     margin-right: auto;
-    height: calc(80vh - 100px);
+
   }
 
   .card-header {
@@ -36,13 +36,14 @@
 
 <div class="card">
   <div class="card-header">
-     Customer
+  Customers
   </div>
 
     <div class="card-body">
 
       <table class="table table-striped" id="productsTable">
         <div>
+          
           
         </div>
         <thead>
@@ -51,13 +52,14 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Username</th>
+            <th scope="col">User Type</th>
 
 
-            <th scope="col">Mailing Name</th>
+
+            <th scope="col">Credit Period</th>
             <th scope="col">Phone</th>
             <th scope="col">Email</th>
             <th scope="col">GST No</th>
-            <th scope="col">TIN No</th>
             <th scope="col">Pan</th>
             <th scope="col">Address</th>
 
@@ -71,28 +73,29 @@
           </tr>
         </thead>
         <tbody>
-          {% for Supplier in cust_List %}
+          {% for Supplier in Supplier_List %}
 
           <tr>
             <td scope="row">{{ forloop.counter }}</td>
-            <td>{{ Supplier.customer_id }}</td>
-            <td>{{ Supplier.customer_name }}</td>
-            
-            <td>{{ Supplier.user.username }}</td>
-            <td>{{ Supplier.mailing_name }}</td>
+            <td>{{ Supplier.id }}</td>
+            <td>{{ Supplier.ERPUsers_name }}</td>
+            <td>{{ Supplier.username }}</td>
+            <td>{{ Supplier.account_type }}</td>
+
+
+            <td>{{ Supplier.credit_period }}</td>
             <td>{{ Supplier.phone }}</td>
             <td>{{ Supplier.email }}</td>
             <td>{{ Supplier.gst_no }}</td>
-            <td>{{ Supplier.tin }}</td>
             <td>{{ Supplier.pan }}</td>
             <td>{{ Supplier.address }}</td>
 
 
 
             <td>
-
+              <a class="btn btn-success" href="{% url 'change_password' Supplier.id %}">Change Password</a>
               <button type="button" class="btn btn-danger"
-                onclick="DeleteAction('delete',{{ Supplier.user.id }},'{{ Supplier.user.username }}')">Delete</button>
+                onclick="DeleteAction('delete',{{ Supplier.id }},'{{ Supplier.username }}')">Delete</button>
             </td>
           </tr>
           {% endfor %}
@@ -102,6 +105,9 @@
     </div>
 </div>
 
+
+<!-- The confirmation modal -->
+<!-- Modal -->
 <div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="subTableModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">

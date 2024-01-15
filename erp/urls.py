@@ -24,12 +24,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('login.urls')),
     path('', include('home.urls')),
-    path('sales/', include('sales.urls')),
-    path('account/', include('accounting.urls')),
-    path('supplier/', include('supplier.urls')),
-    path('customer/', include('customer.urls')),
-    path('production/', include('production.urls')),
-    path('hrd/', include('hrd.urls')),
+    path('', include('sales.urls')),
+    path('', include('accounting.urls')),
+    path('', include('supplier.urls')),
+    path('', include('customer.urls')),
+    path('', include('production.urls')),
+    path('', include('hrd.urls')),
     
     
     

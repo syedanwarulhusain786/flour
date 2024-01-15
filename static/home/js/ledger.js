@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function generateAccountNumber() {
     // Make an AJAX request to your Django backend to get the next available account number
-    fetch("/get_next_account_number/") // Replace with your Django endpoint URL
+    fetch("account/get_next_account_number/") // Replace with your Django endpoint URL
         .then(response => response.json())
         .then(data => {
             if (data.success) {

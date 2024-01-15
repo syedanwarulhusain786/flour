@@ -1,0 +1,106 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    #productsTable {
+        border-collapse: collapse;
+    }
+
+    #productsTable th,
+    #productsTable td {
+        border: 1px solid #ddd; /* Add your desired border color here */
+        padding: 8px;
+        text-align: left;
+    }
+</style>       
+<div class="card" style="padding-top: 50px;">
+    <div class="card-header">
+        <h2>Production Report</h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <table border="1" id="productsTable" class="table table-hover table-product" style="width:100%">
+            <div>
+          
+                <button id="pdfButton" class="btn btn-success" >PDF</button>
+
+              </div>
+            <thead>
+                <tr>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Production Time</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Package</th>
+                    <th scope="col">Package Quantity</th>
+                    <th scope="col">Quantity Per Package</th>
+                    <th scope="col">Total Quantity</th>
+                    <th scope="col">Total Cost</th>
+
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in produced_rows_today %}
+
+                <tr>
+
+                    <td>{{product.sales_order.quotation_number}}</td>  
+                    <td>{{ product.production_time }}</td>   
+
+                    <td>{{product.product}}</td>   
+                    <td>{{product.package}}</td>   
+                    <td>{{product.packageQuantity}}</td>   
+                    <td>{{product.quantityPerPackage}}</td>   
+                    <td>{{product.TotalQuantity}}</td>   
+                    <td>{{product.TotalCost}}</td>   
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+        <script>
+        const btn = document.getElementById("pdfButton");
+
+        btn.addEventListener("click", function(){
+        var element = document.getElementById('productsTable');
+        // Get the current date and time
+        const now = new Date();
+        const formattedDate = now.toISOString().split('T')[0];  // Format as 'YYYY-MM-DD'
+        const formattedTime = now.toTimeString().split(' ')[0];  // Format as 'HH:MM:SS'
+
+        // Combine date and time for the filename
+        const filename = `${formattedDate}_${formattedTime}.pdf`;
+        html2pdf().from(element).save(filename);
+        });
+        </script>
+    </div>
+</div>
+
+
+        
+        
+</div> <!-- Your modal structure -->
+<!-- Your modal structure -->
+
+
+  <script>
+    function handleColorTheme(e) {
+      $("html").attr("data-color-theme", e);
+      $(e).prop("checked", !0);
+    }
+  </script>
+
+
+
+
+<script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/js/datatable/datatable-basic.init.js"></script>
+{% endblock %}
+

@@ -5,8 +5,6 @@ from .models import (
     Primary_Group,
     Group,
     Ledger,
-    Customer,
-    Supplier,
     PurchaseQuotation,
     PurchaseItemRow,
     JournalEntry,
@@ -122,8 +120,6 @@ admin.site.register(Ledger)
 admin.site.register(LedgerEntry)
 admin.site.register(PaymentEntry)
 
-admin.site.register(Customer)
-admin.site.register(Supplier)
 admin.site.register(PurchaseQuotation, PurchaseQuotationAdmin)
 admin.site.register(JournalEntry, JournalEntryAdmin)
 admin.site.register(ContraEntry, ContraEntryAdmin)

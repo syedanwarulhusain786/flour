@@ -37,7 +37,7 @@
     /* Add more styling as needed */
   </style>
     <h2>Sales Order Details</h2>
-    <div class="card mb-4">
+    <div class="card">
         <div class="card-body">
             <h5 class="card-title">Sales Order Information</h5>
             <p class="card-text"><strong>Quotation Number:</strong> {{ sales_quotation.quotation_number }}</p>
@@ -93,6 +93,8 @@
                           <th>Product Name</th>
       
                           <th>Vehicle Number</th>
+                          <th>Row Type</th>
+
                           <th>Delivery Date</th>
                           <th>No Of Bags</th>
                           <th>Quantity</th>
@@ -101,6 +103,7 @@
                           <th>FSSI</th>
                           <th>Loose</th>
                           <th>Delivery Product Price</th>
+                          <th>Download</th>
                           <th>Delivery Status</th>
                           <th>Action</th>
 
@@ -122,6 +125,8 @@
 
       
                           <td>{{product.vehicle_number}}</td>
+                          <td>{{product.row_type}}</td>
+
                           <td>{{product.date_of_delivery}}</td>
                           <td>{{product.no_of_bags}}</td>
                           <td>{{product.quantity}}</td>
@@ -130,6 +135,7 @@
                           <td>{{product.fssi}}</td>
                           <td>{{product.loose}}</td>
                           <td>{{product.final_quantity_price}}</td>
+                          <td><a class="btn btn-success" href="{% url 'salesdownloadDelivery' order_id=product.id %}">Download Slip</a></td>
                           <td>{% if product.status == 'pending' %}
                             <button class="btn btn-success" disabled>Pending</button>
                         {% elif product.status == 'delivered' %}

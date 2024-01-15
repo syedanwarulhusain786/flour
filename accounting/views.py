@@ -17,8 +17,7 @@ from accounting.models import *
 from django.db.models import Q
 from login.models import *
 from accounting.currency import currency_symbols
-# Create your views here.
-# views.py
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from commonApp.models import Product
@@ -41,7 +40,8 @@ from commonApp.forms import ServiceForm
 
 from django.contrib.auth.decorators import user_passes_test
 from login.models import CustomUser
-
+from django.contrib.auth.decorators import login_required
+from .forms import CustomPasswordChangeForm
 def department_check(user, allowed_departments):
     """
     Check if the user's department is in the allowed list.
@@ -53,22 +53,6 @@ def department_required(allowed_departments):
     Decorator to restrict access based on the user's department.
     """
     return user_passes_test(lambda u: department_check(u, allowed_departments))
-
-class GeneratePDF(View):
-    template_name = 'bills/PurchaseOrder1.html'
-
-    def get(self, request, *args, **kwargs):
-        template = get_template(self.template_name)
-        context = {'data': 'Your data goes here'}  # Replace with your actual data
-
-        html = template.render(context)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="output.pdf"'
-
-        # Create PDF for a specific area (e.g., element with ID 'table-container')
-        pisa.CreatePDF(html, dest=response)
-
-        return response
 
 
 
@@ -90,16 +74,241 @@ def find_max_rows(query):
 
 
 
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def  accountingledger(request):
+    IndividualAccount_list=Ledger.objects.all()
+    group=Group.objects.all()
+    primarGroup=Primary_Group.objects.all()
+    supplier=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Supplier'))
+    customer=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Customer'))
+    agent=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Agent'))
+    
+    
+    currency=[{'key':cur,'value':cur+'-'+currency_symbols[cur]} for cur in currency_symbols]
+    
+    if request.method=="POST":
+        if 'save' in request.POST:
+            data = request.POST # Replace with your actual QueryDict data
+            primaryGroupName = data.get(f'primaryGroupName')
+            GroupName= data.get(f'GroupName')
+            opening= data.get(f'opening',0)
+            
+            dr=Group.objects.get(group_number=primaryGroupName)
+          
+            
+            prime=Ledger(group=dr,
+                         ledger_name=GroupName,opening_balance=opening)
+            prime.save()
+    if request.method=="POST":
+        if 'delete' in request.POST:
+            account_numberc = request.POST.get('accountNumberc')
+            
+            # Assuming Primary_Group is your model
+            prime_del = get_object_or_404(Ledger, ledger_number=account_numberc)
+            prime_del.delete()
+    
+    return render(request, 'accountingledger.html', context={
+            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
+            'group':group,'primaryGroup':primarGroup,'currency':currency,'supplier':supplier,
+            'customer':customer,'agent':agent
+        })
+#################Ledger Finish###############
 
 
 
 
+#######################User  Start##################
 
 
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def add_user(request):
+    IndividualAccount_list=Ledger.objects.all()
+    group=Group.objects.all()
+    primarGroup=Primary_Group.objects.all()
+    accountType=AccountType.objects.all()
 
 
+    if request.method == 'POST':
+        voucher_no = request.POST.get('voucher_no')
+        account_type = request.POST.get('account_type')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        first_name = request.POST.get('firstName')
+        
+        last_name = request.POST.get('lastName')
+        userCode = request.POST.get('userCode')
+       
+        
+        credit_period = request.POST.get('creditPeriod', 0)
+        phone = request.POST.get('phone',None)
+        mobile = request.POST.get('mobile',None)
+        email = request.POST.get('email',None)
+        bank_account = request.POST.get('bankAccount',None)
+        ifsc = request.POST.get('IFSC',None) 
+        gst_no = request.POST.get('GstNo',None)
+        pan = request.POST.get('pan',None)
+        opening_balance = request.POST.get('openingBalance', 0)
+        pinCode = request.POST.get('areaCode',None)
+        address = request.POST.get('address',None)
+        commission = request.POST.get('commission',0.0)
+        
+        # Check if the "Add To Ledger" checkbox is selected
+        add_to_ledger = request.POST.get('enable_options', False)
+        ledger=None
+        user_name=first_name+' '+last_name
+        try:
+            user=CustomUser()
+            user.is_superuser=False
+            user.username=username
+            user.first_name=first_name
+            user.last_name=last_name
+            user.email=email
+            user.is_staff=False
+            user.is_active=True
+            user.account_type=AccountType.objects.get(name=account_type)
+            user.company=Company.objects.get(id=request.user.company.id)
+            user.department=Department.objects.get(name='NONE')
+            user.ERPUsers_code=userCode
+            user.ERPUsers_name=user_name.strip()
+            user.credit_period=credit_period
+            user.mobile=mobile
+            user.phone=phone
+            user.email=email
+            user.ifsc=ifsc
+            user.bank_account=bank_account
+            user.gst_no=gst_no
+            user.pan=pan
+            user.pinCode=pinCode
+            user.address=address
+            user.commission=Decimal(commission)
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            user.set_password(password)
+            
+            
+            
+            
+            
+            user.save()
 
+            
+            if add_to_ledger:
+                    # primary_group_number = request.POST.get('primaryGroupName')
+                group_number = request.POST.get('GroupName')
+                # primary=Primary_Group.objects.get(primary_group_number=primary_group_number)
+                groups=Group.objects.get(group_number=group_number)
+                ledger=Ledger.objects.create(
+                    group=groups,
+                    ledgerUser=user,
+                    ledger_name=user_name.strip(),
+                    opening_balance = opening_balance,
+
+                )
+                
+            user=CustomUser.objects.get(id=user.id)    
+            user.ledger=ledger
+            user.save()
+            messages.success(request, 'User created successfully.')
+        except Exception as e:
+            # Handle exceptions appropriately
+          
+            # Display error message
+            messages.error(request, f'An error occurred during user creation./n{e}')        
+           
+   
+    latest_user_Id = CustomUser.objects.order_by().last()
+    next_user_Id = latest_user_Id.id + 1 if latest_user_Id else 100
+    return render(request,'users/add-users.html',context={
+            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
+            'group':group,'primaryGroup':primarGroup,'next_Supplier_number':next_user_Id,'accountType':accountType
+        })
+
+@login_required(login_url='login')
+def change_password(request, user_id):
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        print(user)
+    except User.DoesNotExist:
+        messages.error(request, 'User not found.')
+        return redirect('supplier')  # Replace with your user list view name or URL
+
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Password changed successfully.')
+            return redirect('supplier')  # Replace with your user list view name or URL
+    else:
+        form = CustomPasswordChangeForm(user)
+    return render(request, 'users/changepassword.html', {'form': form, 'user': user})
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def supplierList(request):
+    
+    primarGroup=Primary_Group.objects.all()
+    Supplier_List=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Supplier'))
+    if request.method == 'POST':
+        # Supplier_List=Supplier.objects.get()
+        accountNumberc = request.POST.get('accountNumberc')
+        Supp=CustomUser.objects.get(id=accountNumberc)
+        
+        Supp.delete()
+        
+    return render(request,'suppliers/suppliers.html',context={
+            'username':request.user,
+            'primaryGroup':primarGroup,'Supplier_List':Supplier_List
+        })
+
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def customerList(request):
+    primarGroup=Primary_Group.objects.all()
+    customerList=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Customer'))
+    if request.method == 'POST':
+        # Supplier_List=Supplier.objects.get()
+        accountNumberc = request.POST.get('accountNumberc')
+        Supp=CustomUser.objects.get(id=accountNumberc)
+        
+        Supp.delete()
+        
+    return render(request,'customer/customers.html',context={
+            'username':request.user,
+            'primaryGroup':primarGroup,'Supplier_List':customerList
+        })
+
+
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def agentList(request):
+    primarGroup=Primary_Group.objects.all()
+    agentList=CustomUser.objects.filter(account_type=AccountType.objects.get(name='Agent'))
+    if request.method == 'POST':
+        # Supplier_List=Supplier.objects.get()
+        accountNumberc = request.POST.get('accountNumberc')
+        Supp=CustomUser.objects.get(id=accountNumberc)
+        
+        Supp.delete()
+        
+    return render(request,'agent/agent.html',context={
+            'username':request.user,
+            'primaryGroup':primarGroup,'Supplier_List':agentList
+        })
+#######################Users Finished##################
+
+#############Supplier Delivery ############
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
 def approve(request):
+    # order=Order.objects.filter(is_approved='pending')
     order=Order.objects.filter(is_approved='pending')
     if request.method=='POST':
         order_id = request.POST.get('order_id')
@@ -119,6 +328,231 @@ def approve(request):
         else:
             pass
     return render(request,'supplierOrder/order_approval.html',{'orders':order})
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def acceptDelivery(request,order_id):
+    
+    Orders=Order.objects.filter(id=order_id,is_approved='approved')
+    delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
+    try:
+        latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, user=request.user, row_type='delivery')[0].created_at
+    except:
+        latest_delivery=''
+    
+        
+        
+        
+    return render(request, 'adminOrder/acceptdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery}) 
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def updateDelivery(request,order_id):
+    
+    delivery=DeliveryDetails.objects.get(id=order_id)
+    formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
+    
+    if request.method=='POST':
+        current_date = datetime.now()
+        supp=CustomUser.objects.get(username=delivery.order.user)
+        due_date = current_date + timedelta(days=supp.credit_period)
+        order = request.POST.get('order')
+        
+        vehicle = request.POST.get('vehicle')
+        allBags = int(request.POST.get('allBags', 0))
+        deliveryDate = request.POST.get('deliveryDate')
+        inv = request.POST.get('inv')
+        invdate = request.POST.get('invdate')
+        
+        quantity = Decimal(request.POST.get('aq'))
+        jute = int(request.POST.get('jute'))
+        plastic = int(request.POST.get('plastic'))
+        fssi = int(request.POST.get('fssi'))
+        loose = int(request.POST.get('loose'))
+        Freight = Decimal(request.POST.get('Freight'))
+        Dala = Decimal(request.POST.get('Dala'))
+        cd = Decimal(request.POST.get('cd'))
+        tds = Decimal(request.POST.get('tds'))
+        Bardana = Decimal(request.POST.get('Bardana'))
+        Brokerage = Decimal(request.POST.get('Brokerage'))
+        Commission = Decimal(request.POST.get('Commission'))
+        Kata = Decimal(request.POST.get('Kata'))
+        
+        
+        total = Decimal(request.POST.get('total'))
+        final = Decimal(request.POST.get('final'))
+        billing=request.POST.get('billing_company')
+        partyname=request.POST.get('partyName')
+        partaddress=request.POST.get('partyAddress')
+        tObj=Order.objects.get(id=order)
+        tObj.quantity_left=Decimal(tObj.quantity_left)-Decimal(quantity)
+        tObj.save()
+        delivery.status='delivered'
+        delivery.save()
+        
+        order = DeliveryDetails(
+            user=CustomUser.objects.get(username=request.user),
+            billing_company = Billing_Company.objects.get(id=billing) ,
+            partyName =partyname ,
+            partyAddress =partaddress ,
+            order=tObj,
+            row_type='delivery',
+            vehicle_number=vehicle,
+            date_of_delivery=deliveryDate,
+            no_of_bags=allBags,
+            quantity=quantity,
+            jute_bags = jute,
+            plastic_bags = plastic,
+            fssi = fssi,
+            loose = loose,
+            freight = Freight ,
+            data = Dala,
+            kanta = Kata ,
+            cashDiscount = cd,
+            tdsTcs = tds,
+            bardana = Bardana,
+            brokerage = Brokerage,
+            commission = Commission,
+            deductedAmt = total,
+            finalAmt = final,
+            dueDate=due_date,
+            invoice_no = inv,
+            invoice_date = invdate,
+            status='delivered'
+        )
+        order.save()
+        sock=ProductStock()
+       
+        sock.product = tObj.product
+        
+        sock.type='purchase'
+        sock.quantity =quantity
+        sock.cost_of_single =tObj.price_per_quantal
+        sock.save()
+        ledger_entry=LedgerEntry(
+            delivery = order,
+            order = tObj,
+            account = Ledger.objects.get(ledger_name='SUPPLIER PURCHASES'),
+            # Other fields for ledger entry details
+            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery} Invoice No:{inv} Invoice Date :{invdate} " ,
+            debit_amount = Decimal(final),
+            credit_amount = 0,
+        ).save()
+        ledger_entry=LedgerEntry(
+            delivery = order,
+            order = tObj,
+            account = Ledger.objects.get(ledgerUser=delivery.order.user),
+            # Other fields for ledger entry details
+            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery}" ,
+            debit_amount = 0,
+            credit_amount = Decimal(final),
+        ).save()
+        # Notification.objects.create(user=order.user, message=f'Delivery Accepted: Order #{order.id}')
+        return redirect('adminapproved')
+        
+        
+        
+    return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
+
+
+
+
+@login_required(login_url='login')
+def downloadDelivery(request,order_id):
+    
+    delivery=DeliveryDetails.objects.get(id=order_id)
+    formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
+
+        
+        
+    return render(request, 'adminOrder/downloadDelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
+
+
+@login_required(login_url='login')
+def salesdownloadDelivery(request,order_id):
+    
+    delivery=SalesDeliveryDetails.objects.get(id=order_id)
+    formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
+    if delivery.row_type == 'dispatch':
+        row='Dispatch'
+    else:
+        row='Delivery'
+        
+    
+
+        
+        
+    return render(request, 'customerOrder/adminOrder/saledownload.html', {'row':row,'orders':delivery,'formatted_date':formatted_date})  
+
+
+
+
+
+
+
+
+
+
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def adminapproved(request):
+    Orders=Order.objects.filter(is_approved='approved')
+    return render(request, 'adminOrder/approved.html', {'Orders': Orders})  
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def admindisapproved(request):
+    Orders=Order.objects.filter(is_approved='disapproved')
+    return render(request, 'adminOrder/disapproved.html', {'Orders': Orders})  
+@department_required(allowed_departments=['ACCOUNT'])
+@login_required(login_url='login')
+def salesacceptDelivery(request,order_id):
+    
+    Orders=Order.objects.filter(id=order_id,is_approved='approved')
+    delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
+    try:
+        latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, user=request.user, row_type='delivery')[0].created_at
+    except:
+        latest_delivery=''
+    
+     
+        
+        
+    return render(request, 'adminOrder/acceptdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
+
+
+
+
+#############Supplier Delivery Finished ############
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ####################a
 
@@ -166,7 +600,7 @@ def salesapprove(request):
       
     return render(request,'customerOrder\order_approval.html',{'orders':approved_quotations})
 def salesapproved(request):
-    print('hiii')
+    
     Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').exclude(approval__in =['pending','disapproved','completed'])
     return render(request, 'customerOrder/adminOrder/approved.html', {'orders': Orders})  
 def salesdisapproved(request):
@@ -177,6 +611,7 @@ def salesstartdelivery(request,order_id):
     Orders = SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(quotation_number=order_id).first()#,approval='Approved' ,customer=CustomUser.objects.get(username=request.user)
     counter=Orders.items.all()
     delivery=SalesDeliveryDetails.objects.filter(OrderFk=order_id)
+    
     
     try:
         latest_delivery = SalesDeliveryDetails.objects.filter(order__quotation_number=order_id, row_type='delivery')[0].created_at
@@ -222,19 +657,7 @@ def salesstartdelivery(request,order_id):
 
 
 
-def acceptDelivery(request,order_id):
-    
-    Orders=Order.objects.filter(id=order_id,is_approved='approved')
-    delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
-    try:
-        latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, user=request.user, row_type='delivery')[0].created_at
-    except:
-        latest_delivery=''
-    
-        
-        
-        
-    return render(request, 'adminOrder/acceptdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
+ 
 @login_required(login_url='login')
 def payables(request):
     all_pay=DeliveryDetails.objects.filter(row_type='delivery')
@@ -280,142 +703,6 @@ def PurchaseQuotationDetailView(request,pk):
 
     return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
 
-def updateDelivery(request,order_id):
-    
-    delivery=DeliveryDetails.objects.get(id=order_id)
-    formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
-    
-    if request.method=='POST':
-        current_date = datetime.now()
-        supp=Supplier.objects.get(user=delivery.order.user)
-        due_date = current_date + timedelta(days=supp.credit_period)
-        order = request.POST.get('order')
-        
-        vehicle = request.POST.get('vehicle')
-        allBags = int(request.POST.get('allBags', 0))
-        deliveryDate = request.POST.get('deliveryDate')
-        
-        quantity = Decimal(request.POST.get('aq'))
-        jute = int(request.POST.get('jute'))
-        plastic = int(request.POST.get('plastic'))
-        fssi = int(request.POST.get('fssi'))
-        loose = int(request.POST.get('loose'))
-        Freight = int(request.POST.get('Freight'))
-        Dala = int(request.POST.get('Dala'))
-        cd = int(request.POST.get('cd'))
-        tds = int(request.POST.get('tds'))
-        Bardana = int(request.POST.get('Bardana'))
-        Brokerage = int(request.POST.get('Brokerage'))
-        Commission = int(request.POST.get('Commission'))
-        Kata = int(request.POST.get('Kata'))
-        
-        
-        total = int(request.POST.get('total'))
-        final = int(request.POST.get('final'))
-        
-        tObj=Order.objects.get(id=order)
-        tObj.quantity_left=Decimal(tObj.quantity_left)-Decimal(quantity)
-        tObj.save()
-        delivery.status='delivered'
-        delivery.save()
-        
-        order = DeliveryDetails(
-            user=CustomUser.objects.get(username=request.user),
-            order=tObj,
-            row_type='delivery',
-            vehicle_number=vehicle,
-            date_of_delivery=deliveryDate,
-            no_of_bags=allBags,
-            quantity=quantity,
-            jute_bags = jute,
-            plastic_bags = plastic,
-            fssi = fssi,
-            loose = loose,
-            freight = Freight ,
-            data = Dala,
-            kanta = Kata ,
-            cashDiscount = cd,
-            tdsTcs = tds,
-            bardana = Bardana,
-            brokerage = Brokerage,
-            commission = Commission,
-            deductedAmt = total,
-            finalAmt = final,
-            dueDate=due_date,
-            status='delivered'
-        )
-        order.save()
-        sock=ProductStock()
-       
-        sock.product = tObj.product
-        
-        sock.type='purchase'
-        sock.quantity =quantity
-        sock.cost_of_single =tObj.price_per_quantal
-        sock.save()
-        ledger_entry=LedgerEntry(
-            delivery = order,
-            order = tObj,
-            account = Ledger.objects.get(ledger_name='SUPPLIER PURCHASES'),
-            # Other fields for ledger entry details
-            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery}" ,
-            debit_amount = Decimal(final),
-            credit_amount = 0,
-        ).save()
-        ledger_entry=LedgerEntry(
-            delivery = order,
-            order = tObj,
-            account = Ledger.objects.get(ledger_name=delivery.order.user),
-            # Other fields for ledger entry details
-            description = f"For Purchase OrderId:-{order} DeliveryID:-{delivery}" ,
-            debit_amount = 0,
-            credit_amount = Decimal(final),
-        ).save()
-        # Notification.objects.create(user=order.user, message=f'Delivery Accepted: Order #{order.id}')
-        return redirect('adminapproved')
-        
-        
-        
-    return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def adminapproved(request):
-    Orders=Order.objects.filter(is_approved='approved')
-    return render(request, 'adminOrder/approved.html', {'Orders': Orders})  
-
-def admindisapproved(request):
-    Orders=Order.objects.filter(is_approved='disapproved')
-    return render(request, 'adminOrder/disapproved.html', {'Orders': Orders})  
-
-def salesacceptDelivery(request,order_id):
-    
-    Orders=Order.objects.filter(id=order_id,is_approved='approved')
-    delivery=DeliveryDetails.objects.filter(order=Orders[0].id)
-    try:
-        latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, user=request.user, row_type='delivery')[0].created_at
-    except:
-        latest_delivery=''
-    
-     
-        
-        
-    return render(request, 'adminOrder/acceptdelivery.html', {'Orders': Orders[0],'delivery':delivery,'last':latest_delivery})  
 
 
 
@@ -1022,285 +1309,6 @@ def delete_category(request, service_id):
 
 
 
-
-#######################Customers Start##################
-@login_required(login_url='login')
-def accountingcustomer(request):
-    IndividualAccount_list=Ledger.objects.all()
-    group=Group.objects.all()
-    primarGroup=Primary_Group.objects.all()
-    Supplier_List=Customer.objects.all()
-    
-    if request.method == 'POST':
-        accountNumberc = request.POST.get('accountNumberc')
-        Supp=CustomUser.objects.get(id=accountNumberc)
-        
-        Supp.delete()
-    return render(request,'customer/customers.html',context={
-            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
-            'group':group,'primaryGroup':primarGroup,'cust_List':Supplier_List
-        })
-@login_required(login_url='login')
-def addaccountingcustomer(request):
-    IndividualAccount_list=Customer.objects.all()
-    group=Group.objects.all()
-    primarGroup=Primary_Group.objects.all()
-    Supplier_List=Customer.objects.all()
-    
-    if request.method == 'POST':
-        voucher_no = request.POST.get('voucher_no')
-        customerName = request.POST.get('customerName')
-        customerCode = request.POST.get('customerCode')
-        creditPeriod = request.POST.get('creditPeriod', 0)
-        credit_limit = request.POST.get('creditLimit', 0)
-        mailing_name = request.POST.get('mailingName')
-        phone = request.POST.get('phone')
-        mobile = request.POST.get('mobile')
-        email = request.POST.get('email')
-        bank_account = request.POST.get('bankAccount')
-        branch_name = request.POST.get('branch_name') 
-        tin = request.POST.get('tin')
-        narration = request.POST.get('narration')
-        gst_no = request.POST.get('GstNo')
-        pan = request.POST.get('pan')
-        opening_balance = request.POST.get('openingBalance', 0)
-        route_id = request.POST.get('routeId')
-        area_id = request.POST.get('areaCode')
-        address = request.POST.get('address')
-
-        # Check if the "Add To Ledger" checkbox is selected
-        add_to_ledger = request.POST.get('enable_options', False)
-        ledger=None
-        if add_to_ledger:
-            primary_group_number = request.POST.get('primaryGroupName')
-            group_number = request.POST.get('GroupName')
-            primary=Primary_Group.objects.get(primary_group_number=primary_group_number)
-            groups=Group.objects.get(group_number=group_number)
-            ledger=Ledger.objects.create(
-                group=groups,
-                ledger_name=customerName,
-                ledger_limit = credit_limit ,
-                opening_balance = opening_balance,
-
-            )
-        supp=Customer(
-            legder= ledger,
-            customer_id=voucher_no,
-            customer_name=customerName,
-            customer_code=customerCode,
-            credit_period=creditPeriod,
-            credit_limit=credit_limit,
-            mailing_name=mailing_name,            
-            phone=phone,
-            email=email,
-            bank_account=bank_account,
-            tin=tin,
-            
-            narration=narration,
-            gst_no=gst_no,
-            pan=pan,
-            opening_balance=opening_balance,
-            route_id=route_id,
-            area_id=area_id,
-            branch_name=branch_name,
-            address=address,
-            mobile=mobile,
-            
-        )
-        
-        supp.save()
-    
-    
-    
-    
-    
-    
-    
-
-        
-    return render(request,'customer/addcustomer.html',context={
-            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
-            'group':group,'primaryGroup':primarGroup,'Supplier_List':Supplier_List
-        })
-#######################Customers Finished##################
-
-
-
-################Supplier Start##############
-
-@login_required(login_url='login')
-def addaccountingsupplier(request):
-    IndividualAccount_list=Ledger.objects.all()
-    group=Group.objects.all()
-    primarGroup=Primary_Group.objects.all()
-    accountType=AccountType.objects.all()
-    latest_quotation = Supplier.objects.order_by().last()
-    next_Supplier_number = latest_quotation.supplier_id + 1 if latest_quotation else 100
-    latestCustomer_quotation = Customer.objects.order_by().last()
-    next_Customer_number = latestCustomer_quotation.customer_id + 1 if latestCustomer_quotation else 100
-    if request.method == 'POST':
-        voucher_no = request.POST.get('voucher_no')
-        account_type = request.POST.get('account_type')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        first_name = request.POST.get('firstName')
-        
-        last_name = request.POST.get('lastName')
-        supplier_code = request.POST.get('supplierCode')
-        
-        credit_period = request.POST.get('creditPeriod', 0)
-        credit_limit = request.POST.get('creditLimit', 0)
-        mailing_name = request.POST.get('mailingName')
-        phone = request.POST.get('phone')
-        mobile = request.POST.get('mobile')
-        email = request.POST.get('email')
-        bank_account = request.POST.get('bankAccount')
-        branch_name = request.POST.get('branch_name') 
-        tin = request.POST.get('tin')
-        narration = request.POST.get('narration')
-        gst_no = request.POST.get('GstNo')
-        pan = request.POST.get('pan')
-        opening_balance = request.POST.get('openingBalance', 0)
-        route_id = request.POST.get('routeId')
-        area_id = request.POST.get('areaCode')
-        address = request.POST.get('address')
-        user=CustomUser()
-        user.is_superuser=False
-        user.username=username
-        user.first_name=first_name
-        user.last_name=last_name
-        user.email=email
-        user.is_staff=False
-        user.is_active=True
-        user.account_type=AccountType.objects.get(name=account_type)
-        user.company=Company.objects.get(id=request.user.company.id)
-        user.department=Department.objects.get(name='NONE')
-        user.set_password(password)
-        user.save()
-
-        supplier_name=first_name+' '+last_name
-        
-        
-        if account_type=='Supplier':
-            # Check if the "Add To Ledger" checkbox is selected
-            add_to_ledger = request.POST.get('enable_options', False)
-            ledger=None
-            if add_to_ledger:
-                # primary_group_number = request.POST.get('primaryGroupName')
-                group_number = request.POST.get('GroupName')
-                # primary=Primary_Group.objects.get(primary_group_number=primary_group_number)
-                groups=Group.objects.get(group_number=group_number)
-                ledger=Ledger.objects.create(
-                    group=groups,
-                    ledger_name=supplier_name,
-                    ledger_limit = credit_limit ,
-                    opening_balance = opening_balance,
-
-                )
-                
-            supp=Supplier(
-                user=user,
-                ledger= ledger,
-                supplier_id=voucher_no,
-                supplier_name=supplier_name,
-                supplier_code=supplier_code,
-                credit_period=credit_period,
-                credit_limit=credit_limit,
-                mailing_name=mailing_name,            
-                phone=phone,
-                mobile=mobile,
-                email=email,
-                bank_account=bank_account,
-                tin=tin,
-                narration=narration,
-                gst_no=gst_no,
-                pan=pan,
-                opening_balance=opening_balance,
-                route_id=route_id,
-                area_id=area_id,
-                branch_name=branch_name,
-                address=address,
-                
-            )
-            
-            supp.save()
-        elif account_type =='Customer':
-            # Check if the "Add To Ledger" checkbox is selected
-            add_to_ledger = request.POST.get('enable_options', False)
-            ledger=None
-            if add_to_ledger:
-                primary_group_number = request.POST.get('primaryGroupName')
-                group_number = request.POST.get('GroupName')
-                primary=Primary_Group.objects.get(primary_group_number=primary_group_number)
-                groups=Group.objects.get(group_number=group_number)
-                ledger=Ledger.objects.create(
-                    group=groups,
-                    ledger_name=supplier_name,
-                    ledger_limit = credit_limit ,
-                    opening_balance = opening_balance,
-
-                )
-            supp=Customer(
-                user=user,
-                legder= ledger,
-                customer_id=voucher_no,
-                customer_name=supplier_name,
-                customer_code=f"CO-{next_Customer_number}",
-                credit_period=credit_period,
-                credit_limit=credit_limit,
-                mailing_name=mailing_name,            
-                phone=phone,
-                email=email,
-                bank_account=bank_account,
-                tin=tin,
-                
-                narration=narration,
-                gst_no=gst_no,
-                pan=pan,
-                opening_balance=opening_balance,
-                route_id=route_id,
-                area_id=area_id,
-                branch_name=branch_name,
-                address=address,
-                mobile=mobile,
-                
-            )
-            
-            supp.save()
-            
-    
-    latest_quotation = Supplier.objects.order_by().last()
-    next_Supplier_number = latest_quotation.supplier_id + 1 if latest_quotation else 100
-    return render(request,'suppliers/addsupplier.html',context={
-            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
-            'group':group,'primaryGroup':primarGroup,'next_Supplier_number':next_Supplier_number,'accountType':accountType
-        })
-
-
-@login_required(login_url='login')
-def accountingsupplier(request):
-    IndividualAccount_list=Customer.objects.all()
-    group=Group.objects.all()
-    primarGroup=Primary_Group.objects.all()
-    Supplier_List=Supplier.objects.all()
-    if request.method == 'POST':
-        # Supplier_List=Supplier.objects.get()
-        accountNumberc = request.POST.get('accountNumberc')
-        Supp=CustomUser.objects.get(id=accountNumberc)
-        print(Supp)
-        
-        Supp.delete()
-        
-    return render(request,'suppliers/suppliers.html',context={
-            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
-            'group':group,'primaryGroup':primarGroup,'Supplier_List':Supplier_List
-        })
-
-
-#######################Suppliers Finished##################
-
-
-
 #######################Services Start##################
 
 def list_services(request):
@@ -1497,7 +1505,7 @@ def Journal_entry(request):
                   
     latest_quotation = JournalEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\journal\journalEntry.html',  context={
+    return render(request, 'vouchers/journal/journalEntry.html',  context={
         'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
     'next_quotation_number':next_quotation_number})
     
@@ -2002,113 +2010,7 @@ def debit_note(request):
 
 
 
-#############products start ##################
 
-class ProductListView(ListView):
-    model = Product
-    template_name = 'productandservices/products/product_list.html'
-
-def product_update_form(request, pk=None):
-    name = request.POST.get('name')
-    description = request.POST.get('description')
-    productCost = request.POST.get('productCost')
-    productSelling = request.POST.get('productSelling')
-    materials = request.POST.getlist('materials')
-    primaryCategory = request.POST.get('primaryCategory')
-    images = request.FILES.getlist('images')
-    
-    product_form=Material.objects.all()
-    category=ProductCategory.objects.all()
-    prod=Product.objects.get(pk=pk)
-    if request.method == 'POST':
-        product_form = Product.objects.get(pk=pk)
-        product_form.name = name 
-        product_form.description =  description
-        product_form.productCost =productCost
-        product_form.productSelling = productSelling
-        
-        product_form.save()
-        
-        # for image in images:
-        #     # Create ProductImage objects and associate them with the product
-        #     product_image = ProductImage(product=product_form, image=image)
-        #     product_form.save()
-
-        return redirect('product_list')  # Redirect to the product list view
-
-    template_name = 'productandservices/products/product_detail.html'  # Replace with your actual template name
-    context = {
-        'prod':prod,
-        'product_form': product_form,
-        'category':category
-    }
-    return render(request, template_name, context)
-
-def product_form(request, pk=None):
-    name = request.POST.get('name')
-    description = request.POST.get('description')
-    productCost = request.POST.get('productCost')
-    productSelling = request.POST.get('productSelling')
-    brandInp = request.POST.get('brand')
-    
-    materials = request.POST.getlist('materials')
-    primaryCategory = request.POST.get('primaryCategory')
-    images = request.FILES.getlist('images')
-    
-    product_form=Material.objects.all()
-    category=ProductCategory.objects.all()
-    brand=ProductBrand.objects.all()
-    
-    
-    if request.method == 'POST':
-        cat=ProductCategory.objects.get(pk=primaryCategory)
-        br=ProductBrand.objects.get(pk=brandInp)
-        
-        product_form = Product()
-        product_form.name = name 
-        product_form.description =  description
-        product_form.productCost =productCost
-        product_form.productSelling = productSelling
-        product_form.category = cat
-        product_form.brand = br
-        
-        
-        
-        product_form.save()
-        
-        images = request.FILES.getlist('images')  # Assuming you have a file input field named 'images'
-        # Iterate through the images and save them to the corresponding image fields
-        for i, image in enumerate(images):
-            setattr(product_form, f'image{i}', image)
-
-        # Save the updated product with the new images
-        product_form.save()
-
-        return redirect('product_list')  # Redirect to the product list view
-
-    template_name = 'productandservices/products/product_form.html'  # Replace with your actual template name
-    context = {
-        'product_form': product_form,
-        'category':category,
-        'brand':brand
-    }
-    return render(request, template_name, context)
-
-def product_delete(request, pk):
-    # Your delete logic here
-    product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        product.delete()
-        # Add any additional processing or redirect as needed
-        return redirect('product_list')  # Redirect to the product list view
-
-    template_name = 'productandservices/products/product_confirm_delete.html'  # Replace with your actual template name
-    context = {'product': product}
-    return render(request, template_name, context)
-
-
-
-####################product finished#################
 
 
 
@@ -2217,39 +2119,6 @@ def groupPage(request):
  
 
 
-@login_required(login_url='login')
-def  accountingledger(request):
-    IndividualAccount_list=Ledger.objects.all()
-    group=Group.objects.all()
-    primarGroup=Primary_Group.objects.all()
-    
-    
-    currency=[{'key':cur,'value':cur+'-'+currency_symbols[cur]} for cur in currency_symbols]
-    
-    if request.method=="POST":
-        if 'save' in request.POST:
-            data = request.POST # Replace with your actual QueryDict data
-            primaryGroupName = data.get(f'primaryGroupName')
-            GroupName= data.get(f'GroupName')
-            dr=Group.objects.get(group_number=primaryGroupName)
-     
-            prime=Ledger(group=dr,
-                         ledger_name=GroupName)
-            prime.save()
-    if request.method=="POST":
-        if 'delete' in request.POST:
-            account_numberc = request.POST.get('accountNumberc')
-            
-            # Assuming Primary_Group is your model
-            prime_del = get_object_or_404(Ledger, ledger_number=account_numberc)
-            prime_del.delete()
-    
-    return render(request, 'accountingledger.html', context={
-            'username':request.user,'IndividualAccount_list':IndividualAccount_list,
-            'group':group,'primaryGroup':primarGroup,'currency':currency
-        })
-
-
 def journalEntries(request):
     normalized_data = []
     journal_page_obj=JournalEntryRow.objects.all()
@@ -2278,7 +2147,7 @@ def journalEntries(request):
     return render(request, 'vouchers/Journal/journalEntries.html', context={'journal_page_obj':normalized_data})
 def Gernal_Ledger(request):
     if request.user.account_type.name == "Customer" or request.user.account_type.name == "Supplier":
-        accounts = Ledger.objects.filter(ledger_name=request.user)
+        accounts = Ledger.objects.filter(ledgerUser=request.user)
     else:
         accounts = Ledger.objects.all()
     q = request.GET.get('q')

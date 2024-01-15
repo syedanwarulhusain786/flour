@@ -10,6 +10,7 @@ class ProductionRow(models.Model):
     ('Raw', 'Raw'),
     ('Package', 'Package'),
     ]
+    
     sales_order = models.ForeignKey(SalesQuotation, on_delete=models.CASCADE)
     product = models.ForeignKey(Product,related_name='sale_product', on_delete=models.CASCADE)
     row_type = models.CharField(max_length=20, choices=ROW_TYPE_CHOICES)
@@ -41,6 +42,7 @@ class ProducedRow(models.Model):
     TotalCost =  models.DecimalField(max_digits=50, decimal_places=2)
     
     production_date = models.DateField(auto_now_add=True)
+    production_time = models.TimeField(auto_now_add=True)
     
     
 

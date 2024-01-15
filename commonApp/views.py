@@ -26,23 +26,8 @@ def mark_notifications_as_read(request):
     return JsonResponse({'success': True})
 
 
-@login_required(login_url='login')
-# def voucher(request):
- 
-#     return render(request,'voucher.html')
-
-@login_required(login_url='login')
-def profile(request):
-    profilePic='http://127.0.0.1:8000'+request.user.profilePic.url
- 
-    return render(request,'profile.html',{'user':request.user,'profilePic':profilePic})
 
 
-@login_required(login_url='login')
-def profile(request):
-    profilePic='http://127.0.0.1:8000'+request.user.profilePic.url
- 
-    return render(request,'home.html',{'user':request.user,'profilePic':profilePic})
 
 from django.shortcuts import render
 from production.models import *
@@ -201,7 +186,6 @@ def stock_report(request):
             )
         )
     )
-    print(sales_product_list)
     purchase_product_list = (
         ProductStock.objects
         .filter(product__category__name='Purchase')  # Filter products of type 'sales'
@@ -227,7 +211,7 @@ def stock_report(request):
     )
     pack_product_list = (
         ProductStock.objects
-        .filter(product__category__name='Packaging')  # Filter products of type 'sales'
+        .filter(product__category__name='Package')  # Filter products of type 'sales'
         .values('product__name')
         .annotate(
             total_quantity_sales=Sum(
@@ -268,20 +252,25 @@ def stock_report(request):
 
 
 
+def force(request, my_id):
+    # Your logic here
+    order=Order.objects.get(id=my_id)
+    order.is_approved='completed'
+    order.save()
+    return redirect('suppliercompleted')
 
 
 
-
-
+@department_required(allowed_departments=['ACCOUNT',"INVENTORY"])
 @login_required(login_url='login')
 def inventory(request):
     return render(request,'inventoryHome.html')
 #############products start ##################
-# @department_required(allowed_departments=['ACCOUNT',"INVENTORY"])
+@department_required(allowed_departments=['ACCOUNT',"INVENTORY"])
 @login_required(login_url='login')
 def ProductListView(request):
     products = Product.objects.all()
-    print(products)
+
     context = {'products': products}
     return render(request, 'productandservices/products/product_list.html', context)
 @department_required(allowed_departments=['ACCOUNT',"INVENTORY"])
@@ -329,11 +318,11 @@ def product_form(request, pk=None):
     materials = request.POST.getlist('materials', '')
     primaryCategory = request.POST.get('primaryCategory', '')
     images = request.FILES.getlist('images')
-    
+    selected_packaging_products = request.POST.getlist('packagingProducts[]')  # Assuming 'packagingProducts' is the name of your multiple select field
     product_form=Material.objects.all()
     category=ProductCategory.objects.all()
     brand=ProductBrand.objects.all()
-    
+    packaging_products=Product.objects.filter(category=ProductCategory.objects.get(name='Package'))
     
     if request.method == 'POST':
         cat=ProductCategory.objects.get(pk=primaryCategory)
@@ -349,7 +338,7 @@ def product_form(request, pk=None):
         
         
         
-        product_form.save()
+        # product_form.save()
         
         images = request.FILES.getlist('images')  # Assuming you have a file input field named 'images'
         # Iterate through the images and save them to the corresponding image fields
@@ -358,14 +347,17 @@ def product_form(request, pk=None):
 
         # Save the updated product with the new images
         product_form.save()
-
+        for packaging_product_id in selected_packaging_products:
+            packaging_product = Product.objects.get(pk=packaging_product_id)
+            product_form.packaging_products.add(packaging_product)
         return redirect('product_list')  # Redirect to the product list view
 
     template_name = 'productandservices/products/product_form.html'  # Replace with your actual template name
     context = {
         'product_form': product_form,
         'category':category,
-        'brand':brand
+        'brand':brand,
+        'packaging_products':packaging_products
     }
     return render(request, template_name, context)
 @department_required(allowed_departments=['ACCOUNT',"INVENTORY"])

@@ -2,7 +2,10 @@ import uuid
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.db.models import Sum  
+
+
 from login.models import *
+
 from decimal import Decimal
 def get_image_filename(instance, filename):
     """Generate a unique filename for each uploaded image."""
@@ -57,6 +60,7 @@ class Product(models.Model):
     productSelling = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT)
     brand = models.ForeignKey(ProductBrand, on_delete=models.PROTECT)
+    
     image0 = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
     image1 = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
     image2 = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
@@ -68,7 +72,7 @@ class Product(models.Model):
     image8 = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
     image9 = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
     
-        
+    packaging_products = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='sales_products')    
     def __str__(self):
         return self.name
 
@@ -86,12 +90,18 @@ class Order(models.Model):
     APPROVED = 'approved'
     DISAPPROVED = 'disapproved'
     PENDING = 'pending'
+    COMPLETED='completed'
     STATUS_CHOICES = [
         (APPROVED, 'Approved'),
         (DISAPPROVED, 'Disapproved'),
         (PENDING, 'Pending'),
+        (COMPLETED, 'Completed'),
+        
     ]
-    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    
+
+    user = models.ForeignKey('login.CustomUser', on_delete=models.SET_NULL, null=True, blank=True)
+    
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     product_name = models.CharField(max_length=255)  # New field to store product name
     quantity = models.PositiveIntegerField()
@@ -103,7 +113,6 @@ class Order(models.Model):
     is_approved = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     order_date=models.DateField(auto_now_add=True,null=True, blank=True)
     quantity_left=models.FloatField(default=0)
-    
     def __str__(self):
             return f"Order Id {self.id} User "
 
@@ -125,13 +134,20 @@ class DeliveryDetails(models.Model):
     ]
     created_at=models.DateField(auto_now_add=True,null=True, blank=True)
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey('login.CustomUser', on_delete=models.CASCADE)
+    billing_company = models.ForeignKey('login.Billing_Company', on_delete=models.CASCADE)
+    partyName = models.CharField(max_length=100)
+    partyAddress = models.CharField(max_length=250)
+    
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    row_type = models.CharField(max_length=20, choices=ROW_TYPE_CHOICES)
+    row_type = models.CharField(max_length=50, choices=ROW_TYPE_CHOICES)
     vehicle_number = models.CharField(max_length=20)
+    invoice_no = models.CharField(max_length=50, null=True, blank=True)
+    invoice_date = models.DateField(null=True, blank=True)
+
     date_of_delivery = models.DateField()
     no_of_bags = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
+    quantity = models.DecimalField(max_digits=20, decimal_places=2)
     
     jute_bags = models.PositiveIntegerField()
     plastic_bags = models.PositiveIntegerField()
@@ -201,7 +217,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Notification(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey('login.CustomUser', on_delete=models.CASCADE)
     order_id = models.IntegerField(null=True, blank=True)
     message = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)

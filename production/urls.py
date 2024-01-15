@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from . import views
 urlpatterns = [
+    path('daily-report/', views.production_report, name='production_report'),
     path('orderstatus/', views.orders, name='orderstatus'),
     path('pendingOrder/', views.pendingOrder, name='pendingOrder'),
     path('produced/<int:quotation_number>/', views.producedProduct, name='producedproduction'),

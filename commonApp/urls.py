@@ -18,9 +18,8 @@ from django.contrib import admin
 from django.urls import path,include
 from . import views
 urlpatterns = [
+    path('force/<int:my_id>/', views.force, name='force'),
     path('add_product_stock/', views.add_product_stock, name='add_product_stock'),
-    path('profile/', views.profile, name='profile'),
-    path('home/', views.profile, name='home'),
     path('acceptedsales_list/', views.acceptedsales_list, name='acceptedsales_list'),
     path('allocate/<int:sales_id>/', views.allocate, name='allocate'),
     path('start_production/<str:sales_id>/', views.start_production, name='start_production'),

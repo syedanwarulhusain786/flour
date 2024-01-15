@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from . import views
-from .views import ProductListView, product_form, product_delete
-from .views import GeneratePDF
+# from .views import  product_form, product_delete
 urlpatterns = [
+    path('change-password/<int:user_id>/', views.change_password, name='change_password'),
     path('payables/', views.payables, name='payables'),
     path('viewdelivery/<int:pk>/', views.viewdelivery, name='viewdelivery'),
     
@@ -59,6 +59,10 @@ urlpatterns = [
     path('admindisapproved/', views.admindisapproved, name='admindisapproved'),
     path('acceptDelivery/<int:order_id>/', views.acceptDelivery, name='acceptDelivery'),
     path('updateDelivery/<int:order_id>/', views.updateDelivery, name='updateDelivery'),
+    path('downloadDelivery/<int:order_id>/', views.downloadDelivery, name='downloadDelivery'),
+    path('salesdownloadDelivery/<int:order_id>/', views.salesdownloadDelivery, name='salesdownloadDelivery'),
+    
+
     
     
     
@@ -150,12 +154,13 @@ urlpatterns = [
     path('account/', views.accountingDashboard, name='account'),
     
     
-    path('customer/', views.accountingcustomer, name='customer'),
-    path('addcustomer/', views.addaccountingcustomer, name='addcustomer'),
     
     
-    path('addsupplier/', views.addaccountingsupplier, name='addsupplier'),
-    path('supplier/', views.accountingsupplier, name='supplier'),
+    path('add-user/', views.add_user, name='add_user'),
+    path('suppliers/', views.supplierList, name='supplier'),
+    path('customers/', views.customerList, name='customer'),
+    path('agents/', views.agentList, name='agents'),
+    
     
     
     
@@ -215,11 +220,11 @@ urlpatterns = [
     #################################################Products Urls ##########################
     
     
-    path('products/', ProductListView.as_view(), name='product_list'),
-    # path('products/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
-    path('products/create/', product_form, name='product_create'),
-    path('products/<int:pk>/update/', views.product_update_form , name='product_update'),
-    path('products/<int:pk>/delete/', product_delete, name='product_delete'),
+    # path('products/',views.product_list , name='product_list'),
+    # # path('products/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
+    # path('products/create/', product_form, name='product_create'),
+    # path('products/<int:pk>/update/', views.product_update_form , name='product_update'),
+    # path('products/<int:pk>/delete/', product_delete, name='product_delete'),
     
     ######################product material###########
     path('product-materials/', views.productMaterials, name='product-materials'),
@@ -285,7 +290,6 @@ urlpatterns = [
     #####################################################################################################
 
     
-    path('pdfs/', GeneratePDF.as_view(), name='pdfs'),
     
     
     

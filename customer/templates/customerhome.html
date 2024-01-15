@@ -75,38 +75,45 @@
           <div class="table-responsive mt-4">
             <table class="table table-borderless text-nowrap align-middle mb-0">
               <thead>
+                <!-- start row -->
                 <tr>
-                  <th>Order Number</th>
+                  <th>Order Id</th>
                   <th>Order Date</th>
-                  <th>Expected Delivery</th>
+                  <th>Customer</th>
+                  <th>Delivery Date</th>
+                  <th>Comission</th>
+                  <th>Sub Total</th>
                   <th>Status</th>
+
                   <th>Action</th>
 
 
 
                 </tr>
+                <!-- end row -->
               </thead>
               <tbody>
-                {% for pur in purchase %}
-                <tr class="bg-light">
-                <td class="bg-light">
-                  {{pur.quotation_number}}
-                </td>
-                <td class="bg-light">
-                  {{pur.quotation_date}}
-                </td>
-                <td class="bg-light">
-                  {{pur.delivery_date}}
-                </td>
-                <td class="bg-light">
-                  {{pur.status}}
-                </td>
-                <td>
-                  <a href="{% url 'purchase_quotation_detail' quotation_number=pur.quotation_number %}" class="btn btn-primary">View</a>
-                </td>
-             
-              </tr>
-              {% endfor %}
+                <!-- start row -->
+                {% for product in orders %}
+                <tr>
+                  <td class="bg-light">{{product.quotation_number}}</td>
+
+                  <td class="bg-light">{{product.quotation_date}}</td>
+                  <td class="bg-light">{{product.customer}}</td>
+                  <td class="bg-light">{{product.delivery_date}}</td>
+                  <td class="bg-light">{{product.commision}}</td>
+
+                  <td class="bg-light">{{product.sub_total}}</td>
+                  <td class="bg-light">{{product.approval}}</td>
+
+                  <td class="bg-light">
+                    <a href="{% url 'sales_quotation_detail' pk=product.quotation_number %}" class="btn btn-danger">{{product.id}}View</a>
+
+                  </td>
+
+                </tr>
+                {% endfor %}
+              
               </tbody>
             </table>
             

@@ -9,11 +9,13 @@ from django.shortcuts import render, redirect
 from commonApp.models import *
 from django.utils.dateparse import parse_date
 from decimal import Decimal
-
+from login.models import *
 # Create your views here.
 def customer_home(request):
-    active_quotations = PurchaseQuotation.objects.filter(status=True).prefetch_related('items')
-    return render(request,'customerhome.html',{"purchase":active_quotations})
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval__in =['Approved','disapproved','inProduction','produced','deliverPending','Completed'])
+    print(Orders)
+    # return render(request, 'customerOrder/adminOrder/approved.html', )
+    return render(request,'customerhome.html',{'orders': Orders})
 
 # supplier/views.py
 from django.shortcuts import render
@@ -370,7 +372,7 @@ def salesaccept(request,order_id):
         ledger_entry=LedgerEntry(
             salesdelivery=tObj,
             saleorder = SalesQuotation.objects.get(quotation_number=order),
-            account = Ledger.objects.get(ledger_name=request.user),
+            account = Ledger.objects.get(ledgerUser=request.user),
           
             description = f"For Sales OrderId:-{tObj.OrderFk.quotation_number} DeliveryID:-{tObj.id}" ,
             debit_amount = Decimal(tObj.order.total_price),

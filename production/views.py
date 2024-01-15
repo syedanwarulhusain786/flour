@@ -83,10 +83,45 @@ def send_to_inventory(request, quotation_number):
 
     return redirect('pendingOrder')
 
+from datetime import datetime, date
 
 
+def production_report(request):
+    today = date.today()
+    products= Product.objects.filter(category=ProductCategory.objects.get(name='Sales'))
+    # Filter ProducedRow objects for today's date
+    today_start = datetime.combine(today, datetime.min.time())
+    today_end = datetime.combine(today, datetime.max.time())
 
+    # Filter ProducedRow objects for today's date
+    produced = ProducedRow.objects.filter(production_date__range=(today_start, today_end))
+      # Get products filtered by category
+    products = Product.objects.filter(category=ProductCategory.objects.get(name='Sales'))
 
+    # Create a dictionary mapping product names to a tuple of (packaging list, length of the list)
+    product_name_packaging_dict = {
+        product.name: (list(product.packaging_products.all()), len(product.packaging_products.all()))
+        for product in products
+    }
+    # head=[]
+    # for product in products:
+    #     for prod in product.packaging_products.all():
+    #         head.append(prod.name)  
+    #         head=list(set(head))  
+
+    # Filter ProducedRow objects for today's production_date
+    # produced_rows_today = ProducedRow.objects.filter(production_date=today) 
+    print(produced)
+    
+    context = {
+        'today':today,
+        'product':products,
+        'produced': produced,
+        'product_name_heading_dict':product_name_packaging_dict,
+        'produced_rows_today':produced
+    }
+    template_name = 'production_report.html'  # Replace with your actual template name
+    return render(request, template_name, context)
 
 
 

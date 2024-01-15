@@ -1,8 +1,10 @@
 from django.db import models
+from login.models import *
+
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType    
 
 from commonApp.models import *
-    
-
 class Primary_Group(models.Model): #### Primary Group
     PRIMARY_GROUP_CHOICES = [
         ('Debit', 'Debit'),
@@ -46,13 +48,12 @@ class Group(models.Model): #### Group
 
 class Ledger(models.Model): #### Ledger
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    ledger_number = models.PositiveIntegerField()  # Start from 1 within each subcategory
+    ledgerUser=models.ForeignKey('login.CustomUser', on_delete=models.CASCADE,related_name='ledger_user',null=True, blank=True)
+    ledger_number = models.PositiveIntegerField()
     ledger_name = models.CharField(max_length=255)
-    ledger_type = models.CharField(max_length=50)  # You might want to use choices for predefined types
+    ledger_type = models.CharField(max_length=50)
     opening_balance = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
-    current_balance = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
-    ledger_limit = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
-    ledger_limitLeft = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
+
 
     def __str__(self):
         return f"{self.ledger_name}"
@@ -64,113 +65,26 @@ class Ledger(models.Model): #### Ledger
             if latest_account_in_subcategory:
                 self.ledger_number = latest_account_in_subcategory.ledger_number + 1
             else:
-                self.ledger_number = self.group.group_number*10+1
+                self.ledger_number = self.group.group_number * 10 + 1
+
+        if not self.ledger_type:
+            # Assign primary group type to ledger_type
+            self.ledger_type = self.group.primary_group.primary_group_type
+
         super(Ledger, self).save(*args, **kwargs)
 
 
 
 
 
-class Customer(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True, blank=True)
-    
-    legder = models.ForeignKey(Ledger, on_delete=models.CASCADE)
-    customer_id = models.IntegerField(unique=True)
-    customer_name = models.CharField(max_length=255)
-    customer_code = models.CharField(max_length=50)
-    credit_period = models.IntegerField()
-    credit_limit = models.IntegerField()
-    mailing_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
-    mobile = models.CharField(max_length=20)
-    
-    email = models.EmailField()
-    bank_account = models.CharField(max_length=50)
-    tin = models.CharField(max_length=20)
-    narration = models.CharField(max_length=255)
-    gst_no = models.CharField(max_length=20)
-    pan = models.CharField(max_length=20)
-    opening_balance = models.IntegerField()
-    route_id = models.CharField(max_length=20)
-    area_id = models.CharField(max_length=20)
-    branch_name = models.CharField(max_length=20)
-    
-    address = models.TextField()
-
-    def save(self, *args, **kwargs):
-        # Generate the customer ID if it doesn't exist
-        if not self.customer_id:
-            last_customer = Customer.objects.order_by('-id').first()
-            if last_customer:
-                last_id = int(last_customer.customer_id)
-                new_id = f'{str(last_id + 1).zfill(2)}'
-                new_code = f'cust-{str(last_id + 1).zfill(2)}'
-                
-            else:
-                new_id = 1001
-                new_code= 'cus-01'
-            self.customer_id = new_id
-            self.customer_code = new_code
-
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.customer_name
-    
-    
-    
-class Supplier(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True, blank=True)
-    
-    ledger = models.ForeignKey(Ledger, on_delete=models.SET_NULL,null=True, blank=True)
-    supplier_id = models.IntegerField(unique=True)
-    supplier_name = models.CharField(max_length=255)
-    supplier_code = models.CharField(max_length=50)
-    credit_period = models.IntegerField()
-    credit_limit = models.IntegerField()
-    mailing_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
-    branch_name =  models.CharField(max_length=50)
-    mobile = models.CharField(max_length=255)
-    email = models.EmailField()
-    bank_account = models.CharField(max_length=50)
-    tin = models.CharField(max_length=20)
-    narration = models.CharField(max_length=255)
-    gst_no = models.CharField(max_length=20)
-    pan = models.CharField(max_length=20)
-    opening_balance = models.IntegerField()
-    route_id = models.CharField(max_length=20)
-    area_id = models.CharField(max_length=20)
-    address = models.TextField()
-
-    def save(self, *args, **kwargs):
-        # Generate the supplier ID if it doesn't exist
-        if not self.supplier_id:
-            last_supplier = Supplier.objects.order_by('-id').first()
-            if last_supplier:
-                last_id = int(last_supplier.supplier_id)
-                new_id = f'{str(last_id + 1).zfill(2)}'
-                new_code = f'sup-{str(last_id + 1).zfill(2)}'
-                
-            else:
-                new_id = 1001
-                new_code= 'sup-01'
-            self.supplier_id = new_id
-            self.supplier_code = new_code
-            
-
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.supplier_name
-    
+ 
 
 
 
 
 class PurchaseInvoice(models.Model):
     quotation_number = models.AutoField(primary_key=True)  
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL,null=True, blank=True)
+    supplier = models.ForeignKey('login.CustomUser', on_delete=models.SET_NULL,null=True, blank=True)
 
     billing_address = models.TextField()
     shipping_address = models.TextField(blank=True)
@@ -240,7 +154,7 @@ class SalesQuotation(models.Model):
     ]
    
     quotation_number = models.AutoField(primary_key=True)  
-    customer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,null=True, blank=True)
+    customer = models.ForeignKey('login.CustomUser', on_delete=models.SET_NULL,null=True, blank=True)
 
     billing_address = models.TextField()
     shipping_address = models.TextField(blank=True)
@@ -309,7 +223,7 @@ class SalesDeliveryDetails(models.Model):
     created_at=models.DateField(auto_now_add=True,null=True, blank=True)
     OrderFk = models.ForeignKey(SalesQuotation, on_delete=models.SET_NULL,null=True, blank=True)
 
-    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,null=True, blank=True)
+    user = models.ForeignKey('login.CustomUser', on_delete=models.SET_NULL,null=True, blank=True)
     order = models.ForeignKey(SalesItemRow, on_delete=models.SET_NULL,null=True, blank=True)
     row_type = models.CharField(max_length=20, choices=ROW_TYPE_CHOICES)
     vehicle_number = models.CharField(max_length=20)
@@ -349,7 +263,7 @@ class PurchaseQuotation(models.Model):
         
     ]
     quotation_number = models.AutoField(primary_key=True)  
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True, blank=True)
+    user = models.ForeignKey('login.CustomUser', on_delete=models.CASCADE,null=True, blank=True)
 
     billing_address = models.TextField()
     shipping_address = models.TextField(blank=True)

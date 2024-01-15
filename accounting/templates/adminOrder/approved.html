@@ -57,11 +57,13 @@
                     <th>Order Id</th>
 
                     <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price(Quantal)</th>
+                    <th>Supplier</th>
+
+                    <th>Quantity(QTL)</th>
+                    <th>Price(QTL)</th>
                     <th>End Deivery</th>
                     <th>Order Type</th>
-                    <th>Comission</th>
+                    <th>Comission(QTL)</th>
                     <th>Final Price</th>
                     <th>Actions</th>
 
@@ -77,6 +79,8 @@
                   <tr>
                     <td>{{product.id}}</td>
                     <td>{{product.product_name}}</td>
+                    <td>{{product.user}}</td>
+
                     <td>{{product.quantity}}</td>
                     <td>{{product.price_per_quantal}}</td>
                     <td>{{product.end_delivery_date}}</td>

@@ -113,6 +113,7 @@ label {
                 </div>
                 
               </div>
+              
 
 
 
@@ -154,6 +155,19 @@ label {
                     </select>
                 </div>
               </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="packagingProducts">Packaging Products</label>
+                    <select class="selectpicker form-control" id="packagingProducts" name="packagingProducts[]" data-live-search="true" multiple>
+                        <option data-tokens="{{ packaging_product.name }}" id="{{ packaging_product.name }}"
+                            value="{{ packaging_product.id }}">---Select Packaging Product ----</option>
+                        {% for packaging_product in packaging_products %}
+                        <option data-tokens="{{ packaging_product.id }}" id="{{ packaging_product.id }}"
+                            value="{{ packaging_product.id }}">{{ packaging_product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
           </div>
 

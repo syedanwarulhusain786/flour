@@ -49,7 +49,8 @@
         <div class="card">
           <div class="card-body">
             <div class="mb-2">
-              <h5 class="mb-0">Order Details # {{Orders.id}}</h5>
+              <h5 class="mb-0"> <a class="btn btn-danger" href="{% url 'force' Orders.id %}">Complete Order # {{Orders.id}}</a></h5>
+
             </div>
            
             <div id="bankForm" style="display: block;padding: 20px;">
@@ -74,14 +75,14 @@
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="Product">Quantity</label>
+                                            <label for="Product">Quantity(QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{Orders.quantity}}" readonly>
                                         </div>
                                         
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="Product">Price <span>(Per Quantal)</span></label>
+                                            <label for="Product">Price <span>(QTL)</span></label>
                                             <input type="text" class="form-control" id="product" value="{{Orders.price_per_quantal}}" readonly>
                                         </div>
                                         
@@ -106,7 +107,7 @@
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="Product">Commission</label>
+                                            <label for="Product">Commission(QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{Orders.agent_commission_per_quantal}}" readonly>
                                         </div>
                                         
@@ -132,7 +133,7 @@
                             
                                     <div class="col-md-6" style="padding: 10px;">
                                         <div class="form-group">
-                                            <label for="Product">Quantity Left</label>
+                                            <label for="Product">Quantity Left(QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{ Orders.quantity_left }}" readonly>
                                         </div>
                                     </div>
@@ -172,12 +173,13 @@
                           <th>Row Type</th>
 
                           <th>No Of Bags</th>
-                          <th>Quantity</th>
+                          <th>Quantity(QTL)</th>
                           <th>Jute Bag</th>
                           <th>Plastic Bag</th>
-                          <th>FSSI</th>
+                          <th>FCI</th>
                           <th>Loose</th>
                           <th>Delivery Product Price</th>
+                          <th>Download</th>
                           <th>Delivery Status</th>
                           <th>Action</th>
 
@@ -207,6 +209,7 @@
                           <td>{{product.fssi}}</td>
                           <td>{{product.loose}}</td>
                           <td>{{product.final_quantity_price}}</td>
+                          <td><a class="btn btn-success" href="{% url 'downloadDelivery' order_id=product.id %}">Download Slip</a></td>
                           <td>{% if product.status == 'pending' %}
                             <button class="btn btn-success" disabled>Pending</button>
                         {% elif product.status == 'delivered' %}

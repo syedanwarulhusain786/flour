@@ -24,7 +24,7 @@ urlpatterns = [
     path('supplier-home/', views.supplier_home, name='supplier-home'),
     path('all-orders/', views.supplier_home, name='myorders'),
     path('suppliercompleted/', views.suppliercompleted, name='suppliercompleted'),
-    path('startdelivery/<int:order_id>/', views.startdelivery, name='startdelivery'),
+    path('startdelivery/<int:order_id>/<str:flag>', views.startdelivery, name='startdelivery'),
     
     path('createorder/', views.purchase_order_page, name='createorder'),
     #  path('purchase_quotations/<int:quotation_number>/place_bid/', views.place_bid, name='place_bid'),

@@ -74,7 +74,7 @@
 
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="Product">Quantity</label>
+                                            <label for="Product">Quantity(QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{Orders.quantity}}" readonly>
                                         </div>
                                         
@@ -132,7 +132,7 @@
                             
                                     <div class="col-md-6" style="padding: 10px;">
                                         <div class="form-group">
-                                            <label for="Product">Quantity Left</label>
+                                            <label for="Product">Quantity Left (QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{ Orders.quantity_left }}" readonly>
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
           </div>
         </div>
 
-
+            {% if completed == 'False' %}
 
             <div class="card">
    
@@ -202,11 +202,34 @@
                                     </div>
                                     <div class="mb-4 row align-items-center">
                                         <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity</label>
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity(QTL)</label>
                                         <div class="col-sm-9">
-                                          <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="quantity">
+                                          <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="quantity" step="any">
                                         </div>
+                                    </div>
+
+                                    <div class="mb-4 row align-items-center">
+                                          <label for="billing_company" class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Company</label>
+                                          <div class="col-sm-9">
+                                          <select class="form-control" id="billing_company" name="billing_company" data-live-search="true">
+                                              <option data-tokens="{{ category.name }}" id="{{ category.supplier_name }}"
+                                                  value="{{ category.name }}">---Select suppliers ----</option>
+                                              {% for supplier in billing %}
+                                              <option data-address="{{ supplier.address }}" value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                              {% endfor %}
+                                          </select>
                                       </div>
+                                      
+                                    </div>
+                                  <div class="mb-4 row align-items-center">
+                                    <label for="billing_address"
+                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Address</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="billing_address"  name="billing_address">
+                                    </div>
+                                </div>
+
+                                    
                                   </div>
                                   <div class="col-lg-6">
                                     
@@ -230,7 +253,7 @@
                                     </div>
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">FSSI</label>
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">FCI</label>
                                       <div class="col-sm-9">
                                         <div class="input-group">
                                           <input type="text" class="form-control" id="" name="fssi" value="0">
@@ -246,10 +269,40 @@
                                           </div>
                                         </div>
                                       </div>
+                                      <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Party Name</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <input type="text" class="form-control" id="" name="partyName">
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="mb-4 row align-items-center">
+                                        <label for="exampleInputPassword1"
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Party Address</label>
+                                        <div class="col-sm-9">
+                                          <div class="input-group">
+                                            <textarea class="form-control" name="partyAddress" id="" cols="30" rows="10" ></textarea>
+                                          </div>
+                                        </div>
+                                      </div>
+
+
+
+
+
+
+
+
+
+
+
                                     
 
                                   </div>
                                   <div>
+
                                   <button type="submit" class="btn btn-success" >Start Delivery Process</button>
                                 </div>
                                 </div>
@@ -263,7 +316,7 @@
                 </div>
 
             </div>
-       
+            {% endif %}
             <div class="card">
                 <div class="card-body">
                   <div class="mb-2">
@@ -277,15 +330,19 @@
                         <!-- start row -->
                         <tr>
                           <th>Order Id</th>
-      
                           <th>Vehicle Number</th>
+                          
                           <th>Delivery Date</th>
+                          <th>Delivery Type</th>
+
                           <th>No Of Bags</th>
-                          <th>Quantity</th>
+                          <th>Quantity(QTL)</th>
                           <th>Jute Bag</th>
                           <th>Plastic Bag</th>
                           <th>FSSI</th>
                           <th>Loose</th>
+                          <th>Download</th>
+
                           <th>Delivery Price</th>
                           <th>Delivery Status</th>
 
@@ -306,13 +363,17 @@
       
                           <td>{{product.vehicle_number}}</td>
                           <td>{{product.date_of_delivery}}</td>
+                          <td>{{product.row_type}}</td>
+
                           <td>{{product.no_of_bags}}</td>
+
                           <td>{{product.quantity}}</td>
                           <td>{{product.jute_bags}}</td>
                           <td>{{product.plastic_bags}}</td>
                           <td>{{product.fssi}}</td>
                           <td>{{product.loose}}</td>
                           <td>{{product.final_quantity_price}}</td>
+                          <td><a class="btn btn-success" href="{% url 'downloadDelivery' order_id=product.id %}">Download Slip</a></td>
                           <td>{% if product.status == 'pending' %}
                             <button class="btn btn-success" disabled>Pending</button>
                         {% elif product.status == 'delivered' %}
@@ -339,7 +400,15 @@
   </div>
  <!-- Your modal structure -->
 <!-- Your modal structure -->
-
+<script>
+  $(document).ready(function() {
+    $('#billing_company').change(function() {
+      var selectedOption = $(this).find(':selected');
+      var address = selectedOption.data('address');
+      $('#billing_address').val(address);
+    });
+  });
+</script>
   <script>
     function handleColorTheme(e) {
       $("html").attr("data-color-theme", e);
