@@ -63,6 +63,8 @@
                     <th>End Deivery</th>
                     <th>Order Type</th>
                     <th>Comission(Quantal)</th>
+                    <th>Total Comission</th>
+
                     <th>Final Price</th>
                     <th>Action</th>
 
@@ -84,6 +86,8 @@
                     <td>{{product.end_delivery_date}}</td>
                     <td>{{product.supplier_type}}</td>
                     <td>{{product.agent_commission_per_quantal}}</td>
+                    <td>{{product.agent_commission_total}}</td>
+
                     <td>{{product.final_price}}</td>
                     <td>
                         <button class="btn btn-success approve-btn" data-order-id="{{ product.id }}">Approve</button>

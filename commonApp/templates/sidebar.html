@@ -423,6 +423,14 @@
             <span class="hide-menu">Sales Order Disapproved</span>
           </a>
         </li>
+        <li class="sidebar-item">
+          <a href="{% url 'salescompleted' %}" class="sidebar-link">
+            <div class="round-16 d-flex align-items-center justify-content-center">
+              <i class="ti ti-circle"></i>
+            </div>
+            <span class="hide-menu">Sales Order Completed</span>
+          </a>
+        </li>
       </ul>
     </li>
       <li class="sidebar-item">
@@ -732,7 +740,15 @@
               <span class="hide-menu">Approved Order</span>
             </a>
           </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'supplierpending' %}" aria-expanded="false">
+              <span>
+                <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
 
+              </span>
+              <span class="hide-menu">Pending Order</span>
+            </a>
+          </li>
           <li class="sidebar-item">
             <a class="sidebar-link" href="{% url 'supplierdisapproved' %}" aria-expanded="false">
               <span>
@@ -836,6 +852,15 @@
 
         </span>
         <span class="hide-menu">Disapproved Order</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="{% url 'salespending' %}" aria-expanded="false">
+        <span>
+          <img src="{% static 'icons/new-product.png' %}" alt="All Products Icon" width="24" height="24">
+
+        </span>
+        <span class="hide-menu">Sales Pending Order</span>
       </a>
     </li>
    

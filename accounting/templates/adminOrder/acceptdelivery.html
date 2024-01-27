@@ -125,17 +125,24 @@
                                 <hr>
                                 <div class="row">
 
-                                    <div class="col-md-6" style="padding: 10px;">
+                                    <div class="col-md-4" style="padding: 10px;">
                                         <label for="bankjournal_date"> Last Delivery Date <span
                                                 class="text-danger">*&emsp;</span></label>
                                         <input type="text" class="form-control" id="bankjournal_date" value="{{ last }}" readonly>
                                     </div>
                             
-                                    <div class="col-md-6" style="padding: 10px;">
+                                    <div class="col-md-4" style="padding: 10px;">
                                         <div class="form-group">
                                             <label for="Product">Quantity Left(QTL)</label>
                                             <input type="text" class="form-control" id="product" value="{{ Orders.quantity_left }}" readonly>
                                         </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Product">Total Commission</label>
+                                            <input type="text" class="form-control" id="product" value="{{Orders.agent_commission_total}}" readonly>
+                                        </div>
+                                        
                                     </div>
 
                                     
@@ -166,7 +173,7 @@
                       <thead>
                         <!-- start row -->
                         <tr>
-                          <th>Order Id</th>
+                          <th>Order No</th>
       
                           <th>Vehicle Number</th>
                           <th>Delivery Date</th>

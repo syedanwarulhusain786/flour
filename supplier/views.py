@@ -39,10 +39,13 @@ def purchase_order_page(request):
         
         supplier_type = request.POST.get('radio-stacked')
         commission = Decimal(request.POST.get('commision', 0))
+        totalcommission = 0.0
+        
         # Perform your calculations here based on supplier_type
         total = quantity * price
         if supplier_type == '1':
             total += quantity * commission
+            totalcommission=quantity * commission
             supplier_type='agent'
             
         else:
@@ -60,11 +63,12 @@ def purchase_order_page(request):
             quantity_left=quantity,
             end_delivery_date=end_delivery_date,
             agent_commission_per_quantal=commission,
-            final_price=total
+            final_price=total,
+            agent_commission_total=totalcommission
         )
         order.save()
 
-        return redirect('supplierapproved')  
+        return redirect('supplierpending')  
 
   
 
@@ -135,7 +139,7 @@ def startdelivery(request,order_id,flag=None):
             loose = loose,
         )
         order.save()
-        
+        return redirect('supplierapproved')    
         
         
         
@@ -172,7 +176,9 @@ def suppliercompleted(request):
         
     return render(request, 'supplierOrderside/supplier_completed.html', {'Orders': Orders,'user':user}) 
 
-
+def supplierpending(request):
+    Orders=Order.objects.filter(is_approved='pending',user=request.user)
+    return render(request, 'supplierOrderside/pending.html', {'Orders': Orders})
 def supplierapproved(request):
     Orders=Order.objects.filter(is_approved='approved',user=request.user)
     return render(request, 'supplierOrderside/approved.html', {'Orders': Orders})  

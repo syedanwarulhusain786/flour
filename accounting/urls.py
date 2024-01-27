@@ -31,7 +31,11 @@ urlpatterns = [
     # path('approve_order/<int:order_id>/',  views.approve_order, name='approve_order'),
     # path('disapprove_order/<int:order_id>/',  views.disapprove_order, name='disapprove_order'),
     path('salesapproved/', views.salesapproved, name='salesapproved'),
+    path('salespending/', views.salespending, name='salespending'),
+    
     path('salesdisapproved/', views.salesdisapproved, name='salesdisapproved'),
+    path('salescompleted/', views.salescompleted, name='salescompleted'),
+    
     path('salesacceptDelivery/<int:order_id>/', views.salesacceptDelivery, name='salesacceptDelivery'),
     
     path('updateDelivery/<int:order_id>/', views.updateDelivery, name='updateDelivery'),

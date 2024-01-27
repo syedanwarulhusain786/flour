@@ -42,7 +42,7 @@ class Command(BaseCommand):
             sales=Sales.objects.all()
             for sale in sales:
                 markup.add(types.InlineKeyboardButton(f"Order No {sale.sale_number}", callback_data=f'Order No {sale.sale_number}'))
-            bot.send_message(user_id, 'Please choose an Order Id:', reply_markup=markup)
+            bot.send_message(user_id, 'Please choose an Order No:', reply_markup=markup)
             
         def view_order_by_number(user_id):
             # Prompt the user to enter the order number

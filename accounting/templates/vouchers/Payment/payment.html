@@ -78,7 +78,7 @@
                                 <select class="form-control" id="invoice_no" name="invoice_no" data-value="your_data_value" other-attribute="other_value">
                                     <option selected>--Select purchase--</option>
                                     {% for purchase in purchases %}
-                                    <option data-Date="{{purchase.created_at}}" data-supplier="{{purchase.order.user}}" data-balance={{purchase.finalAmt}} data-final-amount={{purchase.finalAmt}} value="{{purchase.id}}">DR-{{purchase.id}}</option>
+                                    <option data-Date="{{purchase.created_at}}" data-supplier="{{purchase.order.user}}" data-balance={{purchase.pendingAmt}} data-final-amount={{purchase.finalAmt}} value="{{purchase.id}}">DR-{{purchase.id}}</option>
                                     {% endfor %}
                                 </select>
                                 <small id="selectedOptionInfo" class="form-text text-muted"></small>

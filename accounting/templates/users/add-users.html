@@ -159,7 +159,7 @@ label {
           <div class="col-md-4">
             <div class="form-group">
               <label for="bankAccount" >Bank Account</label>
-              <input type="text" class="form-control" name="bankAccount" placeholder="Enter bank account" >
+              <input type="Number" class="form-control" name="bankAccount" placeholder="Enter bank account" >
             </div>
           </div>
 
@@ -206,32 +206,43 @@ label {
 
             <div class="col-md-4">
             <div class="form-group">
-              <label for="openingBalance">Opening Balance</label>
-              <input type="number" class="form-control" name="openingBalance" placeholder="Enter opening balance">
+              <label for="openingBalance" class="required">Opening Balance </label>
+              <input type="number" class="form-control" name="openingBalance" value="0.0" required>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="openingBalance">Commission(%)</label>
-              <input type="number" class="form-control" name="commission" step="any">
+              <input type="number" class="form-control" name="commission" step="any" value="0.0">
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="account_category" class="required">Group:</label>
+              <select class="form-control" id="accountNumber2" name="GroupName" data-live-search="true" required>
+                <option value="" >---None---</option>
+                {% for category in group %}
+                <option data-tokens="{{ category.group_number }}" id="{{ category.group_number }}"
+                  value="{{ category.group_number }}">{{ category.group_name }}</option>
+    
+    
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">
+                Please select a group.
+            </div>
 
-         
+            </div>
+          </div>
+          
 
           
         </div>
 
-          <div class="row" style="padding:20px">
-           
-
-
-            
-          </div>
 
 
 
-          <div class="row" style="padding:20px">
+          <!-- <div class="row" style="padding:20px">
             <div class="col-md-4">
               <div class="form-group">
                 <label>
@@ -240,40 +251,13 @@ label {
               </div>
             </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="account_category">Primary Group:</label>
-                <select class="selectpicker" id="accountNumber1" name="primaryGroupName" data-live-search="true">
-      
-                  {% for category in primaryGroup %}
-                  <option data-tokens="{{ category.primary_group_number }}" id="{{ category.primary_group_number }}"
-                    value="{{ category.primary_group_number }}">{{ category.primary_group_name }}</option>
-      
-      
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
+            
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="account_category">Group:</label>
-                <select class="selectpicker" id="accountNumber2" name="GroupName" data-live-search="true">
-      
-                  {% for category in group %}
-                  <option data-tokens="{{ category.group_number }}" id="{{ category.group_number }}"
-                    value="{{ category.group_number }}">{{ category.group_name }}</option>
-      
-      
-                  {% endfor %}
-                </select>
-
-              </div>
-            </div>
+       
 
           </div>
 
-        
+         -->
 
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-secondary">Cancel</button>
@@ -338,6 +322,16 @@ label {
   });
 </script>
 
-
+<script>
+  $(document).ready(function () {
+      $('#accountNumber2').change(function () {
+          if ($(this).val() === '') {
+              $(this).addClass('is-invalid');
+          } else {
+              $(this).removeClass('is-invalid');
+          }
+      });
+  });
+</script>
 
   {% endblock %}

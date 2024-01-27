@@ -80,6 +80,7 @@ def index(request):
     if user.is_authenticated:
         if user.company_id:
             if user.department_id:
+                print(user.account_type.name)
                 if user.department.name=='SALES':
                     login(request, user)
                     return redirect('sales')
@@ -93,7 +94,9 @@ def index(request):
                     elif user.account_type.name=='Customer':
                         login(request, user)
                         return redirect('customer_home')
-            
+                    elif user.account_type.name=='Agent':
+                        login(request, user)
+                        return redirect('customer_home')
              
                 # login(request, user)
                 # return redirect('home')  # Replace 'home' with your home page URL.
@@ -125,8 +128,9 @@ def index(request):
                             elif user.account_type.name=='Customer':
                                 login(request, user)
                                 return redirect('customer_home')
-                    
-                        print('hi')
+                            elif user.account_type.name=='Agent':
+                                login(request, user)
+                                return redirect('customer_home')
                         # login(request, user)
                         # return redirect('home')  # Replace 'home' with your home page URL.
                     else:

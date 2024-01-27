@@ -109,12 +109,14 @@ class Order(models.Model):
     end_delivery_date = models.DateField(null=True, blank=True)
     supplier_type= models.CharField(max_length=255) 
     agent_commission_per_quantal = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    agent_commission_total = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True,default=0.0)
+    
     final_price = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     is_approved = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     order_date=models.DateField(auto_now_add=True,null=True, blank=True)
     quantity_left=models.FloatField(default=0)
     def __str__(self):
-            return f"Order Id {self.id} User "
+            return f"Order No {self.id} User "
 
     
 class DeliveryDetails(models.Model):
@@ -167,6 +169,7 @@ class DeliveryDetails(models.Model):
     dueDate = models.DateField(null=True, blank=True)
     
     
+    pendingAmt = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True,default=0)
     
     status = models.CharField(max_length=20, choices=status_row,default='pending')
     payment= models.CharField(max_length=20, choices=payment_row,default='due')
@@ -177,6 +180,8 @@ class DeliveryDetails(models.Model):
     def calculate_final_quantity_price(self):
         order_price_per_quantal = self.order.price_per_quantal
         self.final_quantity_price = Decimal(self.quantity) * Decimal(order_price_per_quantal)
+        if not self.pendingAmt:
+            self.pendingAmt = Decimal(self.quantity) * Decimal(order_price_per_quantal)
 
     final_quantity_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 

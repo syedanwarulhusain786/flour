@@ -37,6 +37,12 @@
   
     /* Add more styling as needed */
   </style>
+  <style>
+    label.required::after {
+        content: " *";
+        color: red;
+    }
+  </style>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
 <div class="datatables" style="padding-top: 50px;">
@@ -165,7 +171,7 @@
                       <thead>
                         <!-- start row -->
                         <tr>
-                          <th>Order Id</th>
+                          <th>Order No</th>
       
                           <th>Vehicle Number</th>
                           <th>Delivery Date</th>

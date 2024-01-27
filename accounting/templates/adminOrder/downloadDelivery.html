@@ -11,9 +11,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+
     }
   
     .modal-content {
@@ -37,15 +35,102 @@
   
     /* Add more styling as needed */
   </style>
+           
+           <style>
+            .invoice-box {
+              margin: auto;
+              padding: 30px;
+              border: 1px solid #eee;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+              font-size: 16px;
+              line-height: 24px;
+              font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+              color: #555;
+            }
+      
+            .invoice-box table {
+              width: 100%;
+              line-height: inherit;
+              text-align: left;
+            }
+      
+            .invoice-box table td {
+              padding: 5px;
+              vertical-align: top;
+            }
+      
+            .invoice-box table tr td:nth-child(2) {
+              text-align: left;
+            }
+      
+            .invoice-box table tr.top table td {
+              padding-bottom: 20px;
+            }
+      
+            .invoice-box table tr.top table td.title {
+              font-size: 45px;
+              line-height: 45px;
+              color: #333;
+            }
+      
+            .invoice-box table tr.information table td {
+              padding-bottom: 40px;
+            }
+      
+            .invoice-box table tr.heading td {
+              background: #eee;
+              border-bottom: 1px solid #ddd;
+              font-weight: bold;
+            }
+      
+            .invoice-box table tr.details td {
+              padding-bottom: 20px;
+            }
+      
+            .invoice-box table tr.item td {
+              border-bottom: 1px solid #eee;
+            }
+      
+            .invoice-box table tr.item.last td {
+              border-bottom: none;
+            }
+      
+            .invoice-box table tr.total td:nth-child(2) {
+              border-top: 2px solid #eee;
+              font-weight: bold;
+            }
+      
+            @media only screen and (max-width: 600px) {
+              .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+              }
+      
+              .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+              }
+            }
+      
+            /** RTL **/
+            .invoice-box.rtl {
+              direction: rtl;
+              font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            }
+      
+            .invoice-box.rtl table {
+              text-align: right;
+            }
+      
+            .invoice-box.rtl table tr td:nth-child(2) {
+              text-align: left;
+            }
+          </style>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
-<div class="datatables" style="padding-top: 50px;">
-    <!-- basic table -->
-    <div class="row">
-      <div class="col-12">
-        <!-- ---------------------
-                              start Zero Configuration
-                          ---------------- -->
+
 
 
 
@@ -53,330 +138,216 @@
             <div class="card">
    
                 <div class="card-body">
-                    <div class="collapsible-section mb-4">
-                        <h5 class="card-title fw-semibold mb-4"></h5>
-                        <form method="POST" id="dt">
-                            {% csrf_token %}
-                        <div class="accordion accordion-flush position-relative overflow-hidden" id="accordionFlushExample">
-                          <div class="accordion-item mb-3 shadow-none border rounded-top">
-                            <h2 class="accordion-header" id="flush-headingOne">
-                              {% if delivery.row_type == 'dispatch' %}
-                              <button class="accordion-button collapsed fs-4 fw-semibold px-3 py-6 lh-base border-0 rounded-top"
-                                type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse1" aria-expanded="false"
-                                aria-controls="flush-collapse1"> Dispatch Reciept </button>
-                              {% else %}
-                              <button class="accordion-button collapsed fs-4 fw-semibold px-3 py-6 lh-base border-0 rounded-top"
-                                type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse1" aria-expanded="false"
-                                aria-controls="flush-collapse1"> Delivery Reciept </button>
-                                {% endif %}
+         
+                  
+                      <div class="invoice-box" id="invoice-box">
+                        <table cellpadding="0" cellspacing="0">
+                          <tr class="top">
+                            <td colspan="2">
+                              <table>
+                                <tr>
+                                  <td class="title">
+                                    {% if delivery.row_type == 'dispatch' %}
+                                    <h1>Dispatch Reciept </h1>
+                                    {% else %}
+                                    <h1>Delivery Reciept </h1>
+                                     
+                                      {% endif %}
+                                  </td>
+                  
 
-                            </h2>
-                            <div id="flush-collapse1" class="accordion-collapse collapse" aria-labelledby="flush-heading1"
-                              data-bs-parent="#accordionFlushExample">
-                              <div class="accordion-body px-3 fw-normal">
-                                <div class="row">
-                                  <div class="col-lg-6">
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Order Id</label>
-                                        <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="exampleInputtext" name="order" value="{{delivery.order.id}}" readonly>
-                                        </div>
-                                      </div>
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Agreed Amount per QTL</label>
-                                        <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="Agreed" name="Agreed" value="{{delivery.order.price_per_quantal}}">
-                                        </div>
-                                      </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Vehicle Number</label>
-                                      <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="exampleInputtext" name="vehicle" value="{{delivery.vehicle_number}}">
-                                      </div>
-                                    </div>
+                                  <td>
+                                    Order No # {{delivery.order.id}}<br />
+                                    Delivery ID: {{delivery.id}}<br />
+                                    Delivery Date: {{formatted_date}}
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                  
+                          <tr>
+                            <td colspan="2">
+                              <table>
+                                <tr class="heading">
+                                  <td>Billed To:-</td>
+                        
+                                  <td>Party</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    {{ delivery.billing_company.name }}<br />
+                                      {{ delivery.billing_company.address|linebreaks|safe }}
+                                  </td>
+                  
+                                  <td>
+                                    Invoice No: # {{delivery.invoice_no}}<br />
+                                    Invoice Date: # {{delivery.formatted_date}}<br />
 
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Date Of Delivery</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group border rounded-1">
-                                          <input type="date" class="form-control p-7 border-0" name="deliveryDate" value="{{formatted_date}}">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">No of Bags</label>
-                                      <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="allBags"  value="{{delivery.no_of_bags}}">
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity</label>
-                                        <div class="col-sm-9">
-                                          <input type="number" class="form-control" id="quantity" placeholder="100" name="quantity"  value="{{delivery.quantity}}">
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="billing_company" class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Company</label>
-                                      <div class="col-sm-9">
-                                      <select class="form-control" id="billing_company" name="billing_company" data-live-search="true">
-                                          <option data-address="{{ delivery.billing_company.address }}" value="{{ delivery.billing_company.id }}">{{ delivery.billing_company.name }}</option>
-                                      </select>
-                                  </div>
-                                  
-                                </div>
-                              <div class="mb-4 row align-items-center">
-                                <label for="billing_address"
-                                  class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Address</label>
-                                <div class="col-sm-9">
-                                  <input type="text" class="form-control" id="billing_address"  name="billing_address" value="{{delivery.billing_company.address}}">
-                                </div>
-                            </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Price Before Deduction</label>
-                                      <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="before" placeholder="100" name="before"  >
-                                      </div>
-                                    </div>
-                                      
-                                  </div>
-                                  <div class="col-lg-6">
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Delivery ID</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="text" class="form-control" id="" name="del" value="{{delivery.id}}" readonly>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Jute Bag</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="text" class="form-control" id="" value="{{delivery.jute_bags}}"  name="jute">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Plastic Bag</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="text" class="form-control" id="" value="{{delivery.plastic_bags}}" name="plastic">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">FCI</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="text" class="form-control" id="" name="fssi" value="{{delivery.fssi}}">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Loose</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="text" class="form-control" id="" name="loose" value="{{delivery.loose}}">
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Invoice No</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="text" class="form-control" id="" name="inv" value="{{delivery.invoice_no}}">
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Invoice Date</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="date" class="form-control" id="" name="invdate" value="{{formatted_date}}">
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Party Name</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="text" class="form-control" id="" name="partyName" value="{{delivery.partyName}}">
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Party Address</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <textarea class="form-control" name="partyAddress" id="" cols="30" rows="10" >{{delivery.partyAddress}}</textarea>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      
                                     
+                                    {{delivery.partyName}}<br />
+                                    {{delivery.partyAddress}}<br />
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                  
 
-                                  </div>
-                                  <br>
-                                  <hr>
-                                  <br>
-                                  <hr>
-                                  <br>
-                                  <hr>
-                                  <h6>Deductions in Quantity</h6>
-                                  <div class="col-lg-6">
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Deduction in (%)</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="number" class="form-control" id="qd" name="qd" value=0 step="any" >
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Accepted Quantity</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="number" class="form-control" id="aq" name="aq" value={{delivery.quantity}} step="any">
-                                          </div>
-                                        </div>
-                                      </div>
-                                  </div>
-                                  <div class="mb-4 row align-items-center">
-                                    <label for="exampleInputPassword1"
-                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Price After Deduction</label>
-                                    <div class="col-sm-9">
-                                      <div class="input-group">
-                                        <input type="number" class="form-control" id="price_after_deduction" name="price_after_deduction" value=0 step="any">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <br>
-                                  <hr>
-                                  <h6>Deductions</h6>
-                                  <div class="col-lg-6">
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Freight</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="number" class="form-control" id="Freight" name="Freight" value={{delivery.freight}} step="any">
-                                          </div>
-                                        </div>
-                                      </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Dala</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="Dala"   name="Dala" value={{delivery.data}} step="any">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Cash Discount</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="cd"  name="cd" value={{delivery.cashDiscount}} step="any">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Kata</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="Kata" name="Kata" value={{delivery.kanta}} step="any">
-                                        </div>
-                                      </div>
-                                    </div>
+                  
+                         
+                          <!-- <tr class="heading">
+                            <td>Payment Method</td>
+                  
+                            <td>Check #</td>
+                          </tr>
+                  
+                          <tr class="details">
+                            <td>Check</td>
+                  
+                            <td>1000</td>
+                          </tr> -->
+                        </table>
+                        <table>
+                          <h2 class="heading" >Details Before Deduction</h2>
+                          <tr class="heading">
+                            <td>Item</td>
+                            <td>Unit Price(quantal)</td>
+                            <td>Quantity(quantal)</td>
+                            <td>Final Price</td>
+                          </tr>
+                  
+                          <tr class="item">
+                            <td>{{delivery.order.product_name}}</td>
+                  
+                            <td>Rs {{delivery.order.price_per_quantal}}</td>
+                            <td>{{delivery.quantity}}</td>
+                            <td>Rs {{delivery.final_quantity_price}}</td>
 
+                          </tr>
 
+                  
+                          
+                  
+                          <tr class="total">
+                            <td></td>
+                            <td></td>
+                            <td></td>
 
+                  
+                            <td>Total: Rs {{delivery.final_quantity_price}}</td>
+                          </tr>
+                        </table>
+                        <table>
+                          <h2 class="heading" >Quantity Details</h2>
+                          <tr class="heading">
+                            <td>Package</td>
+                            <td>Pieces</td>
+                          </tr>
+                  
+                          <tr class="item">
+                            <td>Jute Bag</td>
+                  
+                            <td>{{delivery.jute_bags}}</td>
 
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">TDS/TCS</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="tds" name="tds" value={{delivery.tdsTcs}} step="any">
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                        <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Bardana</label>
-                                        <div class="col-sm-9">
-                                          <div class="input-group">
-                                            <input type="number" class="form-control" id="Bardana" name="Bardana" value={{delivery.bardana}} step="any">
-                                          </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Brokerage</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="Brokerage" name="Brokerage" value={{delivery.brokerage}}>
-                                        </div>
-                                      </div>
-                                    </div>
+                          </tr>
+                          <tr class="item">
+                            <td>Plastic Bag</td>
+                  
+                            <td>{{delivery.plastic_bags}}</td>
 
-                                    <div class="mb-4 row align-items-center">
-                                      <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Commission</label>
-                                      <div class="col-sm-9">
-                                        <div class="input-group">
-                                          <input type="number" class="form-control" id="Commission" name="Commission" value={{delivery.commission}} step="any">
-                                        </div>
-                                      </div>
-                                    </div>
+                          </tr>
+                          <tr class="item">
+                            <td>FCI</td>
+                  
+                            <td>{{delivery.fssi}}</td>
 
-                                  
-                                    
+                          </tr>
+                          <tr class="item">
+                            <td>Loose(quantal)</td>
+                  
+                            <td>{{delivery.loose}}</td>
 
-                                  </div>
+                          </tr>
 
-                                  <div class="mb-4 row align-items-center">
-                                    <label for="exampleInputPassword1"
-                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Total Deducted</label>
-                                    <div class="col-sm-9">
-                                      <div class="input-group">
-                                        <input type="number" class="form-control" id="total" name="total" value={{delivery.deductedAmt}} step="any">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="mb-4 row align-items-center">
-                                    <label for="exampleInputPassword1"
-                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Final Amount</label>
-                                    <div class="col-sm-9">
-                                      <div class="input-group">
-                                        <input type="number" class="form-control" id="final" name="final" value={{delivery.finalAmt}} step="any">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  
+                  
+                          
+                  
+                          <tr class="total">
+                            <td></td>
+
+                  
+                            <td>Total:{{delivery.no_of_bags}}</td>
+                          </tr>
+                        </table>
 
 
+                        <table>
+                          <h2 class="heading" >Deduction Details</h2>
+                          <tr class="heading">
+                            <td>Name</td>
+                            <td>Amount(Rs)</td>
+                          </tr>
+                  
+                          <tr class="item">
+                            <td>Freight</td>
+                  
+                            <td>{{delivery.freight}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Dala</td>
+                  
+                            <td>{{delivery.data}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Cash Discount</td>
+                  
+                            <td>{{delivery.fssi}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Kata</td>
+                  
+                            <td>{{delivery.kanta}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>TDS/TCS</td>
+                  
+                            <td>{{delivery.tdsTcs}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Bardana</td>
+                  
+                            <td>{{delivery.bardana}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Brokerage</td>
+                  
+                            <td>{{delivery.brokerage}}</td>
+
+                          </tr>
+                          <tr class="item">
+                            <td>Commission</td>
+                  
+                            <td>{{delivery.commission}}</td>
+
+                          </tr>
+                  
+                          <br>
+                          <tr class="total">
+
+                  
+                            <td>Total Deducted:{{delivery.deductedAmt}}</td>
+                            <td>Final Amount:{{delivery.finalAmt}}</td>
+
+                          </tr>
+                        </table>
+                      </div>
 
 
 
@@ -384,36 +355,29 @@
 
 
 
-                                  <div>
-                                </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
- 
-                        </div>
-                    </form>
-                    </div>
-                </div>
+
+
+
+                 
 
             </div>
+          <div>
        
             <button class="btn btn-primary" id="pdfButton"> Download Delivery</button>
 
-      </div>
-    </div>
+          </div>
  
     <!-- ---------------------
                               end Table Responsive 
                           ---------------- -->
-  </div>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
   <script>
   const btn = document.getElementById("pdfButton");
 
   btn.addEventListener("click", function(){
-  var element = document.getElementById('dt');
+  var element = document.getElementById('invoice-box');
+  console.log(element)
   // Get the current date and time
   const now = new Date();
   const formattedDate = now.toISOString().split('T')[0];  // Format as 'YYYY-MM-DD'
@@ -424,112 +388,9 @@
   html2pdf().from(element).save(filename);
   });
   </script> 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get the input element for quantity
-    var quantityInput = document.getElementById('quantity');
 
-    // Get the input element for price per quantal
-    var pricePerQuantalInput = document.getElementById('Agreed');
-
-    // Get the Agreed input element
-    var before = document.getElementById('before');
-
-    // Add input event listener to quantity and price per quantal inputs
-    quantityInput.addEventListener('input', updateAgreed);
-    pricePerQuantalInput.addEventListener('input', updateAgreed);
-
-    // Function to update the Agreed value
-    function updateAgreed() {
-      // Get the current values of quantity and price per quantal
-      var quantity = parseFloat(quantityInput.value) || 0;
-      var pricePerQuantal = parseFloat(pricePerQuantalInput.value) || 0;
-
-      // Calculate the Agreed value
-      var agreedValue = quantity * pricePerQuantal;
-
-      // Update the Agreed input field with the calculated value
-      before.value = agreedValue;
-    }
-    updateAgreed()
-  });
-</script>
 
 <!-- Add this script tag in your HTML file, preferably at the end before the closing </body> tag -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get the input elements for Deduction in (%), Quantity, and Accepted Quantity
-    var deductionPercentInput = document.getElementById('qd');
-    var quantityInput = document.getElementById('quantity');
-    var acceptedQuantityInput = document.getElementById('aq');
 
-    // Get the Agreed and Price After Deduction input elements
-    var agreedInput = document.getElementById('Agreed');
-    var priceAfterDeductionInput = document.getElementById('price_after_deduction');
 
-    // Add input event listener to Deduction in (%) input field
-    deductionPercentInput.addEventListener('input', updateAcceptedQuantity);
-
-   
-
-    // Function to update Accepted Quantity based on Deduction in (%) and Quantity
-    function updateAcceptedQuantity() {
-      // Get the current values of quantity and deduction percentage
-      var quantity = parseFloat(quantityInput.value) || 0;
-      var deductionPercent = parseFloat(deductionPercentInput.value) || 0;
-
-      // Calculate the Accepted Quantity
-      var acceptedQuantity = quantity - (quantity * deductionPercent / 100);
-
-      // Update the Accepted Quantity input field with the calculated value
-      acceptedQuantityInput.value = acceptedQuantity;
-      updatePriceAfterDeduction()
-    }
-
-    // Function to update Price After Deduction based on Accepted Quantity and Agreed value
-    function updatePriceAfterDeduction() {
-      // Get the current values of Accepted Quantity and Agreed
-      var acceptedQuantity = parseFloat(acceptedQuantityInput.value) || 0;
-      var agreedValue = parseFloat(agreedInput.value) || 0;
-
-      // Calculate the Price After Deduction
-      var priceAfterDeduction = acceptedQuantity * agreedValue;
-
-      // Update the Price After Deduction input field with the calculated value
-      priceAfterDeductionInput.value = priceAfterDeduction;
-    }
-  });
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get all input elements for deduction
-    var deductionInputs = document.querySelectorAll('input[name^="Freight"], input[name^="Dala"], input[name^="cd"], input[name^="Kata"], input[name^="tds"], input[name^="Bardana"], input[name^="Brokerage"], input[name^="Commission"]');
-
-    // Get the total input element
-    var totalInput = document.getElementById('total');
-    var final = document.getElementById('final');
-    var priceAfterDeductionInput = document.getElementById('price_after_deduction')
-    // Add change event listener to each deduction input
-    deductionInputs.forEach(function (input) {
-      input.addEventListener('change', updateTotal);
-    });
-
-    // Function to update the total value
-    function updateTotal() {
-      // Initialize total value
-      var total = 0;
-
-      // Loop through all deduction inputs and sum their values
-      deductionInputs.forEach(function (input) {
-        total += parseFloat(input.value) || 0;
-      });
-      
-      // Update the total input field with the calculated total
-      totalInput.value = total;
-      // var dedu=parseFloat(priceAfterDeductionInput.value) || 0;
-      final.value=priceAfterDeductionInput.value-totalInput.value
-    }
-  });
-</script>
   {% endblock %}

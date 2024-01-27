@@ -37,6 +37,12 @@
   
     /* Add more styling as needed */
   </style>
+  <style>
+    label.required::after {
+        content: " *";
+        color: red;
+    }
+  </style>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
 <div class="datatables" style="padding-top: 50px;">
@@ -69,7 +75,7 @@
                         <div class="col-lg-6">
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Order Id</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Order No</label>
                             <div class="col-sm-9">
                               <input type="text" class="form-control" id="exampleInputtext" name="order"
                                 value="{{orders.OrderFk.quotation_number}}" readonly>
@@ -77,7 +83,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Product Id</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Product Id</label>
                             <div class="col-sm-9">
                               <input type="text" class="form-control" id="exampleInputtext" name="product"
                                 value="{{orders.order.product.name}}" readonly>
@@ -87,14 +93,14 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Vehicle Number</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Vehicle Number</label>
                             <div class="col-sm-9">
                               <input type="text" class="form-control" id="exampleInputtext" name="vehicle" value="{{orders.vehicle_number}}">
                             </div>
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Date Of Delivery</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Date Of Delivery</label>
                             <div class="col-sm-9">
                               <div class="input-group border rounded-1">
                                 <input type="date" class="form-control p-7 border-0" value="{{formatted_date}}" name="deliveryDate">
@@ -103,7 +109,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">No of Bags</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">No of Bags</label>
                             <div class="col-sm-9">
                               <input type="number" class="form-control" id="exampleInputtext" placeholder="100"
                                 name="allBags" value="{{orders.no_of_bags}}">
@@ -111,7 +117,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Quantity</label>
                             <div class="col-sm-9">
                               <input type="number" class="form-control" id="exampleInputtext" placeholder="100"
                                 name="quantity" value="{{orders.quantity}}">
@@ -122,7 +128,7 @@
 
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Jute Bag</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Jute Bag</label>
                             <div class="col-sm-9">
                               <div class="input-group">
                                 <input type="number" class="form-control" id=""  name="jute" value="{{orders.jute_bags}}">
@@ -131,7 +137,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Plastic Bag</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Plastic Bag</label>
                             <div class="col-sm-9">
                               <div class="input-group">
                                 <input type="number" class="form-control" id=""  name="plastic" value="{{orders.plastic_bags}}">
@@ -140,7 +146,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">FSSI</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">FSSI</label>
                             <div class="col-sm-9">
                               <div class="input-group">
                                 <input type="number" class="form-control" id="" name="fssi" value="{{orders.fssi}}">
@@ -149,7 +155,7 @@
                           </div>
                           <div class="mb-4 row align-items-center">
                             <label for="exampleInputPassword1"
-                              class="form-label fw-semibold col-sm-3 col-form-label text-end">Loose</label>
+                              class="form-label fw-semibold col-sm-3 col-form-label text-end required">Loose</label>
                             <div class="col-sm-9">
                               <div class="input-group">
                                 <input type="text" class="form-control" id="" name="loose"  value="{{orders.loose}}">

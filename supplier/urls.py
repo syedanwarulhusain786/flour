@@ -35,6 +35,7 @@ urlpatterns = [
     #  path('purchase_quotations/<int:quotation_number>/place_bid/', views.place_bid, name='place_bid'),
     path('approved/', views.supplierapproved, name='supplierapproved'),
     path('disapproved/', views.supplierdisapproved, name='supplierdisapproved'),
+    path('pending/', views.supplierpending, name='supplierpending'),
     
     
     

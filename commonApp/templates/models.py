@@ -110,7 +110,7 @@ class Order(models.Model):
     quantity_left=models.FloatField(default=0)
     
     def __str__(self):
-            return f"Order Id {self.id} User "
+            return f"Order No {self.id} User "
 
     
 class DeliveryDetails(models.Model):

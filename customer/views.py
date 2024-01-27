@@ -298,7 +298,7 @@ def customercompleted(request):
 
 def customerapproved(request):
     Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='approved')
-  
+    print('hii')
     return render(request, 'customerOrderside/approved.html', {'orders': Orders})  
 def customerdisapproved(request):
     Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='disapproved')

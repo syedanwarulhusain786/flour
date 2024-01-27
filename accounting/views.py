@@ -155,54 +155,59 @@ def add_user(request):
         commission = request.POST.get('commission',0.0)
         
         # Check if the "Add To Ledger" checkbox is selected
-        add_to_ledger = request.POST.get('enable_options', False)
+        # add_to_ledger = request.POST.get('enable_options', False)
         ledger=None
         user_name=first_name+' '+last_name
-        try:
-            user=CustomUser()
-            user.is_superuser=False
-            user.username=username
-            user.first_name=first_name
-            user.last_name=last_name
-            user.email=email
-            user.is_staff=False
-            user.is_active=True
-            user.account_type=AccountType.objects.get(name=account_type)
-            user.company=Company.objects.get(id=request.user.company.id)
-            user.department=Department.objects.get(name='NONE')
-            user.ERPUsers_code=userCode
-            user.ERPUsers_name=user_name.strip()
-            user.credit_period=credit_period
-            user.mobile=mobile
-            user.phone=phone
-            user.email=email
-            user.ifsc=ifsc
-            user.bank_account=bank_account
-            user.gst_no=gst_no
-            user.pan=pan
-            user.pinCode=pinCode
-            user.address=address
-            user.commission=Decimal(commission)
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            user.set_password(password)
-            
-            
-            
-            
-            
-            user.save()
+        user_exists = CustomUser.objects.filter(username=username).exists()
 
-            
-            if add_to_ledger:
-                    # primary_group_number = request.POST.get('primaryGroupName')
+        if user_exists:
+            messages.error(request, f'An error occurred during user creation.Username already Exist')        
+        else:
+            try:
+                user=CustomUser()
+                user.is_superuser=False
+                user.username=username
+                user.first_name=first_name
+                user.last_name=last_name
+                user.email=email
+                user.is_staff=False
+                user.is_active=True
+                user.account_type=AccountType.objects.get(name=account_type)
+                user.company=Company.objects.get(id=request.user.company.id)
+                user.department=Department.objects.get(name='NONE')
+                user.ERPUsers_code=userCode
+                user.ERPUsers_name=user_name.strip()
+                user.credit_period=credit_period
+                user.mobile=mobile
+                user.phone=phone
+                user.email=email
+                user.ifsc=ifsc
+                user.bank_account=bank_account
+                user.gst_no=gst_no
+                user.pan=pan
+                user.pinCode=pinCode
+                user.address=address
+                user.commission=Decimal(commission)
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                user.set_password(password)
+                
+                
+                
+                
+                
+                user.save()
+
+                
+                # if add_to_ledger:
+                        # primary_group_number = request.POST.get('primaryGroupName')
                 group_number = request.POST.get('GroupName')
                 # primary=Primary_Group.objects.get(primary_group_number=primary_group_number)
                 groups=Group.objects.get(group_number=group_number)
@@ -213,17 +218,17 @@ def add_user(request):
                     opening_balance = opening_balance,
 
                 )
-                
-            user=CustomUser.objects.get(id=user.id)    
-            user.ledger=ledger
-            user.save()
-            messages.success(request, 'User created successfully.')
-        except Exception as e:
-            # Handle exceptions appropriately
-          
-            # Display error message
-            messages.error(request, f'An error occurred during user creation./n{e}')        
-           
+                    
+                user=CustomUser.objects.get(id=user.id)    
+                user.ledger=ledger
+                user.save()
+                messages.success(request, 'User created successfully.')
+            except Exception as e:
+                # Handle exceptions appropriately
+            
+                # Display error message
+                messages.error(request, f'An error occurred during user creation./n{e}')        
+        return redirect('add_user')    
    
     latest_user_Id = CustomUser.objects.order_by().last()
     next_user_Id = latest_user_Id.id + 1 if latest_user_Id else 100
@@ -317,16 +322,21 @@ def approve(request):
             ord=Order.objects.get(id=order_id)
             ord.is_approved="approved"
             ord.save()
+            return redirect('adminapproved')
+            
             # Notification.objects.create(user=order.user, message='Admin Just Approved: Order #{order_id}')  
             
         elif action=='disapproved':
             ord=Order.objects.get(id=order_id)
             ord.is_approved="disapproved"
             ord.save()
+            return redirect('admindisapproved')
+            
             # Notification.objects.create(user=order.user, message=f'Admin Just Disapproved: Order #{order_id}')  
             
         else:
             pass
+        
     return render(request,'supplierOrder/order_approval.html',{'orders':order})
 @department_required(allowed_departments=['ACCOUNT'])
 @login_required(login_url='login')
@@ -338,7 +348,6 @@ def acceptDelivery(request,order_id):
         latest_delivery = DeliveryDetails.objects.filter(order__id=order_id, user=request.user, row_type='delivery')[0].created_at
     except:
         latest_delivery=''
-    
         
         
         
@@ -346,8 +355,12 @@ def acceptDelivery(request,order_id):
 @department_required(allowed_departments=['ACCOUNT'])
 @login_required(login_url='login')
 def updateDelivery(request,order_id):
-    
     delivery=DeliveryDetails.objects.get(id=order_id)
+    try:
+        brk=delivery.quantity*delivery.order.agent_commission_per_quantal
+    except:
+        brk=0.00
+            
     formatted_date = delivery.date_of_delivery.strftime('%Y-%m-%d')
     
     if request.method=='POST':
@@ -419,6 +432,8 @@ def updateDelivery(request,order_id):
             status='delivered'
         )
         order.save()
+        if tObj.supplier_type=='agent':
+            final=Brokerage
         sock=ProductStock()
        
         sock.product = tObj.product
@@ -450,7 +465,7 @@ def updateDelivery(request,order_id):
         
         
         
-    return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date})  
+    return render(request, 'adminOrder/updatedelivery.html', {'delivery':delivery,'formatted_date':formatted_date,'brk':brk})  
 
 
 
@@ -574,22 +589,24 @@ def SalesQuotationDetailView(request,pk):
             ord.delivery_date=delivery
             
             ord.save()
+            return redirect('salesapproved')
         elif action=='disapproved':
             ord=SalesQuotation.objects.get(quotation_number=order_id)
             ord.approval="Disapproved"
             ord.save()
+            return redirect('salesdisapproved')
         else:
             pass
 
     if str(request.user.account_type) =='Customer':
         
-        return render(request, 'customerOrderside\orderdetail.html', {'sales_quotation': sales_quotation_with_items,'delivery':delivery})  
+        return render(request, 'customerOrderside/orderdetail.html', {'sales_quotation': sales_quotation_with_items,'delivery':delivery})  
     else:    
-        return render(request, 'customerOrder\orderdetail.html', {'sales_quotation': sales_quotation_with_items})  
+        return render(request, 'customerOrder/orderdetail.html', {'sales_quotation': sales_quotation_with_items})  
 
 
 def salesapprove(request):
-    approved_quotations = SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='Pending')
+    approved_quotations = SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval__in=['Pending','pending'])
 
     if request.method=='POST':
         order_id = request.POST.get('order_id')
@@ -598,11 +615,20 @@ def salesapprove(request):
         print(order_id,action,delivery)
 
       
-    return render(request,'customerOrder\order_approval.html',{'orders':approved_quotations})
+    return render(request,'customerOrder/order_approval.html',{'orders':approved_quotations})
+def salescompleted(request):
+    
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').exclude(approval__in =['pending','Pending','Disapproved','disapproved'])
+    return render(request, 'customerOrder/adminOrder/approved.html', {'orders': Orders})  
 def salesapproved(request):
     
-    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').exclude(approval__in =['pending','disapproved','completed'])
+    Orders= SalesQuotation.objects.select_related('customer').prefetch_related('items').exclude(approval__in =['pending','Pending','Disapproved','Completed','disapproved','completed'])
     return render(request, 'customerOrder/adminOrder/approved.html', {'orders': Orders})  
+def salespending(request):
+    
+    Orders = SalesQuotation.objects.filter(approval__in=['pending','Pending']).select_related('customer').prefetch_related('items')
+    print(Orders)
+    return render(request, 'customerOrder/adminOrder/sales_pending.html', {'orders': Orders}) 
 def salesdisapproved(request):
     Orders=SalesQuotation.objects.select_related('customer').prefetch_related('items').filter(approval='disapproved')
     return render(request, 'customerOrder/adminOrder/disapproved.html', {'orders': Orders})  
@@ -677,7 +703,7 @@ def viewdelivery(request,pk):
     
 
 
-    return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
+    return render(request,'bills/PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
 
 
 
@@ -701,7 +727,7 @@ def PurchaseQuotationDetailView(request,pk):
     
 
 
-    return render(request,'bills\PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
+    return render(request,'bills/PurchaseOrder1.html',{'purchase':purchase,'company':company,'quotes':quote})
 
 
 
@@ -1015,12 +1041,12 @@ def purchase_quote(request):
     
     
     context = {'PurchaseQuotation': next_quotation_number,'suppliers':supplier,'products':products,'terms':terms,'tax':tax}
-    return render(request, 'purchase\PurchaseOrder\purchaseOrder.html',context)
+    return render(request, 'purchase/PurchaseOrder/purchaseOrder.html',context)
 
 @login_required(login_url='login')
 def quotepurchaseList(request):
     quotes=PurchaseQuotation.objects.all()
-    return render(request,'purchase\PurchaseOrder\PurchaseOrders.html',{'quotes':quotes})
+    return render(request,'purchase/PurchaseOrder/PurchaseOrders.html',{'quotes':quotes})
 
 
 @login_required(login_url='login')
@@ -1032,7 +1058,7 @@ def PurchaseQuotationDeleteView(request,pk):
         # Add any additional processing or redirect as needed
         return redirect('purchase-orders')  # Redirect to the product list view
 
-    return render(request,'purchase\PurchaseOrder\purchaseOrdersConfirmDelet.html',{'object':product})
+    return render(request,'purchase/PurchaseOrder/purchaseOrdersConfirmDelet.html',{'object':product})
 
     
 ######################################################## 
@@ -1505,7 +1531,7 @@ def Journal_entry(request):
                   
     latest_quotation = JournalEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers/journal/journalEntry.html',  context={
+    return render(request, 'vouchers/Journal/journalEntry.html',  context={
         'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
     'next_quotation_number':next_quotation_number})
     
@@ -1573,8 +1599,12 @@ def payment(request):
             credit_total=amt,
         )
         quote.save()
-
-        delivery.payment='paid'
+        
+        delivery.pendingAmt-=Decimal(amt)
+        
+        # delivery.save()
+        if delivery.pendingAmt==0:
+            delivery.payment='paid'
         delivery.save()
        
         ledger_entry=LedgerEntry(
@@ -1602,13 +1632,13 @@ def payment(request):
         
 
         # Redirect to the detail view for the created quotation
-        return redirect('payment-entries')
+        return redirect('payments')
         
         
                   
     latest_quotation = PaymentEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\Payment\payment.html',  context={
+    return render(request, 'vouchers/Payment/payment.html',  context={
         'username':request.user,'account_list':to_ledger_accounts,
     'next_quotation_number':next_quotation_number,'purchases':purchase,'pay':pay})
 
@@ -1689,7 +1719,7 @@ def reciept(request):
         
 
         # Redirect to the detail view for the created quotation
-        return redirect('payment-entries')
+        return redirect('reciepts')
         
         
                   
@@ -1782,7 +1812,7 @@ def contra(request):
                   
     latest_quotation = ContraEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\Contra\contra.html',  context={
+    return render(request, 'vouchers/Contra/contra.html',  context={
         'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
     'next_quotation_number':next_quotation_number})
 
@@ -1868,7 +1898,7 @@ def credit_note(request):
                   
     latest_quotation = CreditNoteEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\Credit\credit_note.html',  context={
+    return render(request, 'vouchers/Credit/credit_note.html',  context={
         'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
     'next_quotation_number':next_quotation_number})
 
@@ -1943,7 +1973,6 @@ def debit_note(request):
                 )
 
 
-
         # Redirect to the detail view for the created quotation
         return redirect('debit-note-entries')
         
@@ -1951,7 +1980,7 @@ def debit_note(request):
                   
     latest_quotation = DebitNoteEntry.objects.order_by().last()
     next_quotation_number = latest_quotation.voucherNo + 1 if latest_quotation else 100
-    return render(request, 'vouchers\Debit\debit_note.html',  context={
+    return render(request, 'vouchers/Debit/debit_note.html',  context={
         'username':request.user,'Category_list':Category_list,'Subcategory_list':Subcategory_list,'account_list':ledgers_under_selected_groups,
     'next_quotation_number':next_quotation_number})
 
@@ -2205,13 +2234,23 @@ def Gernal_Ledger(request):
 from django.shortcuts import render
 from .models import LedgerEntry
 from .filters import LedgerEntryFilter
+from django.db.models import Q
+
+# Filter based on the first condition
 
 def LedgerEntries(request):
     if request.user.account_type.name == "Customer" :
         ledger_entries = LedgerEntry.objects.filter(saleorder__customer=request.user)
         
     elif request.user.account_type.name == "Supplier":
-        ledger_entries = LedgerEntry.objects.filter(order__user=request.user)
+        entries_condition1 = LedgerEntry.objects.filter(order__user=request.user)
+
+        # Filter based on the second condition
+        entries_condition2 = LedgerEntry.objects.filter(account=Ledger.objects.get(ledgerUser=request.user))
+
+        # Combine the sets using union (|) or intersection (&) based on your requirement
+        ledger_entries = entries_condition1 | entries_condition2
+        # ledger_entries = LedgerEntry.objects.filter(order__user=request.user,account=Ledger.objects.get(ledgerUser=request.user))
     else:
         ledger_entries = LedgerEntry.objects.all()
     print(ledger_entries)
@@ -2302,7 +2341,6 @@ def action(request):
             return JsonResponse({'success': True, 'message': 'Account Added successfully'})
 
     return JsonResponse({'success': False, 'message': 'Invalid request'})
-
 
 
 

@@ -37,6 +37,12 @@
   
     /* Add more styling as needed */
   </style>
+  <style>
+    label.required::after {
+        content: " *";
+        color: red;
+    }
+  </style>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
   <script src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
 <div class="datatables" style="padding-top: 50px;">
@@ -124,18 +130,25 @@
                                 <hr>
                                 <div class="row">
 
-                                    <div class="col-md-6" style="padding: 10px;">
+                                    <div class="col-md-4" style="padding: 10px;">
                                         <label for="bankjournal_date"> Last Delivery Date <span
                                                 class="text-danger">*&emsp;</span></label>
                                         <input type="text" class="form-control" id="bankjournal_date" value="{{ last }}" readonly>
                                     </div>
                             
-                                    <div class="col-md-6" style="padding: 10px;">
-                                        <div class="form-group">
-                                            <label for="Product">Quantity Left (QTL)</label>
-                                            <input type="text" class="form-control" id="product" value="{{ Orders.quantity_left }}" readonly>
-                                        </div>
+                                    <div class="col-md-4 p-3 ">
+                                      <div class="form-group" >
+                                          <label for="Product" >Quantity Left (QTL)</label>
+                                          <input type="text" class="form-control bg-success" id="product" value="{{ Orders.quantity_left }}" readonly>
+                                      </div>
                                     </div>
+                                    <div class="col-md-4 p-3">
+                                      <div class="form-group">
+                                          <label for="Product">Total Commission</label>
+                                          <input type="text" class="form-control" id="product" value="{{Orders.agent_commission_total}}" readonly>
+                                      </div>
+                                      
+                                  </div>
 
                                     
 
@@ -172,46 +185,46 @@
                                   <div class="col-lg-6">
                                     <div class="mb-4 row align-items-center">
                                         <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Order Id</label>
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end required">Order No</label>
                                         <div class="col-sm-9">
                                           <input type="text" class="form-control" id="exampleInputtext" name="order" value="{{Orders.id}}" readonly>
                                         </div>
                                       </div>
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Vehicle Number</label>
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end required">Vehicle Number</label>
                                       <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="exampleInputtext" name="vehicle">
+                                        <input type="text" class="form-control" id="exampleInputtext" name="vehicle" required>
                                       </div>
                                     </div>
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">Date Of Delivery</label>
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end required">Date Of Delivery</label>
                                       <div class="col-sm-9">
                                         <div class="input-group border rounded-1">
-                                          <input type="date" class="form-control p-7 border-0" name="deliveryDate" >
+                                          <input type="date" class="form-control p-7 border-0" name="deliveryDate"  required>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="mb-4 row align-items-center">
                                       <label for="exampleInputPassword1"
-                                        class="form-label fw-semibold col-sm-3 col-form-label text-end">No of Bags</label>
+                                        class="form-label fw-semibold col-sm-3 col-form-label text-end required">No of Bags</label>
                                       <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="allBags">
+                                        <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="allBags" required>
                                       </div>
                                     </div>
                                     <div class="mb-4 row align-items-center">
                                         <label for="exampleInputPassword1"
-                                          class="form-label fw-semibold col-sm-3 col-form-label text-end">Quantity(QTL)</label>
+                                          class="form-label fw-semibold col-sm-3 col-form-label text-end required">Quantity(QTL)</label>
                                         <div class="col-sm-9">
-                                          <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="quantity" step="any">
+                                          <input type="number" class="form-control" id="exampleInputtext" placeholder="100" name="quantity" step="any" required>
                                         </div>
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
-                                          <label for="billing_company" class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Company</label>
+                                          <label for="billing_company" class="form-label fw-semibold col-sm-3 col-form-label text-end required">Billing Company</label>
                                           <div class="col-sm-9">
-                                          <select class="form-control" id="billing_company" name="billing_company" data-live-search="true">
+                                          <select class="form-control" id="billing_company" name="billing_company" data-live-search="true" required>
                                               <option data-tokens="{{ category.name }}" id="{{ category.supplier_name }}"
                                                   value="{{ category.name }}">---Select suppliers ----</option>
                                               {% for supplier in billing %}
@@ -223,9 +236,9 @@
                                     </div>
                                   <div class="mb-4 row align-items-center">
                                     <label for="billing_address"
-                                      class="form-label fw-semibold col-sm-3 col-form-label text-end">Billing Address</label>
+                                      class="form-label fw-semibold col-sm-3 col-form-label text-end required">Billing Address</label>
                                     <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="billing_address"  name="billing_address">
+                                      <input type="text" class="form-control" id="billing_address"  name="billing_address" required>
                                     </div>
                                 </div>
 
@@ -329,7 +342,7 @@
                       <thead>
                         <!-- start row -->
                         <tr>
-                          <th>Order Id</th>
+                          <th>Order No</th>
                           <th>Vehicle Number</th>
                           
                           <th>Delivery Date</th>
@@ -375,7 +388,7 @@
                           <td>{{product.final_quantity_price}}</td>
                           <td><a class="btn btn-success" href="{% url 'downloadDelivery' order_id=product.id %}">Download Slip</a></td>
                           <td>{% if product.status == 'pending' %}
-                            <button class="btn btn-success" disabled>Pending</button>
+                            <button class="btn btn-primary" disabled>Pending</button>
                         {% elif product.status == 'delivered' %}
                             <button class="btn btn-danger" disabled>Delivered</button>
                         {% endif %}</td>
